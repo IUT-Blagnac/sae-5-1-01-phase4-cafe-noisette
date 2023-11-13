@@ -43,23 +43,19 @@ image:{baseURL}/actions/workflows/tests.yml/badge.svg[Tests]
 image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg[License: MPL-2.0, link="https://opensource.org/licenses/MPL-2.0"]
 //---------------------------------------------------------------
 
-TIP: Pensez à mettre à jour les infos dans ce fichier pour que les badges pointent sur les résultats effectifs de vos intégrations continue ou sur la bonne licence logicielle.
-
-WARNING: Ce dépôt présente uen des parties du projet à développer dans le cadre de la SAÉ 5.A.01 du BUT1 Informatique de l'IUT de Blagnac.
-
-Ce fichier `README.adoc` (dont vous lisez sûrement le rendu HTML automatiquement effectué par GitHUb), fait partie du dépôt initial cloné à partir du lien GitHub classroom qui vous a été donné par ailleurs.
-Vous trouverez le dépôt "template" qui a servi de base ici : https://github.com/IUT-Blagnac/S5.A.01-template.git. 
-
 == Équipe
 
 Projet est réalisé par::
 
-- https://github.com/janeDoe[Jane Doe]
-- https://github.com/johnSmith[John Smith]
+- https://github.com/BryceFuerty[Fuertes Bryce]
+- https://github.com/AurelienSP[Sanchez-Porro Aurélien]
+- https://github.com/Jolex35[Jolas Alex]
+- https://github.com/NolanJacquemont[Jacquemont Nolan]
+- https://github.com/EternalNico[Sacilotto Nicolas]
+- https://github.com/Darknxss[Grasser James]
 ...
 
 
 == Contexte général
 
 
-TIP: En cas de besoin, n'hésitez pas à me contacter (jean-michel.bruel@univ-tlse2.fr) ou à me poser des questions via le Discord de l'IUT.
