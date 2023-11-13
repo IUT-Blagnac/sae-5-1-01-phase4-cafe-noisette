@@ -58,4 +58,16 @@ Projet est réalisé par::
 
 == Contexte général
 
+Le but de cette SAE S5.A.01 est la création d'une applciation de gestion de la SAE, nous devrons y incorporer plusieurs fonctionnalitées :
 
+|===
+| **Must have this** | **Should have this** | **Could have this**
+| Remplissage de la fiche joueur | Saisie des informations sur les dépots des équipes | Constitution des équipes automatique
+| Constitution des équipes | Gestion des évaluations par les coatch et par les clients | affectations des équipes aux sujets automatique
+| Saisie des sujets | Gestion de la phase de renfort (des ALT aux INIT) | Page de présentation des équipes dans chaque groupes
+| Saisie des voeux des équipes en terme de sujet | Gestion des défis entre les rouges et les jaunes| Toutes fonctionnalitées que vous auriez aimer voir cette année
+| Affectation des équipes aux sujets ||
+
+
+
+|===
