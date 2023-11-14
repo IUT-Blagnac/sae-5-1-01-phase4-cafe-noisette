@@ -12,6 +12,9 @@ public class UserMapper {
         entity.setId(dto.getId());
         entity.setUsername(dto.getUsername());
         entity.setFirstname(dto.getFirstname());
+        entity.setLastname(dto.getLastname());
+        entity.setEmail(dto.getEmail());
+        entity.setPassword(dto.getPassword());
         return entity;
     }
 
