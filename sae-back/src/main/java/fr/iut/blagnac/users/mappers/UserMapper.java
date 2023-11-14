@@ -11,7 +11,7 @@ public class UserMapper {
         UserEntity entity = new UserEntity();
         entity.setId(dto.getId());
         entity.setUsername(dto.getUsername());
-        entity.setAge(dto.getAge());
+        entity.setFirstname(dto.getFirstname());
         return entity;
     }
 
@@ -19,7 +19,7 @@ public class UserMapper {
         UserDTO dto = new UserDTO();
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
-        dto.setAge(entity.getAge());
+        dto.setFirstname(entity.getFirstname());
         return dto;
     }
 
