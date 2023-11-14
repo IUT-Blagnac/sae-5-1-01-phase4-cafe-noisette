@@ -18,6 +18,15 @@ public class UserEntity {
 
     private String username;
 
-    private String age;
+    private String firstname;
+
+    private String lastname;
+
+    private String email;
+
+    private String playerInfo;
+
+    private String password;
+   
 
 }

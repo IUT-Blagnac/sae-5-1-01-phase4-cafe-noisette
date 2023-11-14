@@ -20,7 +20,21 @@ public class UserDTO {
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("age")
-    private String age;
+    @JsonProperty("Firstname")
+    private String Firstname;
+
+    @JsonProperty("Lastname")
+    private String Lastname;
+
+    @JsonProperty("email")
+    private String email;
+
+    @JsonProperty("playerInfo")
+    private String playerInfo;
+
+    @JsonProperty("password")
+    private String password;
+
+
 
 }
