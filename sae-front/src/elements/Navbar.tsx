@@ -3,7 +3,7 @@ import {Box} from "@mui/material";
 
 function Navbar() {
     return (
-        <Box>
+        <Box sx={{width:'100vw',position:'fixed', top:'0', height:'80px', backgroundColor: '#666'}}>
             Navigation Bar
         </Box>
     );

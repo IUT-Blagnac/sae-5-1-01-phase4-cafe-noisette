@@ -1,13 +1,15 @@
+import { ThemeOptions } from '@mui/material/styles';
 import {createTheme} from "@mui/material";
-import {blue} from "@mui/material/colors";
 
-
-export default class theme {
-    static theme = createTheme({
-        palette: {
-            primary: {
-                main: blue[500],
-            },
+export const themeOptions: ThemeOptions = createTheme( {
+    palette: {
+        mode: 'dark',
+        primary: {
+            main: '#1976d2',
         },
-    });
-}
+        secondary: {
+            main: '#9c27b0',
+        },
+    },
+});
+
