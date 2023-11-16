@@ -2,11 +2,13 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import { useState, ChangeEvent } from "react";
+import {useNavigate} from "react-router-dom";
 
 function CreateFormPage() {
   //Mise des valeurs par défauts
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUsername(event.target.value);
@@ -48,7 +50,7 @@ function CreateFormPage() {
 
       <div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
         <p style={{ fontSize: 13, marginRight: 5 }}>Vous n'avez pas de compte ?</p>
-        <Link href="/login/createAccount/" variant="body2">
+        <Link variant="body2" onClick={() => navigate('login/createAccount')}>
           Créer un compte
         </Link>
       </div>
