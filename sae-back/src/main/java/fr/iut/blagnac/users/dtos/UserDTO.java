@@ -1,6 +1,7 @@
 package fr.iut.blagnac.users.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,17 +21,17 @@ public class UserDTO {
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("Firstname")
-    private String Firstname;
+    @JsonProperty("firstname")
+    private String firstname;
 
-    @JsonProperty("Lastname")
-    private String Lastname;
+    @JsonProperty("lastname")
+    private String lastname;
 
     @JsonProperty("email")
     private String email;
 
     @JsonProperty("playerInfo")
-    private String playerInfo;
+    private PlayerInfoDTO playerInfo;
 
     @JsonProperty("password")
     private String password;

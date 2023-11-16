@@ -1,4 +1,5 @@
 package fr.iut.blagnac.users.entities;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,7 +25,7 @@ public class UserEntity {
 
     private String email;
 
-    private String playerInfo;
+    private PlayerInfoEntity playerInfo;
 
     private String password;
    

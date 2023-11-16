@@ -3,14 +3,23 @@ package fr.iut.blagnac.users.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Size;
-
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RegisterForReflection
 public class PlayerInfoDTO {
 
     @JsonProperty("id")
     private Long id;
     
     @JsonProperty("nickname")
-    private Long nickname;
+    private String nickname;
 
     @JsonProperty("globalLevel")
     @Size(max= 5) 
