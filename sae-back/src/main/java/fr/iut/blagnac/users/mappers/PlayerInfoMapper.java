@@ -9,6 +9,7 @@ public class PlayerInfoMapper {
 
     public static PlayerInfoEntity toEntity(PlayerInfoDTO dto) {
         PlayerInfoEntity entity = new PlayerInfoEntity();
+        
         entity.setId(dto.getId());
         entity.setNickname(dto.getNickname());
         entity.setGlobalLevel(dto.getGlobalLevel());
