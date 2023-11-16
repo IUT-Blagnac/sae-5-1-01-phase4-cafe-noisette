@@ -1,8 +1,16 @@
 package fr.iut.blagnac.users.entities;
 
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class PlayerInfoEntity {
 
     @Id
@@ -17,7 +25,7 @@ public class PlayerInfoEntity {
 
     private int backLevel;
 
-    private int frontVevel;
+    private int frontLevel;
 
     private int testLevel;
 

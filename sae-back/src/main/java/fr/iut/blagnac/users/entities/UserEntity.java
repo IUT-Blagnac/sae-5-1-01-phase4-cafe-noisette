@@ -1,7 +1,6 @@
 package fr.iut.blagnac.users.entities;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +23,9 @@ public class UserEntity {
 
     private String email;
 
-    private String playerInfo;
+    @OneToOne
+    @JoinColumn(name = "playerInfo_id")
+    private PlayerInfoEntity playerInfo;
 
     private String password;
    
