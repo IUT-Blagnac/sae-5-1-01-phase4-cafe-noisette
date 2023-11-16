@@ -15,7 +15,11 @@ public class UserMapper {
         entity.setLastname(dto.getLastname());
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
-        entity.setPlayerInfo(PlayerInfoMapper.toEntity(dto.getPlayerInfo()));
+
+        if(dto.getPlayerInfo() != null){
+            entity.setPlayerInfo(PlayerInfoMapper.toEntity(dto.getPlayerInfo()));
+        }
+        
         return entity;
     }
 
@@ -27,7 +31,11 @@ public class UserMapper {
         dto.setLastname(entity.getLastname());
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
-        dto.setPlayerInfo(PlayerInfoMapper.toDTO(entity.getPlayerInfo()));
+
+        if(entity.getPlayerInfo() != null) {
+             dto.setPlayerInfo(PlayerInfoMapper.toDTO(entity.getPlayerInfo()));
+        }
+
         return dto;
     }
 
