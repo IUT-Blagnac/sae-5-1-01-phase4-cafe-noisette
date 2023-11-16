@@ -50,7 +50,7 @@ function CreateFormPage() {
 
       <div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
         <p style={{ fontSize: 13, marginRight: 5 }}>Vous n'avez pas de compte ?</p>
-        <Link variant="body2" onClick={() => navigate('login/createAccount')}>
+        <Link variant="body2" onClick={() => navigate('/login/createAccount')}>
           Créer un compte
         </Link>
       </div>
