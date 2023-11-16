@@ -1,7 +1,10 @@
+import Button from "@mui/material/Button";
+import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import { useState, ChangeEvent } from "react";
 
 function CreateFormPage() {
+  //Mise des valeurs par défauts
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,10 +16,12 @@ function CreateFormPage() {
     setPassword(event.target.value);
   };
 
+  //Gère la soumission lors de l'envoie du formulaire
   const handleSubmit = () => {
     console.log("Username:", username);
     console.log("Password:", password);
   };
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
@@ -39,7 +44,15 @@ function CreateFormPage() {
         onChange={handlePasswordChange}
       />
 
-      <button  onClick={handleSubmit}>Submit</button>
+      <Button variant="contained" onClick={handleSubmit}>Se connecter</Button>
+
+      <div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+        <p style={{ fontSize: 13, marginRight: 5 }}>Vous n'avez pas de compte ?</p>
+        <Link href="/login/createAccount/" variant="body2">
+          Créer un compte
+        </Link>
+      </div>
+
     </div>
   );
 }
