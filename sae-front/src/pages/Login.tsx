@@ -26,7 +26,7 @@ function CreateFormPage() {
 
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "80vh" }}>
       <h1>Connexion à l'application</h1>
       <TextField
         id="outlined-basic"

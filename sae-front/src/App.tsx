@@ -8,12 +8,12 @@ import CreateAccount from "./pages/CreateAccount";
 import Navbar from "./elements/Navbar";
 import {Box, CssBaseline, ThemeProvider} from "@mui/material";
 import Footer from "./elements/Footer";
-import {themeOptions} from "./utils/theme";
+import {useTheme} from "./utils/theme";
 
 function App() {
-    const [value, setValue] = React.useState(0);
+    const theme = useTheme()
     return (
-        <ThemeProvider theme={themeOptions} >
+        <ThemeProvider theme={theme} >
             <CssBaseline />
                 <Box sx={{marginTop:'80px'}}>
                         <Navbar/>
