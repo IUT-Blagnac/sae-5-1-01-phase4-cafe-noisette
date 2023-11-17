@@ -1,9 +1,12 @@
 package fr.iut.blagnac.users.entities;
 
+import fr.iut.blagnac.users.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -25,9 +28,13 @@ public class UserEntity {
 
     @OneToOne
     @JoinColumn(name = "playerInfo_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private PlayerInfoEntity playerInfo;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
    
 
 }

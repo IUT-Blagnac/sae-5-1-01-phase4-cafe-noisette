@@ -1,5 +1,6 @@
 package fr.iut.blagnac.users.mappers;
 
+import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
 import io.quarkus.runtime.annotations.RegisterForReflection;
@@ -14,11 +15,15 @@ public class UserMapper {
         entity.setFirstname(dto.getFirstname());
         entity.setLastname(dto.getLastname());
         entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
 
-        if(dto.getPlayerInfo() != null){
-            entity.setPlayerInfo(PlayerInfoMapper.toEntity(dto.getPlayerInfo()));
-        }
+        PBKDF2Encoder encoder = new PBKDF2Encoder();
+
+        entity.setPassword(encoder.encode(dto.getPassword()));
+        entity.setRole(dto.getRole());
+
+//        if(dto.getPlayerInfo() != null){
+//            entity.setPlayerInfo(PlayerInfoMapper.toEntity(dto.getPlayerInfo()));
+//        }
         
         return entity;
     }
@@ -30,6 +35,7 @@ public class UserMapper {
         dto.setFirstname(entity.getFirstname());
         dto.setLastname(entity.getLastname());
         dto.setEmail(entity.getEmail());
+        dto.setRole(entity.getRole());
         dto.setPassword(entity.getPassword());
 
         if(entity.getPlayerInfo() != null) {

@@ -2,6 +2,7 @@ package fr.iut.blagnac.users.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import fr.iut.blagnac.users.enums.UserRole;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,9 @@ public class UserDTO {
 
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("role")
+    private UserRole role;
 
 
 
