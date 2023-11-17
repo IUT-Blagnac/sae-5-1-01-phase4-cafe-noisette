@@ -10,6 +10,7 @@ import {Box, CssBaseline, ThemeProvider} from "@mui/material";
 import Footer from "./elements/Footer";
 import {useTheme} from "./utils/theme";
 import ProjectList from "./pages/projects/ProjectList";
+import UserInfos from './pages/UserInfos';
 
 function App() {
     const theme = useTheme()
@@ -22,6 +23,7 @@ function App() {
                             <Route path="/" element={<Home />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/projects" element={<ProjectList />} />
+                            <Route path="/user_infos" element={<UserInfos />} />
                             <Route path="/projects/create" element={<About />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/login/createAccount" element={<CreateAccount />} />

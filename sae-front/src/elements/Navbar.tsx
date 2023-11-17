@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 function Navbar() {
     const { isDarkMode, toggle } = useDarkMode()
     const navigate = useNavigate()
-    const pages = [{name: "Accueil", path: "/"}, {name: "About", path: "/about"}, {name: "Projects", path: "/projects"}]
+    const pages = [{name: "Accueil", path: "/"}, {name: "About", path: "/about"}, {name: "Projects", path: "/projects"}, {name: "User Info", path: "/user_infos"}]
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed">
