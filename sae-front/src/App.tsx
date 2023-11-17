@@ -9,6 +9,7 @@ import Navbar from "./elements/Navbar";
 import {Box, CssBaseline, ThemeProvider} from "@mui/material";
 import Footer from "./elements/Footer";
 import {useTheme} from "./utils/theme";
+import ProjectList from "./pages/projects/ProjectList";
 
 function App() {
     const theme = useTheme()
@@ -20,6 +21,8 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/about" element={<About />} />
+                            <Route path="/projects" element={<ProjectList />} />
+                            <Route path="/projects/create" element={<About />} />
                             <Route path="/login" element={<Login />} />
                             <Route path="/login/createAccount" element={<CreateAccount />} />
                         </Routes>
