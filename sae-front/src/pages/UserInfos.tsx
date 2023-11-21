@@ -1,7 +1,7 @@
 import { Rating, TextField, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import Circle from '@mui/icons-material/Circle';
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -15,23 +15,23 @@ const StyledRating = styled(Rating)({
 function UserInfos() {
   const initialSkills = [
     { label: 'Niveau global en projet de dev :', value: 1, color: 'purple' },
-    { label: 'Codage front :', value: 1 , color: 'orange'},
-    { label: 'Test :', value: 1 , color: 'orange'},
-    { label: 'Documentation :', value: 1 , color: 'orange'},
-    { label: 'Github / Scumaster :', value: 1, color: 'orange' },
-    { label: 'Design / Interface :', value: 1 , color: 'orange'},
+    { label: 'Codage front :', value: 1, color: 'orange' },
+    { label: 'Test :', value: 1, color: 'orange' },
+    { label: 'Documentation :', value: 1, color: 'orange' },
+    { label: 'Github / Scrumaster :', value: 1, color: 'orange' },
+    { label: 'Design / Interface :', value: 1, color: 'orange' },
   ];
 
   const [skills, setSkills] = useState(initialSkills);
   const [customSkill, setCustomSkill] = useState({ label: '', value: 1 });
 
-  const handleRatingChange = (index:any, newValue:any) => {
+  const handleRatingChange = (index: any, newValue: any) => {
     const updatedSkills = [...skills];
     updatedSkills[index].value = newValue ? newValue : 1;
     setSkills(updatedSkills);
   };
 
-  const handleCustomSkillRatingChange = (event:any, newValue:any) => {
+  const handleCustomSkillRatingChange = (event: any, newValue: any) => {
     setCustomSkill({
       label: event ? event.target.value : customSkill.label,
       value: newValue ? newValue : customSkill.value,
@@ -63,8 +63,8 @@ function UserInfos() {
             value={skill.value}
             onChange={(event, newValue) => handleRatingChange(index, newValue)}
             size="large"
-            icon={<RadioButtonUncheckedIcon fontSize="inherit" style={{ color: skill.color }} />}
-            emptyIcon={<RadioButtonUncheckedIcon fontSize="inherit" />}
+            icon={<Circle fontSize="inherit" style={{ color: skill.color }} />}
+            emptyIcon={<Circle fontSize="inherit" />}
           />
         </Box>
       ))}
@@ -80,8 +80,8 @@ function UserInfos() {
           value={customSkill.value}
           onChange={(event, newValue) => handleCustomSkillRatingChange(null, newValue)}
           size="large"
-          icon={<RadioButtonUncheckedIcon fontSize="inherit" style={{ color: 'orange' }} />}
-          emptyIcon={<RadioButtonUncheckedIcon fontSize="inherit" />}
+          icon={<Circle fontSize="inherit" style={{ color: 'orange' }} />}
+          emptyIcon={<Circle fontSize="inherit" />}
         />
       </Box>
     </Box>
