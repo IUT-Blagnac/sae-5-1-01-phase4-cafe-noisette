@@ -3,9 +3,10 @@ import {AppBar, Box, Button, IconButton, Switch, Toolbar} from "@mui/material";
 import { useDarkMode } from 'usehooks-ts'
 import {Castle} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
+import useColorMode from "../hooks/useColorMode";
 
 function Navbar() {
-    const { isDarkMode, toggle } = useDarkMode()
+    const { isDark, toggle } = useColorMode()
     const navigate = useNavigate()
     const pages = [{name: "Accueil", path: "/"}, {name: "About", path: "/about"}, {name: "Projects", path: "/projects"}, {name: "User Info", path: "/user_infos"}]
     return (
@@ -34,7 +35,7 @@ function Navbar() {
                             </Button>
                         ))}
                     </Box>
-                    <Switch checked={isDarkMode} onChange={toggle} />
+                    <Switch checked={isDark} onChange={toggle} />
                     <Button color="inherit" onClick={() => navigate('/login')}>Login</Button>
                 </Toolbar>
             </AppBar>

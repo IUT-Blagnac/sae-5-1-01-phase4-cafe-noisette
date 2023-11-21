@@ -1,18 +1,18 @@
 import {createTheme} from "@mui/material";
-import {useDarkMode} from "usehooks-ts";
+import useColorMode from "../hooks/useColorMode";
 
 export const useTheme = () =>{
-    const { isDarkMode } = useDarkMode()
+    const { isDark } = useColorMode()
 
-    if(isDarkMode) {
+    if(isDark) {
         return createTheme( {
             palette: {
                 mode: 'dark',
                 primary: {
-                    main: '#1976d2',
+                    main: '#FFA500',
                 },
                 secondary: {
-                    main: '#9c27b0',
+                    main: '#800080',
                 },
             },
         })
@@ -21,10 +21,10 @@ export const useTheme = () =>{
             palette: {
                 mode: 'light',
                 primary: {
-                    main: '#1976d2',
+                    main: '#800080',
                 },
                 secondary: {
-                    main: '#9c27b0',
+                    main: '#FFA500',
                 },
             },
         })
