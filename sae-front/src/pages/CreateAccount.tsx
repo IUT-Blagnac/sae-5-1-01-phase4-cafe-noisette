@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
+import Link from "@mui/material/Link";
 
 function CreateAccount() {
   const [username, setUsername] = useState("");
@@ -127,6 +128,14 @@ function CreateAccount() {
       </TextField>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <Button variant="contained" onClick={handleSubmit}>Créer votre compte</Button>
+      
+      <div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
+        <p style={{ fontSize: 13, marginRight: 5 }}>Vous avez déjà un compte ?</p>
+        <Link variant="body2" onClick={() => navigate('/login')}>
+          Cliquer ici
+        </Link>
+      </div>
+      
     </div>
   );
 }
