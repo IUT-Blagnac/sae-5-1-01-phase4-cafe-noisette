@@ -15,7 +15,7 @@ import io.smallrye.jwt.build.JwtClaimsBuilder;
 
 public class TokenUtils {
 
-    public static String generateToken(String username, UserRole role, Long duration, String issuer) throws Exception {
+    public static String generateToken(String username, Set<UserRole> roles, Long duration, String issuer) throws Exception {
         String privateKeyLocation = "/privatekey.pem";
         PrivateKey privateKey = readPrivateKey(privateKeyLocation);
 
@@ -23,7 +23,9 @@ public class TokenUtils {
         long currentTimeInSecs = currentTimeInSecs();
 
         Set<String> groups = new HashSet<>();
-        groups.add(role.getRole());
+        for (UserRole role : roles) {
+            groups.add(role.toString());
+        }
 
         claimsBuilder.issuer(issuer);
         claimsBuilder.subject(username);

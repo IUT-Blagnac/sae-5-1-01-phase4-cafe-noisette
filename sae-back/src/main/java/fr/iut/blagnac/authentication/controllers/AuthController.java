@@ -38,7 +38,7 @@ public class AuthController {
         UserDTO userDTO = userService.getUserByUsername(authRequest.getUsername());
         if (userDTO != null && userDTO.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
             try {
-                return Response.ok(new AuthResponse(TokenUtils.generateToken(userDTO.getUsername(), userDTO.getRole(), duration, issuer))).build();
+                return Response.ok(new AuthResponse(TokenUtils.generateToken(userDTO.getUsername(), userDTO.getRoles(), duration, issuer))).build();
             } catch (Exception e) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
