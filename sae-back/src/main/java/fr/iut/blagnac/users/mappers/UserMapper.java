@@ -36,7 +36,6 @@ public class UserMapper {
         dto.setLastname(entity.getLastname());
         dto.setEmail(entity.getEmail());
         dto.setRoles(entity.getRoles());
-        dto.setPassword(entity.getPassword());
 
         if(entity.getPlayerInfo() != null) {
              dto.setPlayerInfo(PlayerInfoMapper.toDTO(entity.getPlayerInfo()));

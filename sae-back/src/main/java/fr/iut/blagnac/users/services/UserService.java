@@ -1,5 +1,7 @@
 package fr.iut.blagnac.users.services;
 
+import fr.iut.blagnac.authentication.dtos.AuthRequest;
+import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.PlayerInfoEntity;
 import fr.iut.blagnac.users.entities.UserEntity;
@@ -18,6 +20,9 @@ import org.slf4j.LoggerFactory;
 public class UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
+    @Inject
+    PBKDF2Encoder passwordEncoder;
 
     @Inject
     UserRepository userRepository;
@@ -73,6 +78,27 @@ public class UserService {
 
             userRepository.persist(userEntity);
             return UserMapper.toDTO(userEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw e;
+        }
+    }
+
+    public UserDTO checkPassword(AuthRequest authRequest) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(authRequest.getUsername());
+
+            if (userEntity == null) {
+                LOGGER.error("User not found");
+                throw new PersistenceException("User not found");
+            }
+
+            if (userEntity.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
+                return UserMapper.toDTO(userEntity);
+            } else {
+                LOGGER.error("Wrong password");
+                throw new PersistenceException("Wrong password");
+            }
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw e;

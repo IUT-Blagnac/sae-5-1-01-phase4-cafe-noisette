@@ -35,14 +35,14 @@ public class AuthController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(AuthRequest authRequest) {
-        UserDTO userDTO = userService.getUserByUsername(authRequest.getUsername());
-        if (userDTO != null && userDTO.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
+        try {
+            UserDTO userDTO = userService.checkPassword(authRequest);
             try {
                 return Response.ok(new AuthResponse(TokenUtils.generateToken(userDTO.getUsername(), userDTO.getRoles(), duration, issuer))).build();
             } catch (Exception e) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
-        } else {
+        } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
