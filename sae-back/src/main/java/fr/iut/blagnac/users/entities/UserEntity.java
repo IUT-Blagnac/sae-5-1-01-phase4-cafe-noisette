@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -34,7 +36,6 @@ public class UserEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
-   
+    private Set<UserRole> roles;
 
 }

@@ -18,7 +18,7 @@ public class UserController {
     UserService userService;
 
     @GET
-    @RolesAllowed({"ADMIN"})
+    @RolesAllowed("**")
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUser(@PathParam("id") String id) {

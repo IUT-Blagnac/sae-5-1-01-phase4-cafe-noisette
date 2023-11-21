@@ -19,7 +19,7 @@ public class UserMapper {
         PBKDF2Encoder encoder = new PBKDF2Encoder();
 
         entity.setPassword(encoder.encode(dto.getPassword()));
-        entity.setRole(dto.getRole());
+        entity.setRoles(dto.getRoles());
 
 //        if(dto.getPlayerInfo() != null){
 //            entity.setPlayerInfo(PlayerInfoMapper.toEntity(dto.getPlayerInfo()));
@@ -35,7 +35,7 @@ public class UserMapper {
         dto.setFirstname(entity.getFirstname());
         dto.setLastname(entity.getLastname());
         dto.setEmail(entity.getEmail());
-        dto.setRole(entity.getRole());
+        dto.setRoles(entity.getRoles());
         dto.setPassword(entity.getPassword());
 
         if(entity.getPlayerInfo() != null) {
