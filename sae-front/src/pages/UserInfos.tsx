@@ -1,8 +1,7 @@
 import { Rating, TextField, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React, { useState } from 'react';
+import React from 'react';
 import Circle from '@mui/icons-material/Circle';
-import { useTheme } from "../utils/theme";
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -13,18 +12,21 @@ const StyledRating = styled(Rating)({
   },
 });
 
-function UserInfos() {
-  const initialSkills = [
-    { label: 'Niveau global en projet de dev :', value: 1, color: 'secondary.main' },
-    { label: 'Codage front :', value: 1, color: 'primary.main' },
-    { label: 'Test :', value: 1, color: 'primary.main' },
-    { label: 'Documentation :', value: 1, color: 'primary.main' },
-    { label: 'Github / Scrumaster :', value: 1, color: 'primary.main' },
-    { label: 'Design / Interface :', value: 1, color: 'primary.main' },
-  ];
+export interface skillType {
+  label: string;
+  value: number;
+  color?: string;
+}
 
-  const [skills, setSkills] = useState(initialSkills);
-  const [customSkill, setCustomSkill] = useState({ label: '', value: 1 });
+interface UserInfosProps {
+  skills: skillType[];
+  setSkills: (skills: skillType[]) => void;
+  customSkill: skillType;
+  setCustomSkill: (customSkill: skillType) => void;
+}
+
+function UserInfos(props: UserInfosProps) {
+  const { skills, setSkills, customSkill, setCustomSkill } = props;
 
   const handleRatingChange = (index: any, newValue: any) => {
     const updatedSkills = [...skills];
@@ -40,52 +42,52 @@ function UserInfos() {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-    >
-      {skills.map((skill, index) => (
-        <Box
-          key={index}
-          textAlign="center"
-          mb={5}
-          display="flex"
-          alignItems="center"
-          sx={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
-        >
-          <Typography component="legend" sx={{ marginRight: '10px' }}>
-            {skill.label}
-          </Typography>
-          <Rating
-            name="rating"
-            value={skill.value}
-            onChange={(event, newValue) => handleRatingChange(index, newValue)}
-            size="large"
-            icon={<Circle fontSize="inherit" sx={{ color: skill.color }} />}
-            emptyIcon={<Circle fontSize="inherit" />}
+      <>
+        {skills.map((skill, index) => (
+            <Box
+                key={index}
+                textAlign="center"
+                mt={3}
+                display="flex"
+                alignItems="center"
+                sx={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
+            >
+              <Box flexGrow={1} alignItems="center" display="flex">
+                <Typography component="legend" sx={{ marginRight: '15px' }}>
+                  {skill.label}
+                </Typography>
+              </Box>
+              <Rating
+                  name="rating"
+                  value={skill.value}
+                  onChange={(event, newValue) => handleRatingChange(index, newValue)}
+                  size="large"
+                  icon={<Circle fontSize="inherit" sx={{ color: skill.color }} />}
+                  emptyIcon={<Circle fontSize="inherit" />}
+              />
+            </Box>
+        ))}
+        <Box textAlign="center" display="flex" alignItems="center">
+          <Box flexGrow={1} alignItems="center" display="flex">
+            <TextField
+                label="Autre"
+                value={customSkill.label}
+                variant={'standard'}
+                onChange={(event) => handleCustomSkillRatingChange(event, null)}
+                sx={{ marginRight: '10px', width: '95%' }}
+            />
+          </Box>
+          <StyledRating
+              name="rating"
+              value={customSkill.value}
+              sx={{ mt: 3 }}
+              onChange={(event, newValue) => handleCustomSkillRatingChange(null, newValue)}
+              size="large"
+              icon={<Circle fontSize="inherit" sx={{ color: 'primary.main' }} />}
+              emptyIcon={<Circle fontSize="inherit" />}
           />
         </Box>
-      ))}
-      <Box textAlign="center" display="flex" alignItems="center">
-        <TextField
-          label="Autre"
-          value={customSkill.label}
-          onChange={(event) => handleCustomSkillRatingChange(event, null)}
-          sx={{ marginRight: '10px' }}
-        />
-        <StyledRating
-          name="rating"
-          value={customSkill.value}
-          onChange={(event, newValue) => handleCustomSkillRatingChange(null, newValue)}
-          size="large"
-          icon={<Circle fontSize="inherit" sx={{ color: 'primary.main' }} />}
-          emptyIcon={<Circle fontSize="inherit" />}
-        />
-      </Box>
-    </Box>
+      </>
   );
 }
 
