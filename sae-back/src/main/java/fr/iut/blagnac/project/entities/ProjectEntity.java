@@ -18,9 +18,9 @@ public class ProjectEntity {
     @GeneratedValue
     private Long id;
 
-    private String nom;
+    private String name;
 
-    private String desc;
+    private String description;
 
     @OneToOne
     @JoinColumn(name = "contact_id")

@@ -19,11 +19,11 @@ public class ProjectDTO {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("nom")
-    private String nom;
+    @JsonProperty("name")
+    private String name;
 
-    @JsonProperty("desc")
-    private String desc;
+    @JsonProperty("description")
+    private String description;
 
     @JsonProperty("contact")
     private UserDTO contact;

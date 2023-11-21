@@ -1,10 +1,7 @@
 package fr.iut.blagnac.teams.entities;
 
-import fr.iut.blagnac.project.dtos.ProjectDTO;
 import fr.iut.blagnac.project.entities.ProjectEntity;
-import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
-import fr.iut.blagnac.users.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,8 +31,17 @@ public class TeamEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProjectEntity project;
 
-    private ArrayList<UserDTO> members;
+    @ManyToMany
+    @JoinTable(
+            name = "team_members",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private ArrayList<UserEntity> members;
 
+    @OneToOne
+    @JoinColumn(name = "leader_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity leader;
 
 

@@ -11,8 +11,8 @@ public class ProjectMapper {
     public static ProjectEntity toEntity(ProjectDTO dto) {
         ProjectEntity entity = new ProjectEntity();
         entity.setId(dto.getId());
-        entity.setNom(dto.getNom());
-        entity.setDesc(dto.getDesc());
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
 
         return entity;
     }
@@ -20,8 +20,8 @@ public class ProjectMapper {
     public static ProjectDTO toDTO(ProjectEntity entity) {
         ProjectDTO dto = new ProjectDTO();
         dto.setId(entity.getId());
-        dto.setNom(entity.getNom());
-        dto.setDesc(entity.getDesc());
+        dto.setName(entity.getName());
+        dto.setDescription(entity.getDescription());
 
         if(entity.getContact() != null) {
             dto.setContact(UserMapper.toDTO(entity.getContact()));
