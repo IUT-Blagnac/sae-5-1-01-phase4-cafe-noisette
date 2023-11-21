@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import Navbar from "./elements/Navbar";
 import {Box, CssBaseline, ThemeProvider} from "@mui/material";
-import Footer from "./elements/Footer";
 import {useTheme} from "./utils/theme";
 import ProjectList from "./pages/projects/ProjectList";
 import UserInfos from './pages/UserInfos';

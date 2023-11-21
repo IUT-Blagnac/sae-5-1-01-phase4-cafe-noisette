@@ -2,7 +2,6 @@ import { Rating, TextField, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import Circle from '@mui/icons-material/Circle';
-import {useTheme} from "../utils/theme";
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -14,10 +13,9 @@ const StyledRating = styled(Rating)({
 });
 
 function UserInfos() {
-  const theme = useTheme();
   const initialSkills = [
-    { label: 'Niveau global en projet de dev :', value: 1, color: theme.palette.primary.main },
-    { label: 'Codage front :', value: 1, color: theme.palette.secondary .main },
+    { label: 'Niveau global en projet de dev :', value: 1, color: 'primary.main' },
+    { label: 'Codage front :', value: 1, color: 'secondary.main' },
     { label: 'Test :', value: 1, color: 'orange' },
     { label: 'Documentation :', value: 1, color: 'orange' },
     { label: 'Github / Scrumaster :', value: 1, color: 'orange' },
@@ -65,7 +63,7 @@ function UserInfos() {
             value={skill.value}
             onChange={(event, newValue) => handleRatingChange(index, newValue)}
             size="large"
-            icon={<Circle fontSize="inherit" style={{ color: skill.color }} />}
+            icon={<Circle fontSize="inherit" sx={{ color: skill.color }} />}
             emptyIcon={<Circle fontSize="inherit" />}
           />
         </Box>
