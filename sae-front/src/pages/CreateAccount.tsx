@@ -58,12 +58,12 @@ function CreateAccount() {
 
   const commonTextFieldStyle = {
     width: '20%',
-    marginBottom: 10,
+    marginBottom: 1,
   };
 
   const roleTextFieldStyle = {
     ...commonTextFieldStyle,
-    marginBottom: 30,
+    marginBottom: 3,
   };
 
   return (
@@ -119,10 +119,11 @@ function CreateAccount() {
         value={role}
         onChange={handleChange}
       >
-        <MenuItem value="TEACHER">Teacher</MenuItem>
-        <MenuItem value="STUDENT">Student</MenuItem>
+        <MenuItem value="TEACHER">Professeur</MenuItem>
+        <MenuItem value="STUDENT_INIT">Étudiant INITIAL</MenuItem>
+          <MenuItem value="STUDENT_ALT">Étudiant ALTERNANT</MenuItem>
         <MenuItem value="CONTACT">Contact</MenuItem>
-        <MenuItem value="ADMIN">Admin</MenuItem>
+        {/*<MenuItem value="ADMIN">Admin</MenuItem>*/}
       </TextField>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <Button variant="contained" onClick={handleSubmit}>Créer votre compte</Button>

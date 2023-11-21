@@ -32,7 +32,7 @@ function CreateFormPage() {
         id="outlined-basic"
         label="Nom d'utilisateur"
         variant="outlined"
-        sx={{ marginBottom: 30 }}
+        sx={{ marginBottom: '30px' }}
         value={username}
         onChange={handleUsernameChange}
       />
@@ -41,7 +41,7 @@ function CreateFormPage() {
         label="Mot de passe"
         variant="outlined"
         type="password"
-        sx={{ marginBottom: 30 }}
+        sx={{ marginBottom: '30px' }}
         value={password}
         onChange={handlePasswordChange}
       />
