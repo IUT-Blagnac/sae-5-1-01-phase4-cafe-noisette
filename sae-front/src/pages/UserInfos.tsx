@@ -2,7 +2,7 @@ import { Rating, TextField, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import Circle from '@mui/icons-material/Circle';
-import {useTheme} from "../utils/theme";
+import { useTheme } from "../utils/theme";
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -54,9 +54,9 @@ function UserInfos() {
           mb={5}
           display="flex"
           alignItems="center"
-          style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
+          sx={{ borderBottom: '1px solid #ccc', paddingBottom: '10px' }}
         >
-          <Typography component="legend" style={{ marginRight: '10px' }}>
+          <Typography component="legend" sx={{ marginRight: '10px' }}>
             {skill.label}
           </Typography>
           <Rating
@@ -74,14 +74,14 @@ function UserInfos() {
           label="Autre"
           value={customSkill.label}
           onChange={(event) => handleCustomSkillRatingChange(event, null)}
-          style={{ marginRight: '10px' }}
+          sx={{ marginRight: '10px' }}
         />
         <StyledRating
           name="rating"
           value={customSkill.value}
           onChange={(event, newValue) => handleCustomSkillRatingChange(null, newValue)}
           size="large"
-          icon={<Circle fontSize="inherit" sx={{color:'primary.main'}} />}
+          icon={<Circle fontSize="inherit" sx={{ color: 'primary.main' }} />}
           emptyIcon={<Circle fontSize="inherit" />}
         />
       </Box>
