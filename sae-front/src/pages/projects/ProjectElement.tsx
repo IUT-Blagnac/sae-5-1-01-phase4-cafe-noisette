@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, Card, Typography} from "@mui/material";
+import {Box, Button, Card, Typography} from "@mui/material";
 import {Project} from "../../utils/Project";
 
 interface ProjectElementProps {
@@ -8,10 +8,17 @@ interface ProjectElementProps {
 
 function ProjectElement (props: ProjectElementProps) {
     const {project} = props
+
+    function handleSelect () {
+
+    }
+
     return (
         <Box>
-            <Card>
-                <Typography variant={"h5"} sx={{width:'25em'}}>{project.name}</Typography>
+            <Card sx={{maxWidth:'300px', height:'200px', m:2,p:2}}>
+                <Typography variant={"h4"}>{project.name}</Typography>
+                <Typography variant={"body1"}>{project.description}</Typography>
+                <Button variant={"contained"} sx={{width:'100%'}} onClick={handleSelect}>Select this project</Button>
             </Card>
         </Box>
     )

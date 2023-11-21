@@ -28,7 +28,6 @@ function App() {
                             <Route path="/login" element={<Login />} />
                             <Route path="/login/createAccount" element={<CreateAccount />} />
                         </Routes>
-                        <Footer/>
                 </Box>
         </ThemeProvider>
 

@@ -2,6 +2,7 @@ import { Rating, TextField, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import Circle from '@mui/icons-material/Circle';
+import {useTheme} from "../utils/theme";
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -13,9 +14,10 @@ const StyledRating = styled(Rating)({
 });
 
 function UserInfos() {
+  const theme = useTheme();
   const initialSkills = [
-    { label: 'Niveau global en projet de dev :', value: 1, color: 'purple' },
-    { label: 'Codage front :', value: 1, color: 'orange' },
+    { label: 'Niveau global en projet de dev :', value: 1, color: theme.palette.primary.main },
+    { label: 'Codage front :', value: 1, color: theme.palette.secondary .main },
     { label: 'Test :', value: 1, color: 'orange' },
     { label: 'Documentation :', value: 1, color: 'orange' },
     { label: 'Github / Scrumaster :', value: 1, color: 'orange' },

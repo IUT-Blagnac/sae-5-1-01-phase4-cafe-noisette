@@ -7,6 +7,6 @@ export interface User {
     firstname: string;
     lastname: string;
     email: string;
-    playerInfo: PlayerInfo;
+    playerInfo: PlayerInfo | null;
     userType: UserType;
 }
