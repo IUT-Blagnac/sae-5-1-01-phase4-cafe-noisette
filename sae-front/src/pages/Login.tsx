@@ -30,18 +30,18 @@ function CreateFormPage() {
       <h1>Connexion à l'application</h1>
       <TextField
         id="outlined-basic"
-        label="Username"
+        label="Nom d'utilisateur"
         variant="outlined"
-        style={{ marginBottom: 30 }}
+        sx={{ marginBottom: 30 }}
         value={username}
         onChange={handleUsernameChange}
       />
       <TextField
         id="outlined-basic"
-        label="Password"
+        label="Mot de passe"
         variant="outlined"
         type="password"
-        style={{ marginBottom: 30 }}
+        sx={{ marginBottom: 30 }}
         value={password}
         onChange={handlePasswordChange}
       />

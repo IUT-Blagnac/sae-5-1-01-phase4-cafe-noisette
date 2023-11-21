@@ -73,7 +73,7 @@ function CreateAccount() {
         name="username"
         label="Nom d'utilisateur"
         variant="outlined"
-        style={commonTextFieldStyle}
+        sx={commonTextFieldStyle}
         value={username}
         onChange={handleChange}
       />
@@ -81,7 +81,7 @@ function CreateAccount() {
         name="firstName"
         label="Prénom"
         variant="outlined"
-        style={commonTextFieldStyle}
+        sx={commonTextFieldStyle}
         value={firstName}
         onChange={handleChange}
       />
@@ -89,7 +89,7 @@ function CreateAccount() {
         name="lastName"
         label="Nom de famille"
         variant="outlined"
-        style={commonTextFieldStyle}
+        sx={commonTextFieldStyle}
         value={lastName}
         onChange={handleChange}
       />
@@ -98,7 +98,7 @@ function CreateAccount() {
         label="Mot de passe"
         variant="outlined"
         type="password"
-        style={commonTextFieldStyle}
+        sx={commonTextFieldStyle}
         value={password}
         onChange={handleChange}
       />
@@ -106,7 +106,7 @@ function CreateAccount() {
         name="email"
         label="Email"
         variant="outlined"
-        style={commonTextFieldStyle}
+        sx={commonTextFieldStyle}
         value={email}
         onChange={handleChange}
       />
@@ -115,7 +115,7 @@ function CreateAccount() {
         select
         label="Type d'utilisateur"
         variant="outlined"
-        style={roleTextFieldStyle}
+        sx={roleTextFieldStyle}
         value={role}
         onChange={handleChange}
       >
