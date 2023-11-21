@@ -3,7 +3,6 @@ package fr.iut.blagnac.project.controller;
 import fr.iut.blagnac.project.dtos.ProjectDTO;
 import fr.iut.blagnac.project.services.ProjectService;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -18,7 +17,6 @@ public class ProjectController {
     ProjectService projectService;
 
     @GET
-    @RolesAllowed({"ADMIN"})
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("id") String id) {
