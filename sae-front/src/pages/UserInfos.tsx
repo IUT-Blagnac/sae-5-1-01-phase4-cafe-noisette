@@ -2,6 +2,7 @@ import { Rating, TextField, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React, { useState } from 'react';
 import Circle from '@mui/icons-material/Circle';
+import {useTheme} from "../utils/theme";
 
 const StyledRating = styled(Rating)({
   '& .MuiRating-iconFilled': {
@@ -14,12 +15,12 @@ const StyledRating = styled(Rating)({
 
 function UserInfos() {
   const initialSkills = [
-    { label: 'Niveau global en projet de dev :', value: 1, color: 'primary.main' },
-    { label: 'Codage front :', value: 1, color: 'secondary.main' },
-    { label: 'Test :', value: 1, color: 'orange' },
-    { label: 'Documentation :', value: 1, color: 'orange' },
-    { label: 'Github / Scrumaster :', value: 1, color: 'orange' },
-    { label: 'Design / Interface :', value: 1, color: 'orange' },
+    { label: 'Niveau global en projet de dev :', value: 1, color: 'secondary.main' },
+    { label: 'Codage front :', value: 1, color: 'primary.main' },
+    { label: 'Test :', value: 1, color: 'primary.main' },
+    { label: 'Documentation :', value: 1, color: 'primary.main' },
+    { label: 'Github / Scrumaster :', value: 1, color: 'primary.main' },
+    { label: 'Design / Interface :', value: 1, color: 'primary.main' },
   ];
 
   const [skills, setSkills] = useState(initialSkills);
@@ -80,7 +81,7 @@ function UserInfos() {
           value={customSkill.value}
           onChange={(event, newValue) => handleCustomSkillRatingChange(null, newValue)}
           size="large"
-          icon={<Circle fontSize="inherit" style={{ color: 'orange' }} />}
+          icon={<Circle fontSize="inherit" sx={{color:'primary.main'}} />}
           emptyIcon={<Circle fontSize="inherit" />}
         />
       </Box>
