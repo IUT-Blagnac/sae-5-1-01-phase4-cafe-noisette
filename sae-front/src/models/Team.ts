@@ -2,7 +2,7 @@ import {User} from "./User";
 import {Project} from "./Project";
 
 export interface Team {
-    id: number;
+    id?: number;
     name: string;
     github: string;
     project: Project;

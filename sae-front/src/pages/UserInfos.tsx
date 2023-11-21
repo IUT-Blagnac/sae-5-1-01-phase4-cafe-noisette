@@ -13,6 +13,7 @@ const StyledRating = styled(Rating)({
 });
 
 export interface skillType {
+  name: string;
   label: string;
   value: number;
   color?: string;
@@ -23,10 +24,12 @@ interface UserInfosProps {
   setSkills: (skills: skillType[]) => void;
   customSkill: skillType;
   setCustomSkill: (customSkill: skillType) => void;
+  nickname: string;
+  setNickname: (nickname: string) => void;
 }
 
 function UserInfos(props: UserInfosProps) {
-  const { skills, setSkills, customSkill, setCustomSkill } = props;
+  const { skills, setSkills, customSkill, setCustomSkill, nickname, setNickname } = props;
 
   const handleRatingChange = (index: any, newValue: any) => {
     const updatedSkills = [...skills];
@@ -36,6 +39,7 @@ function UserInfos(props: UserInfosProps) {
 
   const handleCustomSkillRatingChange = (event: any, newValue: any) => {
     setCustomSkill({
+      name: 'otherDesc',
       label: event ? event.target.value : customSkill.label,
       value: newValue ? newValue : customSkill.value,
     });
@@ -43,6 +47,14 @@ function UserInfos(props: UserInfosProps) {
 
   return (
       <>
+        <TextField
+            name="nickname"
+            label="Pseudo"
+            variant="outlined"
+            type="text"
+            value={nickname}
+            onChange={(event) => setNickname(event.target.value)}
+        />
         {skills.map((skill, index) => (
             <Box
                 key={index}

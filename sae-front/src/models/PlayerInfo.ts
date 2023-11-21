@@ -1,5 +1,5 @@
 export interface PlayerInfo {
-    id: number;
+    id?: number;
     nickname: string;
     globalLevel: number;
     chiefLevel: number;

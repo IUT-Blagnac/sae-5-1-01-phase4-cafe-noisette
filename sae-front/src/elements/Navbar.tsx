@@ -3,11 +3,14 @@ import {AppBar, Box, Button, IconButton, Switch, Toolbar} from "@mui/material";
 import { useDarkMode } from 'usehooks-ts'
 import {Castle} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
+import {useAuthUser} from "../contexts/AuthUserContext";
 
 function Navbar() {
     const { isDarkMode, toggle } = useDarkMode()
     const navigate = useNavigate()
     const pages = [{name: "Accueil", path: "/"}, {name: "About", path: "/about"}, {name: "Projects", path: "/projects"}]
+    const authUser = useAuthUser();
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="fixed">
@@ -35,7 +38,11 @@ function Navbar() {
                         ))}
                     </Box>
                     <Switch checked={isDarkMode} onChange={toggle} />
-                    <Button color="inherit" onClick={() => navigate('/login')}>Login</Button>
+                    <Box hidden={!!authUser.token}> <Button color="inherit" onClick={() => navigate('/login')}>Login</Button> </Box>
+                    <Box hidden={!authUser.token}> <Button color="inherit" onClick={() => {
+                        authUser.disconnect()
+                        navigate('/')
+                    }}>Disconnect</Button> </Box>
                 </Toolbar>
             </AppBar>
         </Box>
