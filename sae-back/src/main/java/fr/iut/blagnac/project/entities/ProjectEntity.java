@@ -1,7 +1,6 @@
 package fr.iut.blagnac.project.entities;
 
 import fr.iut.blagnac.users.entities.UserEntity;
-import fr.iut.blagnac.users.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
