@@ -29,17 +29,14 @@ public class TeamDTO {
     @JsonProperty("github")
     private String github;
 
-    @JsonProperty("project")
-    private ProjectDTO Project;
+    @JsonProperty("projectId")
+    private Long ProjectId;
 
-    @JsonProperty("members")
-    private  ArrayList<UserDTO> members;
+    @JsonProperty("membersId")
+    private  ArrayList<Long> membersId;
 
-    @JsonProperty("playerInfo")
-    private PlayerInfoDTO playerInfo;
-
-    @JsonProperty("leader")
-    private UserDTO leader;
+    @JsonProperty("leaderId")
+    private Long leaderId;
 
 
 }
