@@ -9,7 +9,7 @@ const darkTheme = createTheme( {
             main: '#FFA500',
         },
         secondary: {
-            main: '#800080',
+            main: '#6c006c',
         },
     },
 })
@@ -18,7 +18,7 @@ const lightTheme = createTheme( {
     palette: {
         mode: 'light',
         primary: {
-            main: '#800080',
+            main: '#6c006c',
         },
         secondary: {
             main: '#FFA500',
