@@ -2,6 +2,9 @@ package fr.iut.blagnac.users.services;
 
 import fr.iut.blagnac.authentication.dtos.AuthRequest;
 import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
+import fr.iut.blagnac.authentication.utils.PermissionChecker;
+import fr.iut.blagnac.exceptions.SAE5ManagementException;
+import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.PlayerInfoEntity;
 import fr.iut.blagnac.users.entities.UserEntity;
@@ -13,6 +16,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +34,18 @@ public class UserService {
     @Inject
     PlayerInfoRepository playerInfoRepository;
 
-    public UserDTO getUser(Long id) {
+    public UserDTO getUser(Long id, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findById(id);
 
             if (userEntity == null) {
                 LOGGER.error("User not found");
-                return null;
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            if (!PermissionChecker.checkUsername(securityContext, userEntity.getUsername(), true)) {
+                LOGGER.error("User not authorized");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
             }
 
             UserDTO userDTO = UserMapper.toDTO(userEntity);
@@ -44,7 +53,7 @@ public class UserService {
             return userDTO;
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -54,15 +63,13 @@ public class UserService {
 
             if (userEntity == null) {
                 LOGGER.error("User not found");
-                return null;
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
-            UserDTO userDTO = UserMapper.toDTO(userEntity);
-
-            return userDTO;
+            return UserMapper.toDTO(userEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -80,7 +87,7 @@ public class UserService {
             return UserMapper.toDTO(userEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -90,26 +97,19 @@ public class UserService {
 
             if (userEntity == null) {
                 LOGGER.error("User not found");
-                throw new PersistenceException("User not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
             if (userEntity.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
                 return UserMapper.toDTO(userEntity);
             } else {
                 LOGGER.error("Wrong password");
-                throw new PersistenceException("Wrong password");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.WRONG_PASSWORD);
             }
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
-
-//    @Transactional
-//    public UserDTO createUser(UserDTO userDTO) {
-//        User userEntity = new User(userDTO.getUsername(), userDTO.getAge());
-//        userRepository.persist(userEntity);
-//
-//    }
 
 }
