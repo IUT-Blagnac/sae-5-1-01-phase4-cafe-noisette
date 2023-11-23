@@ -17,14 +17,6 @@ public class TeamMapper {
         entity.setName(dto.getName());
         entity.setGithub(dto.getGithub());
 
-        ArrayList<UserEntity> entityTeamMembers = new ArrayList<>();
-        dto.getMembers().forEach(member -> {
-            entityTeamMembers.add(UserMapper.toEntity(member));
-        });
-
-        entity.setMembers(entityTeamMembers);
-
-
         return entity;
     }
 
@@ -34,19 +26,21 @@ public class TeamMapper {
         dto.setName(entity.getName());
         dto.setGithub(entity.getGithub());
 
-        ArrayList<UserDTO> dtoTeamMembers = new ArrayList<>();
+        ArrayList<Long> dtoTeamMembers = new ArrayList<>();
         entity.getMembers().forEach(member -> {
-            dtoTeamMembers.add(UserMapper.toDTO(member));
+            dtoTeamMembers.add(member.getId());
         });
-
-        dto.setMembers(dtoTeamMembers);
+        
+        dto.setMembersId(dtoTeamMembers);
+        
+       
 
         if(entity.getLeader() != null) {
-            dto.setLeader(UserMapper.toDTO(entity.getLeader()));;
+            dto.setLeaderId(entity.getLeader().getId());
         }
 
         if(entity.getProject() != null) {
-            dto.setProject(ProjectMapper.toDTO(entity.getProject()));
+            dto.setProjectId(entity.getProject().getId());
         }
 
         return dto;
