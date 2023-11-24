@@ -9,7 +9,8 @@ public enum SAE5ManagementExceptionTypes {
     USER_NOT_AUTHENTICATED("User not authenticated", 401),
     USER_NOT_AUTHORIZED("User not authorized", 403),
     WRONG_PASSWORD("Wrong password", 401),
-    PERSISTENCE_ERROR("Persistence error", 500);
+    PERSISTENCE_ERROR("Persistence error", 500),
+    USER_ALREADY_EXISTS("User already exists", 409);
 
     @Getter
     private String message;

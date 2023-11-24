@@ -34,48 +34,53 @@ public class UserService {
     @Inject
     PlayerInfoRepository playerInfoRepository;
 
-    public UserDTO getUser(Long id, SecurityContext securityContext) {
+    public UserDTO getUserById(Long id, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findById(id);
 
-            if (userEntity == null) {
-                LOGGER.error("User not found");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
-            }
-
-            if (!PermissionChecker.checkUsername(securityContext, userEntity.getUsername(), true)) {
-                LOGGER.error("User not authorized");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
-            }
-
-            UserDTO userDTO = UserMapper.toDTO(userEntity);
-
-            return userDTO;
+            return getUser(securityContext, userEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
-    public UserDTO getUserByUsername(String username) {
+    public UserDTO getUserByUsername(String username, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(username);
 
-            if (userEntity == null) {
-                LOGGER.error("User not found");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
-            }
-
-            return UserMapper.toDTO(userEntity);
+            return getUser(securityContext, userEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
+    }
+
+    private UserDTO getUser(SecurityContext securityContext, UserEntity userEntity) {
+        if (userEntity == null) {
+            LOGGER.error("User not found");
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+        }
+
+        if (!PermissionChecker.checkUsername(securityContext, userEntity.getUsername(), true)) {
+            LOGGER.error("User not authorized");
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
+        }
+
+        UserDTO userDTO = UserMapper.toDTO(userEntity);
+
+        return userDTO;
     }
 
     @Transactional
     public UserDTO createUser(UserDTO userDTO) {
         try {
+            if (userRepository.findByUsername(userDTO.getUsername()) != null ||
+                    userRepository.findByEmail(userDTO.getEmail()) != null) {
+                LOGGER.error("User already exists");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_ALREADY_EXISTS);
+            }
+
             UserEntity userEntity = UserMapper.toEntity(userDTO);
             PlayerInfoEntity playerInfoEntity = PlayerInfoMapper.toEntity(userDTO.getPlayerInfo());
 

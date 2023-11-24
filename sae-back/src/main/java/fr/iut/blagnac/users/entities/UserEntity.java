@@ -27,6 +27,7 @@ public class UserEntity {
 
     private String lastname;
 
+    @Column(unique = true)
     private String email;
 
     @OneToOne

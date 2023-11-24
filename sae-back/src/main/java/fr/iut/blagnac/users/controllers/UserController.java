@@ -22,18 +22,37 @@ public class UserController {
     @Inject
     SecurityContext securityContext;
 
+    public Response getUserById(String id) {
+        if (id == null || id.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        UserDTO userDTO = userService.getUserById(Long.parseLong(id), securityContext);
+
+        return Response.ok(userDTO).build();
+    }
+
+    public Response getUserByUsername(String username) {
+        if (username == null || username.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        UserDTO userDTO = userService.getUserByUsername(username, securityContext);
+
+        return Response.ok(userDTO).build();
+    }
+
     @GET
     @RolesAllowed("**")
-    @Path("/{id}")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("id") String id) {
+    public Response getUser(@QueryParam("id") Long id, @QueryParam("username") String username) {
         try {
-            if (id == null || id.isEmpty()) {
+            if (id != null) {
+                return getUserById(id.toString());
+            } else if (username != null) {
+                return getUserByUsername(username);
+            } else {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            UserDTO userDTO = userService.getUser(Long.parseLong(id), securityContext);
-
-            return Response.ok(userDTO).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }
