@@ -2,9 +2,9 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import { useState, ChangeEvent } from "react";
-import {Navigate, useNavigate} from "react-router-dom";
-import {login} from "../rest/queries";
-import {useAuthUser} from "../contexts/AuthUserContext";
+import { Navigate, useNavigate } from "react-router-dom";
+import { getUserByUsername, login } from "../rest/queries";
+import { useAuthUser } from "../contexts/AuthUserContext";
 
 function CreateFormPage() {
     //Mise des valeurs par défauts
@@ -25,9 +25,18 @@ function CreateFormPage() {
     const handleSubmit = () => {
         login(username, password).then((response) => {
             if (response.response.status === 200) {
-                console.log("token", response.json)
                 if (response.json) {
                     authUser.updateToken(response.json.token);
+                    getUserByUsername(username).then((response) => {
+                            if (response.response.status === 200) {
+                                if (response.json) {
+                                    authUser.updateUser(response.json);
+                                }
+                            } else {
+                                console.log("Error");
+                            }
+                        }
+                    );
                 }
                 navigate("/projects");
             } else {
