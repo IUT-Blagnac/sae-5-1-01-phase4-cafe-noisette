@@ -2,6 +2,7 @@ package fr.iut.blagnac.project.mappers;
 
 import fr.iut.blagnac.project.dtos.ProjectDTO;
 import fr.iut.blagnac.project.entities.ProjectEntity;
+import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.mappers.UserMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
@@ -22,9 +23,9 @@ public class ProjectMapper {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
-
         if(entity.getContact() != null) {
-            dto.setContact(UserMapper.toDTO(entity.getContact()));
+            UserDTO userDTO = UserMapper.toDTO(entity.getContact());
+            dto.setContactId(userDTO.getId());
         }
 
         return dto;

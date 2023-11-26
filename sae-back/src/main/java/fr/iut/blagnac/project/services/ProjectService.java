@@ -1,5 +1,7 @@
 package fr.iut.blagnac.project.services;
 
+import fr.iut.blagnac.exceptions.SAE5ManagementException;
+import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
 import fr.iut.blagnac.project.dtos.ProjectDTO;
 import fr.iut.blagnac.project.entities.ProjectEntity;
 import fr.iut.blagnac.project.mappers.ProjectMapper;
@@ -65,18 +67,21 @@ public class ProjectService {
     public ProjectDTO createProject(ProjectDTO projectDTO) {
         try {
             ProjectEntity projectEntity = ProjectMapper.toEntity(projectDTO);
-            UserEntity userEntity = UserMapper.toEntity(projectDTO.getContact());
+            UserEntity userEntity = userRepository.findById(projectDTO.getContactId());
 
-            userRepository.persist(userEntity);
-
+            if(userEntity == null) {
+                LOGGER.error("user not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
             projectEntity.setContact(userEntity);
+            LOGGER.error("added contact");
 
             projectRepository.persist(projectEntity);
+            LOGGER.error("project persisted");
             return ProjectMapper.toDTO(projectEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting project", e);
             throw e;
         }
     }
-
 }
