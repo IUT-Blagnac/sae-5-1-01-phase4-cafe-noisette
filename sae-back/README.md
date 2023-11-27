@@ -24,3 +24,7 @@ mvn quarkus:dev
 ## Build de l'application
 
 TODO (via Docker)
+
+## Déploiement de l'application
+
+TODO (sur un serveur)

@@ -20,3 +20,7 @@ npm start
 ```bash
 npm run build
 ```
+
+## Déploiement de l'application
+
+TODO (via github pages)

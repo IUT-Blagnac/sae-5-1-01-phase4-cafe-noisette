@@ -37,24 +37,28 @@ endif::[]
 // /!\ A MODIFIER !!!
 :baseURL: https://github.com/IUT-Blagnac/S5.A.01-template.git
 
-// Tags
-image:{baseURL}/actions/workflows/build.yml/badge.svg[Build] 
-image:{baseURL}/actions/workflows/tests.yml/badge.svg[Tests] 
-image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg[License: MPL-2.0, link="https://opensource.org/licenses/MPL-2.0"]
 //---------------------------------------------------------------
 
 == Équipe
 
-Projet est réalisé par::
+Ce projet est réalisé par::
 
-- https://github.com/BryceFuerty[Fuertes Bryce]
-- https://github.com/AurelienSP[Sanchez-Porro Aurélien]
-- https://github.com/Jolex35[Jolas Alex]
-- https://github.com/NolanJacquemont[Jacquemont Nolan]
-- https://github.com/EternalNico[Sacilotto Nicolas]
-- https://github.com/Darknxss[Grasser James]
-...
+- https://github.com/NolanJacquemont[Jacquemont Nolan] - Chef de projet
+- https://github.com/BryceFuerty[Fuertes Bryce] - Développeur Backend
+- https://github.com/AurelienSP[Sanchez-Porro Aurélien] - Développeur Backend
+- https://github.com/Jolex35[Jolas Alex] - Développeur Frontend
+- https://github.com/EternalNico[Sacilotto Nicolas] - Développeur Frontend
+- https://github.com/Darknxss[Grasser James] - Développeur Frontend
 
+== Documentations techniques
+
+=== Documentation technique backend
+
+La documentation technique du backend est disponible xref:sae-back/README.md[ici].
+
+=== Documentation technique frontend
+
+La documentation technique du frontend est disponible xref:sae-front/README.md[ici].
 
 == Contexte général
 
