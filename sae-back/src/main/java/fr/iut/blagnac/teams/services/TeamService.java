@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.iut.blagnac.exceptions.SAE5ManagementException;
+import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
 import fr.iut.blagnac.project.entities.ProjectEntity;
 import fr.iut.blagnac.project.repositories.ProjectRepository;
 import fr.iut.blagnac.teams.dtos.TeamDTO;
@@ -80,19 +82,21 @@ public class TeamService {
             ProjectEntity project = projectRepository.findById(teamDTO.getProjectId());
             teamEntity.setProject(project);
 
-            ArrayList<UserEntity> teamMembersEntities = new ArrayList<>();
-            teamDTO.getMembersId().forEach(t -> teamMembersEntities.add(userRepository.findById(t)));
-            teamEntity.setMembers(teamMembersEntities);
-
-
-
             teamRepository.persist(teamEntity);
+            
+            ArrayList<UserEntity> teamMembersEntities = new ArrayList<>();
+            teamDTO.getMembersId().forEach(t -> {
+                UserEntity user = userRepository.findById(t);
+                user.setTeam(teamEntity);
+                teamMembersEntities.add(user);
+            });
+            teamEntity.setMembers(teamMembersEntities);
            
             return TeamMapper.toDTO(teamEntity);
 
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 }

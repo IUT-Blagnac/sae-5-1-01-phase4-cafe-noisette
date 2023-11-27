@@ -28,7 +28,6 @@ public class TeamEntity {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private ProjectEntity project;
 
     @ManyToMany
@@ -36,12 +35,10 @@ public class TeamEntity {
             name = "team_members",
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private ArrayList<UserEntity> members;
 
     @OneToOne
     @JoinColumn(name = "leader_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity leader;
 
 
