@@ -1,5 +1,6 @@
 import {User} from "../models/User";
 import {get, post} from "./restUtils";
+import {Project} from "../models/Project";
 
 export const createAccount = async (account: User) => {
     return await post<User, User>('users', account);
@@ -16,4 +17,8 @@ export const getUserById = async (id: string) => {
 
 export const getUserByUsername = async (username: string) => {
     return await get<User>('users?username=' + username, true);
+}
+
+export const getProjects = async () => {
+    return await get<Project[]>('projects', true);
 }
