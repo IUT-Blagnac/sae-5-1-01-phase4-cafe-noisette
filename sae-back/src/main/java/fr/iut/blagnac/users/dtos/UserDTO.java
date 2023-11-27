@@ -42,6 +42,10 @@ public class UserDTO {
     @JsonProperty("roles")
     private Set<UserRole> roles;
 
+    @JsonProperty("teamId")
+    private Long teamId;
+
+
 
 
 }
