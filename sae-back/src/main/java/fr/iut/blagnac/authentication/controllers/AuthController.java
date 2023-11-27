@@ -5,6 +5,7 @@ import fr.iut.blagnac.authentication.dtos.AuthResponse;
 import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
 import fr.iut.blagnac.authentication.utils.TokenUtils;
 import fr.iut.blagnac.constants.AuthConstants;
+import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.services.UserService;
 import jakarta.annotation.security.PermitAll;
@@ -42,6 +43,8 @@ public class AuthController {
             } catch (Exception e) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }

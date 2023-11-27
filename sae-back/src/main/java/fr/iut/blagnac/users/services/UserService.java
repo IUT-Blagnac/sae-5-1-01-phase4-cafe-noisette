@@ -68,6 +68,7 @@ public class UserService {
         }
 
         UserDTO userDTO = UserMapper.toDTO(userEntity);
+        LOGGER.info("User " + userEntity.getUsername() + " found");
 
         return userDTO;
     }
@@ -89,6 +90,7 @@ public class UserService {
             userEntity.setPlayerInfo(playerInfoEntity);
 
             userRepository.persist(userEntity);
+            LOGGER.info("User " + userEntity.getUsername() + " created");
             return UserMapper.toDTO(userEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
@@ -114,6 +116,9 @@ public class UserService {
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        } catch (Exception e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHENTICATED, e);
         }
     }
 
