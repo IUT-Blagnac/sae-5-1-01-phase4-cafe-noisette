@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import {User} from "../../models/User";
 import {UserType} from "../../models/UserType";
 import MenuItem from "@mui/material/MenuItem";
+import {getProjects} from "../../rest/queries";
 
 function ProjectList () {
     const [newProject, setNewProject] = React.useState({name:'', description:''} as Project)
@@ -13,6 +14,19 @@ function ProjectList () {
     const [clients, setClients] = React.useState([{id:1,email:'email@thales', username:'Bryva',firstname:'Bryce',lastname:'Fuertes',roles:[UserType.CONTACT]}] as User[])
     const [projects, setProjects] =
         React.useState([{id:1, client:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'},{id:2, client:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'},{id:3, client:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'}] as Project[])
+
+    function requestProjects () {
+        getProjects().then((response) => {
+                if (response.responseCode === 200) {
+                    if (response.data) {
+                        setProjects(response.data);
+                    }
+                } else {
+                    console.log("Error while getting projects: " + response.errorMessage);
+                }
+        }
+        )
+    }
 
     function handleAddProject () {
         if (newProject.name.trim().length >= 2 && newProject.description.trim().length >= 5) {
