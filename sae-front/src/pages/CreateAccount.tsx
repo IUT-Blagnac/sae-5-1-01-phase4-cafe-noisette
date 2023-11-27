@@ -72,13 +72,6 @@ function CreateAccount() {
 
         setError("");
 
-        console.log("Username:", username);
-        console.log("First Name:", firstName);
-        console.log("Last Name:", lastName);
-        console.log("Password:", password);
-        console.log("Email:", email);
-        console.log("Roles:", getUserTypeByString(role));
-
         const user: User = {
             username: username,
             firstname: firstName,
@@ -103,11 +96,10 @@ function CreateAccount() {
 
         createAccount(user)
             .then((response) => {
-                if (response.response.status === 200) {
+                if (response.responseCode === 200) {
                     navigate('/login');
-                    console.log(response.json)
                 } else {
-                    setError("Une erreur est survenue lors de la création de votre compte.");
+                    setError("Une erreur est survenue lors de la création de votre compte: '" + response.errorMessage + "'");
                 }
             })
             .catch((error) => {

@@ -24,23 +24,23 @@ function CreateFormPage() {
     //Gère la soumission lors de l'envoie du formulaire
     const handleSubmit = () => {
         login(username, password).then((response) => {
-            if (response.response.status === 200) {
-                if (response.json) {
-                    authUser.updateToken(response.json.token);
+            if (response.responseCode === 200) {
+                if (response.data) {
+                    authUser.updateToken(response.data.token);
                     getUserByUsername(username).then((response) => {
-                            if (response.response.status === 200) {
-                                if (response.json) {
-                                    authUser.updateUser(response.json);
+                            if (response.responseCode === 200) {
+                                if (response.data) {
+                                    authUser.updateUser(response.data);
                                 }
                             } else {
-                                console.log("Error");
+                                console.log("Error while logging in: " + response.errorMessage);
                             }
                         }
                     );
                 }
                 navigate("/projects");
             } else {
-                console.log("Error");
+                console.log("Error while logging in: " + response.errorMessage);
             }
         });
     };
