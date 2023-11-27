@@ -4,5 +4,5 @@ export interface Project {
     id?: number;
     name: string;
     description: string;
-    contact: User | null;
+    client: User | null | undefined;
 }

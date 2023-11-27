@@ -10,20 +10,25 @@ import MenuItem from "@mui/material/MenuItem";
 function ProjectList () {
     const [newProject, setNewProject] = React.useState({name:'', description:''} as Project)
     const [admin, setAdmin] = React.useState(false)
-    const [contacts, setContacts] = React.useState([{id:1,email:'email@thales', username:'Bryva',firstname:'Bryce',lastname:'Fuertes',roles:[UserType.CONTACT]}] as User[])
+    const [clients, setClients] = React.useState([{id:1,email:'email@thales', username:'Bryva',firstname:'Bryce',lastname:'Fuertes',roles:[UserType.CONTACT]}] as User[])
     const [projects, setProjects] =
-        React.useState([{id:1, contact:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'},{id:1, contact:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'},{id:1, contact:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'}] as Project[])
+        React.useState([{id:1, client:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'},{id:2, client:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'},{id:3, client:null, name:'Thalès', description:'Je mange des macros excel, j adore 🤓🤓🤓'}] as Project[])
 
     function handleAddProject () {
-        if (newProject.name.trim.length <2 || newProject.description.trim.length < 5) {
+        if (newProject.name.trim().length >= 2 && newProject.description.trim().length >= 5) {
+            console.log('gedis')
             setProjects([...projects, {
                 name: newProject.name.trim(),
                 description: newProject.description.trim(),
                 id: projects.length + 1,
-                contact: null
+                client: newProject.client
             }])
-            setNewProject({name:'', description:'',id:0,contact:null })
+            setNewProject({name:'', description:'',id:0,client: null})
         }
+    }
+
+    function handleRemoveProject (project: Project) {
+        setProjects(projects.filter((p) => p.id !== project.id))
     }
 
     return (
@@ -33,7 +38,7 @@ function ProjectList () {
             {projects.length === 0 && <Typography variant={"h5"} sx={{m:2 }}>No projects</Typography>}
             <Box sx={{display:'flex', maxWidth:'100vw', flexFlow:'wrap'}}>
                 {projects.length > 0 && projects.map((project) => (
-                    <ProjectElement key={project.id} project={project} admin={admin}/>
+                    <ProjectElement key={project.id} project={project} admin={admin} handleRemoveProject={handleRemoveProject}/>
                 ))}
 
                 {admin && <Card sx={{maxWidth:'300px', height:'300px', m:2,p:2, border:'2px dashed #ccc', borderRadius:'5px'}}>
@@ -48,10 +53,10 @@ function ProjectList () {
                         rows={2}
                     />
                     <FormControl fullWidth sx={{mt:2}} size={'small'}>
-                        <InputLabel>Contact</InputLabel>
-                        <Select label={'Contact'} name={'Contact'} >
-                            {contacts.map((contact) => (
-                                <MenuItem key={contact.id} value={contact.id}>{contact.lastname} {contact.firstname}</MenuItem>
+                        <InputLabel>Client</InputLabel>
+                        <Select label={'Client'} name={'Client'} onChange={(event) => setNewProject({...newProject, client:clients.find((client) => client.id === event.target.value)})}>
+                            {clients.map((client) => (
+                                <MenuItem key={client.id} value={client.id}>{client.lastname} {client.firstname}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
