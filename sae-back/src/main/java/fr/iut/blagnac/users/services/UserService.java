@@ -104,7 +104,7 @@ public class UserService {
 
             if (userEntity == null) {
                 LOGGER.error("User not found");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_DOES_NOT_EXIST);
             }
 
             if (userEntity.getPassword().equals(passwordEncoder.encode(authRequest.getPassword()))) {
@@ -116,9 +116,6 @@ public class UserService {
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
-        } catch (Exception e) {
-            LOGGER.error("Error while getting user", e);
-            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHENTICATED, e);
         }
     }
 

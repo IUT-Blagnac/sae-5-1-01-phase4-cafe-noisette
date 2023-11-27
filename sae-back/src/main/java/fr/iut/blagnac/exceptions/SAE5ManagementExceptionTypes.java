@@ -2,6 +2,7 @@ package fr.iut.blagnac.exceptions;
 
 import lombok.Getter;
 
+@Getter
 public enum SAE5ManagementExceptionTypes {
 
     BAD_REQUEST("Bad request", 400),
@@ -10,14 +11,13 @@ public enum SAE5ManagementExceptionTypes {
     USER_NOT_AUTHORIZED("User not authorized", 403),
     WRONG_PASSWORD("Wrong password", 401),
     PERSISTENCE_ERROR("Persistence error", 500),
-    USER_ALREADY_EXISTS("User already exists", 409);
+    USER_ALREADY_EXISTS("User already exists", 409),
+    USER_DOES_NOT_EXIST("User does not exist", 404);
 
-    @Getter
-    private String message;
-    @Getter
-    private int status;
+    private final String message;
+    private final int status;
 
-    private SAE5ManagementExceptionTypes(String message, int status) {
+    SAE5ManagementExceptionTypes(String message, int status) {
         this.message = message;
         this.status = status;
     }
