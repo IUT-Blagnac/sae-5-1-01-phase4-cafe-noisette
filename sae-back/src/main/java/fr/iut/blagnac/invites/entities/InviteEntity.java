@@ -1,4 +1,4 @@
-package fr.iut.blagnac.users.entities;
+package fr.iut.blagnac.invites.entities;
 
 import fr.iut.blagnac.teams.entities.TeamEntity;
 import fr.iut.blagnac.users.enums.UserRole;
@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserEntity {
+public class InviteEntity {
 
     @Id
     @GeneratedValue
