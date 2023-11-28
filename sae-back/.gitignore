@@ -42,3 +42,4 @@ nb-configuration.xml
 # Plugin directory
 /.quarkus/cli/plugins/
 /src/main/docker-compose/sae-back-data
+/src/main/docker-compose/.env
