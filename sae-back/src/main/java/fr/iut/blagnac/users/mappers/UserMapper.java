@@ -41,7 +41,10 @@ public class UserMapper {
              dto.setPlayerInfo(PlayerInfoMapper.toDTO(entity.getPlayerInfo()));
         }
 
-        dto.setTeamId(entity.getTeam().getId());
+
+        if(entity.getTeam() != null) {
+            dto.setTeamId(entity.getTeam().getId());
+        }
 
         return dto;
     }
