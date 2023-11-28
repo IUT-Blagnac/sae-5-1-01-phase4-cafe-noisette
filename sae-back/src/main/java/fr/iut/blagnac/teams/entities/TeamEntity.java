@@ -9,9 +9,6 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 @Entity
 @Getter
 @Setter
@@ -30,11 +27,8 @@ public class TeamEntity {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @ManyToMany
-    @JoinTable(
-            name = "team_members",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @OneToMany
+    @JoinColumn(name = "members_id")
     private ArrayList<UserEntity> members;
 
     @OneToOne
