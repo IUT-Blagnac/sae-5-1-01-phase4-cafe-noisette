@@ -66,6 +66,19 @@ public class UserController {
         }
     }
 
+    @GET
+    @RolesAllowed("**")
+    @Path("/me")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMe() {
+        try {
+            UserDTO userDTO = userService.getUserByUsername(securityContext.getUserPrincipal().getName(), securityContext);
+            return Response.ok(userDTO).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
     @POST
     @PermitAll
     @Path("/")
