@@ -73,6 +73,25 @@ public class TeamService {
         }
     }
 
+    public TeamDTO getTeamByUser(Long id){
+        try{
+            UserEntity user = userRepository.findById(id);
+            TeamEntity teamEntity = teamRepository.findByUser(user);
+
+            if (teamEntity == null) {
+                LOGGER.error("User not found");
+                return null;
+            }
+
+            TeamDTO teamDTO = TeamMapper.toDTO(teamEntity);
+            return teamDTO;
+
+         } catch (PersistenceException e){
+            LOGGER.error("Error while getting user", e);
+            throw e;
+        }
+    }
+
     @Transactional
     public TeamDTO createTeam(TeamDTO teamDTO) {
         try {
