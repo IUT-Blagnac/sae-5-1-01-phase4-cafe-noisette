@@ -12,7 +12,8 @@ public enum SAE5ManagementExceptionTypes {
     WRONG_PASSWORD("Wrong password", 401),
     PERSISTENCE_ERROR("Persistence error", 500),
     USER_ALREADY_EXISTS("User already exists", 409),
-    USER_DOES_NOT_EXIST("User does not exist", 404);
+    USER_DOES_NOT_EXIST("User does not exist", 404),
+    ALREADY_IN_TEAM("User is already in a team",409);
 
     private final String message;
     private final int status;

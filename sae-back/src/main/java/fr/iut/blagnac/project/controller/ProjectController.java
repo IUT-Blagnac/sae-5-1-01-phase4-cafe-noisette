@@ -41,4 +41,15 @@ public class ProjectController {
         return Response.ok(project).build();
     }
 
+    @GET
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjects() {
+        ProjectDTO[] projectDTOs = projectService.getProjects();
+
+        return Response.ok(projectDTOs).build();
+
+    }
+
+
 }

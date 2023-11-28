@@ -12,6 +12,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Collection;
@@ -62,6 +65,32 @@ public class ProjectService {
             LOGGER.error("Error while getting project", e);
             throw e;
         }
+    }
+
+    public ProjectDTO[] getProjects(){
+         try {
+            List<ProjectEntity> projectList = projectRepository.get();
+            ProjectEntity[] projectEntity = new ProjectEntity[projectList.size()];
+            projectList.toArray(projectEntity);
+
+            ProjectDTO[] listProjectDTO = new ProjectDTO[projectList.size()];
+            int id = 0;
+
+            for (ProjectEntity projectEntity2 : projectEntity) {
+            
+                ProjectDTO projectDTO = ProjectMapper.toDTO(projectEntity2);
+                listProjectDTO[id] = projectDTO;
+
+                id+=1;
+            }
+            
+            return listProjectDTO;
+            
+
+            } catch (PersistenceException e) {
+                LOGGER.error("Error while getting projects", e);
+                throw e;
+            }
     }
 
     @Transactional
