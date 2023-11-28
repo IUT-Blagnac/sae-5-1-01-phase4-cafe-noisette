@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import java.util.Collection;
 
 @Entity
 @Getter
@@ -22,9 +21,11 @@ public class ProjectEntity {
 
     private String description;
 
-    @OneToOne
-    @JoinColumn(name = "contact_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private UserEntity contact;
+    @OneToMany
+    @JoinTable(
+            name = "project_contacts",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Collection<UserEntity> contacts;
 
 }
