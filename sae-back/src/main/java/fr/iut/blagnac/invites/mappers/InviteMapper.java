@@ -3,6 +3,7 @@ package fr.iut.blagnac.invites.mappers;
 import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
+import fr.iut.blagnac.users.mappers.PlayerInfoMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection

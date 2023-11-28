@@ -42,7 +42,7 @@ public class UserEntity {
     private Set<UserRole> roles;
 
     @ManyToOne
-    @JoinColumn(name = "team_id")
+    @JoinColumn(name = "team_id",nullable=true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private TeamEntity team;
 

@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
 @ApplicationScoped
-@Path("/users")
+@Path("/invites")
 public class inviteController {
 
     @Inject

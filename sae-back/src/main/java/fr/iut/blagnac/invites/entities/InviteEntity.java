@@ -1,6 +1,7 @@
 package fr.iut.blagnac.invites.entities;
 
 import fr.iut.blagnac.teams.entities.TeamEntity;
+import fr.iut.blagnac.users.entities.PlayerInfoEntity;
 import fr.iut.blagnac.users.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
