@@ -13,7 +13,9 @@ import fr.iut.blagnac.teams.dtos.TeamDTO;
 import fr.iut.blagnac.teams.entities.TeamEntity;
 import fr.iut.blagnac.teams.mappers.TeamMapper;
 import fr.iut.blagnac.teams.repositories.TeamRepository;
+import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
+import fr.iut.blagnac.users.mappers.UserMapper;
 import fr.iut.blagnac.users.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -53,7 +55,7 @@ public class TeamService {
         }
     }
 
-    public TeamDTO getUserByName(String name){
+    public TeamDTO getTeamByName(String name){
         try{
             TeamEntity teamEntity = teamRepository.findByName(name);
 
@@ -98,5 +100,24 @@ public class TeamService {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
+    }
+
+    @Transactional
+    public TeamDTO addMember(TeamDTO teamDTO, UserDTO userDTO) {
+        
+        TeamEntity teamEntity = TeamMapper.toEntity(teamDTO);
+        UserEntity userEntity = UserMapper.toEntity(userDTO);
+
+        if (userEntity.getTeam() != null) {
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.ALREADY_IN_TEAM);
+        }
+
+        ArrayList<UserEntity> dtoTeamMembers;
+        dtoTeamMembers = teamEntity.getMembers();
+        dtoTeamMembers.add(userEntity);
+        
+         return TeamMapper.toDTO(teamEntity);
+
+
     }
 }
