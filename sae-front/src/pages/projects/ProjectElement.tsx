@@ -1,29 +1,35 @@
 import React from "react";
-import {Box, Button, Card, IconButton, Typography} from "@mui/material";
+import {Box, Button, Card, FormControl, IconButton, InputLabel, Select, Typography} from "@mui/material";
 import {Project} from "../../models/Project";
 import {Delete, Edit} from "@mui/icons-material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import {User} from "../../models/User";
 
 interface ProjectElementProps {
     project: Project,
     admin: boolean
     handleRemoveProject: (project: Project) => void
+    clients: User[]
+    handleUpdateProject: (project: Project) => void
 }
 
 function ProjectElement (props: ProjectElementProps) {
-    const {project, admin, handleRemoveProject} = props
+    const {project, admin, handleRemoveProject, clients, handleUpdateProject} = props
     const [open, setOpen] = React.useState(false);
+    const [updateProject, setUpdateProject] = React.useState({name:'', description:'', client: null} as Project)
 
     function handleClose () {
         setOpen(false)
     }
 
-    function handleOpen () {
+    function handleUpdate () {
         setOpen(true)
+        setUpdateProject(project)
     }
 
     function handleSelect () {
@@ -32,13 +38,13 @@ function ProjectElement (props: ProjectElementProps) {
 
     return (
         <Box>
-            <Card sx={{maxWidth:'300px',minWidth:'300px', height:'300px', m:2,p:2,display:'flex', flexDirection:'column',justifyContent:'space-between'}}>
+            <Card sx={{maxWidth:'400px',minWidth:'400px', height:'400px', m:2,p:2,display:'flex', flexDirection:'column',justifyContent:'space-between'}}>
 
                 <Box sx={{display:'flex',justifyContent:'space-between'}}>
                     <Typography variant={"h4"}>{project.name}</Typography>
                     {admin &&
-                        <Box sx={{minWidth:'5em'}}>
-                            <IconButton onClick={handleOpen}>
+                        <Box sx={{minWidth:'5em', display:''}}>
+                            <IconButton onClick={handleUpdate}>
                                 <Edit/>
                             </IconButton>
                             <IconButton onClick={() => handleRemoveProject(project)}>
@@ -47,10 +53,9 @@ function ProjectElement (props: ProjectElementProps) {
                         </Box>
                     }
                 </Box>
-                <Typography variant={"body1"}>{project.description}</Typography>
+                <Typography variant={"body1"} sx={{height:'8 em'}}>{project.description}</Typography>
                 <Typography>{project.client?.username}</Typography>
                 <Button variant={"contained"} sx={{width:'100%'}} onClick={handleSelect}>Select this project</Button>
-
             </Card>
 
             <Dialog
@@ -63,15 +68,32 @@ function ProjectElement (props: ProjectElementProps) {
                     Edit project
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Let Google help apps determine location. This means sending anonymous
-                        location data to Google, even when no apps are running.
-                    </DialogContentText>
+                    <Card sx={{maxWidth:'400px', p:2, borderRadius:'5px'}}>
+                        <TextField label={'Nom du projet'} value={updateProject.name} error={updateProject.name.trim().length<2}  size={'small'} onChange={(event) => setUpdateProject({...updateProject, name:event.target.value})} sx={{width:'100%'}}/>
+                        <TextField
+                            error={updateProject.description.trim().length<5}
+                            onChange={(event) => setUpdateProject({...updateProject, description:event.target.value})}
+                            sx={{mt:2,width:'100%'}}
+                            label={'Description'}
+                            value={updateProject.description}
+                            style={{textAlign: 'left'}}
+                            multiline
+                            rows={6}
+                        />
+                        <FormControl fullWidth sx={{mt:2}} size={'small'} >
+                            <InputLabel>Client</InputLabel>
+                            <Select label={'Client'} value={project.client?.id} name={'Client'} onChange={(event) => setUpdateProject({...updateProject, client:clients.find((client) => client.id === event.target.value)})}>
+                                {clients.map((client) => (
+                                    <MenuItem key={client.id} value={client.id}>{client.lastname} {client.firstname}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Card>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Disagree</Button>
-                    <Button onClick={handleClose} autoFocus>
-                        Agree
+                    <Button onClick={handleClose}>Annuler</Button>
+                    <Button onClick={() => (handleUpdateProject(updateProject), handleClose())} autoFocus>
+                        Modifier
                     </Button>
                 </DialogActions>
             </Dialog>

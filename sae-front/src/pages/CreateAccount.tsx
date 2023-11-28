@@ -7,7 +7,6 @@ import Link from "@mui/material/Link";
 import {Box, Dialog, Typography} from "@mui/material";
 import UserInfos, {skillType} from "./UserInfos";
 import {User} from "../models/User";
-import {getUserTypeByString} from "../models/UserType";
 import {createAccount} from "../rest/queries";
 import {useAuthUser} from "../contexts/AuthUserContext";
 
@@ -78,7 +77,7 @@ function CreateAccount() {
             lastname: lastName,
             email: email,
             password: password,
-            roles: [getUserTypeByString(role)],
+            roles: [role],
             playerInfo: {
                 nickname: nickname,
                 globalLevel: skills[0].value,

@@ -1,5 +1,4 @@
 import {PlayerInfo} from "./PlayerInfo";
-import {UserType} from "./UserType";
 
 export interface User {
     id?: number;
@@ -9,5 +8,12 @@ export interface User {
     email: string;
     playerInfo?: PlayerInfo;
     password: string | null; // only on creation
-    roles: UserType[];
+    roles: string[];
 }
+
+// Roles :
+//     ADMIN,
+//     TEACHER,
+//     STUDENT_INIT,
+//     STUDENT_ALT,
+//     CONTACT
