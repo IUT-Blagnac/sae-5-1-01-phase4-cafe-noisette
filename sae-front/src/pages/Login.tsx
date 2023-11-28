@@ -3,7 +3,7 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import { useState, ChangeEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { getUserByUsername, login } from "../rest/queries";
+import { login } from "../rest/queries";
 import { useAuthUser } from "../contexts/AuthUserContext";
 
 function CreateFormPage() {

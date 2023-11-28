@@ -1,6 +1,6 @@
 import {createContext, ReactNode, useCallback, useContext, useEffect, useState} from "react";
 import {User} from "../models/User";
-import {getMe, getUserByUsername} from "../rest/queries";
+import {getMe} from "../rest/queries";
 
 export interface AuthUser {
     token: string | undefined;
