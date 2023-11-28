@@ -19,6 +19,10 @@ export const getUserByUsername = async (username: string) => {
     return await get<User>('users?username=' + username, true);
 }
 
+export const getMe = async () => {
+    return await get<User>('users/me', true);
+}
+
 export const getProjects = async () => {
     return await get<Project[]>('projects', true);
 }

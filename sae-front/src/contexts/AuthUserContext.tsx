@@ -1,11 +1,12 @@
-import {createContext, ReactNode, useContext, useState} from "react";
+import {createContext, ReactNode, useCallback, useContext, useEffect, useState} from "react";
 import {User} from "../models/User";
+import {getMe, getUserByUsername} from "../rest/queries";
 
 export interface AuthUser {
     token: string | undefined;
     user?: User | undefined;
     updateToken: (token: string) => void;
-    updateUser: (user: User) => void;
+    refreshUser: () => void;
     disconnect: () => void;
 }
 
@@ -19,16 +20,33 @@ const useAuthUserValues = () => {
         localStorage.setItem("token", token);
     }
 
-    const updateUser = (user: User) => {
-        setUser(user);
-    }
+    const refreshUser = useCallback(() => {
+        if (token) {
+            getMe().then((response) => {
+                    if (response.responseCode === 200) {
+                        if (response.data) {
+                            setUser(response.data);
+                        }
+                    } else {
+                        console.log("Error while logging in: " + response.errorMessage);
+                    }
+                }
+            );
+        }
+    }, [token]);
 
     const disconnect = () => {
         setToken(undefined);
         localStorage.removeItem("token");
     }
 
-    return {token, user, updateToken, updateUser, disconnect} as AuthUser;
+    useEffect(() => {
+        if (token) {
+            refreshUser();
+        }
+    }, [token, refreshUser]);
+
+    return {token, user, updateToken, refreshUser, disconnect} as AuthUser;
 }
 
 export const AuthUserContext = createContext<AuthUser | null>(null)

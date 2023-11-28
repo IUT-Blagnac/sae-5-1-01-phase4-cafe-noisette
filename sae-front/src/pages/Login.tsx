@@ -27,16 +27,7 @@ function CreateFormPage() {
             if (response.responseCode === 200) {
                 if (response.data) {
                     authUser.updateToken(response.data.token);
-                    getUserByUsername(username).then((response) => {
-                            if (response.responseCode === 200) {
-                                if (response.data) {
-                                    authUser.updateUser(response.data);
-                                }
-                            } else {
-                                console.log("Error while logging in: " + response.errorMessage);
-                            }
-                        }
-                    );
+                    authUser.refreshUser();
                 }
                 navigate("/projects");
             } else {
