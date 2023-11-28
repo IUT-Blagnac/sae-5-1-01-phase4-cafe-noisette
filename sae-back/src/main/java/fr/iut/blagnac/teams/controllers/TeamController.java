@@ -43,8 +43,19 @@ public class TeamController {
         if (teamDTO == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        TeamDTO user = teamService.createTeam(teamDTO);
-        return Response.ok(user).build();
+        TeamDTO team = teamService.createTeam(teamDTO);
+        return Response.ok(team).build();
+    }
+
+    @GET
+    @Path("/user/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamByUser(Long id) {
+        if (id == null){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+         TeamDTO team = teamService.getTeamByUser(id);
+         return Response.ok(team).build();
     }
 
 }
