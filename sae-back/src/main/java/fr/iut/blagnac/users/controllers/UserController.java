@@ -3,7 +3,6 @@ package fr.iut.blagnac.users.controllers;
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.enums.UserRole;
-import fr.iut.blagnac.users.repositories.UserRepository;
 import fr.iut.blagnac.users.services.UserService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -46,15 +45,22 @@ public class UserController {
     @RolesAllowed("**")
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@QueryParam("id") Long id, @QueryParam("username") String username) {
+    public Response getUsers(
+            @QueryParam("id") Long id,
+            @QueryParam("username") String username,
+            @QueryParam("role") UserRole role
+    ) {
         try {
             if (id != null) {
                 return getUserById(id.toString());
             } else if (username != null) {
                 return getUserByUsername(username);
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST).build();
+            } else if (role != null) {
+                UserDTO[] userTab = userService.getUsersByRole(role);
+                return Response.ok(userTab).build();
             }
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }
@@ -72,22 +78,6 @@ public class UserController {
             }
             UserDTO user = userService.createUser(userDTO);
             return Response.ok(user).build();
-        } catch (SAE5ManagementException sme) {
-            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
-        }
-    }
-
-    @GET
-    @Path("/role?{role}")  
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsersByRole(UserRole role){
-        try {
-            if (role == null) {
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-            UserDTO[] userTab = userService.getUsersByRole(role);
-            return Response.ok(userTab).build();
-        
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }
