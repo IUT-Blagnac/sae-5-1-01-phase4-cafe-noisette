@@ -7,7 +7,6 @@ import fr.iut.blagnac.project.entities.ProjectEntity;
 import fr.iut.blagnac.project.mappers.ProjectMapper;
 import fr.iut.blagnac.project.repositories.ProjectRepository;
 import fr.iut.blagnac.users.entities.UserEntity;
-import fr.iut.blagnac.users.mappers.UserMapper;
 import fr.iut.blagnac.users.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -15,6 +14,8 @@ import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Collection;
+import java.util.ArrayList;
 
 @ApplicationScoped
 public class ProjectService {
@@ -67,13 +68,20 @@ public class ProjectService {
     public ProjectDTO createProject(ProjectDTO projectDTO) {
         try {
             ProjectEntity projectEntity = ProjectMapper.toEntity(projectDTO);
-            UserEntity userEntity = userRepository.findById(projectDTO.getContactId());
+            Collection<Long> idList = projectDTO.getContactIds();
+            Collection<UserEntity> userList = new ArrayList<UserEntity>();
+            for(Long id : idList) {
+                UserEntity userEntity = userRepository.findById(id);
 
-            if(userEntity == null) {
-                LOGGER.error("user not found");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+                if(userEntity == null) {
+                    LOGGER.error("user not found");
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+                }
+
+                userList.add(userEntity);
             }
-            projectEntity.setContact(userEntity);
+
+            projectEntity.setContacts(userList);
             LOGGER.error("added contact");
 
             projectRepository.persist(projectEntity);
