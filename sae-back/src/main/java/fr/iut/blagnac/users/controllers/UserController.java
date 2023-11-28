@@ -2,6 +2,8 @@ package fr.iut.blagnac.users.controllers;
 
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.users.dtos.UserDTO;
+import fr.iut.blagnac.users.enums.UserRole;
+import fr.iut.blagnac.users.repositories.UserRepository;
 import fr.iut.blagnac.users.services.UserService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
@@ -75,4 +77,19 @@ public class UserController {
         }
     }
 
+    @GET
+    @Path("/role?{role}")  
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsersByRole(UserRole role){
+        try {
+            if (role == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            UserDTO[] userTab = userService.getUsersByRole(role);
+            return Response.ok(userTab).build();
+        
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
 }

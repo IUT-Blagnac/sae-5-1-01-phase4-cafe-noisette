@@ -5,9 +5,13 @@ import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
 import fr.iut.blagnac.authentication.utils.PermissionChecker;
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
+import fr.iut.blagnac.project.dtos.ProjectDTO;
+import fr.iut.blagnac.project.entities.ProjectEntity;
+import fr.iut.blagnac.project.mappers.ProjectMapper;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.PlayerInfoEntity;
 import fr.iut.blagnac.users.entities.UserEntity;
+import fr.iut.blagnac.users.enums.UserRole;
 import fr.iut.blagnac.users.mappers.PlayerInfoMapper;
 import fr.iut.blagnac.users.mappers.UserMapper;
 import fr.iut.blagnac.users.repositories.PlayerInfoRepository;
@@ -17,6 +21,9 @@ import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.SecurityContext;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +78,34 @@ public class UserService {
         LOGGER.info("User " + userEntity.getUsername() + " found");
 
         return userDTO;
+    }
+
+    public UserDTO[] getUsersByRole(UserRole role){
+        try{
+
+            List<UserEntity> userList = userRepository.findByRole(role);
+            UserEntity[] userEntities = new UserEntity[userList.size()];
+            userList.toArray(userEntities);
+
+            UserDTO[] listUserDTO = new UserDTO[userList.size()];
+            int id = 0;
+
+            for (UserEntity userEntity2 : userEntities) {
+            
+                UserDTO userDTO = UserMapper.toDTO(userEntity2);
+                listUserDTO[id] = userDTO;
+
+                id+=1;
+            }
+
+            return listUserDTO;
+
+
+        }catch (PersistenceException e) {
+            LOGGER.error("Error while getting users with role", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+
     }
 
     @Transactional
