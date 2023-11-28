@@ -1,5 +1,16 @@
 # sae-back
 
+## Table des matières
+- [Introduction](#introduction)
+- [Prérequis](#prérequis)
+- [Installation](#installation)
+- [Lancement de l'application en mode dev](#lancement-de-lapplication-en-mode-dev)
+- [Build de l'application](#build-de-lapplication)
+- [Déploiement de l'application](#déploiement-de-lapplication)
+  - [Paramétrage](#paramétrage)
+
+## Introduction
+
 Ce backend est une API REST qui permet de gérer les données de l'application.
 Elle utilise le framework Quarkus en Java 17 et utilise maven pour la gestion des dépendances.
 
@@ -41,7 +52,7 @@ Le déploiement peut se faire très simplement via docker-compose.
 
 ```bash
 cd src/main/docker-compose
-docker-compose up
+docker compose up
 ```
 
 Le fichier [docker-compose.yml](src/main/docker-compose) contient les informations nécessaires pour lancer le backend et la base de données postgresql.
