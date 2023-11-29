@@ -9,6 +9,7 @@ import UserInfos, {skillType} from "./UserInfos";
 import {User} from "../models/User";
 import {createAccount} from "../rest/queries";
 import {useAuthUser} from "../contexts/AuthUserContext";
+import CustomSnackbar from "../elements/CustomSnackbar";
 
 function CreateAccount() {
     const [username, setUsername] = useState("");
@@ -33,6 +34,7 @@ function CreateAccount() {
     const [skills, setSkills] = useState(initialSkills);
     const [customSkill, setCustomSkill] = useState({ name: 'otherDesc', label: '', value: 1 });
     const [openUserInfos, setOpenUserInfos] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const navigate = useNavigate();
     const authUser = useAuthUser();
@@ -99,10 +101,12 @@ function CreateAccount() {
                     navigate('/login');
                 } else {
                     setError("Une erreur est survenue lors de la création de votre compte: '" + response.errorMessage + "'");
+                    setSnackbarOpen(true);
                 }
             })
             .catch((error) => {
                 console.log(error);
+                setSnackbarOpen(true);
             });
     };
 
@@ -238,6 +242,8 @@ function CreateAccount() {
                     {error && <p style={{ color: 'red' }}>{error}</p>}
 
                     <Button variant="contained" onClick={handleSubmit} disabled={disableCreateAccount()}>Créer votre compte</Button>
+
+                    <CustomSnackbar snackbarOpen={snackbarOpen} setSnackbarOpen={setSnackbarOpen} alertText={'Erreur lors de la création du compte'} severity={"error"}/>
 
                     <div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
                         <p style={{ fontSize: 13, marginRight: 5 }}>Vous avez déjà un compte ?</p>

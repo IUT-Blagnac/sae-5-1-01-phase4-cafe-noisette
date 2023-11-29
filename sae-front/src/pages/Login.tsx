@@ -5,7 +5,7 @@ import React, { useState, ChangeEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { login } from "../rest/queries";
 import { useAuthUser } from "../contexts/AuthUserContext";
-import {Alert, Snackbar} from "@mui/material";
+import CustomSnackbar from "../elements/CustomSnackbar";
 
 function CreateFormPage() {
     //Mise des valeurs par défauts
@@ -40,12 +40,6 @@ function CreateFormPage() {
             }
         });
     };
-    
-    
-    function handleCloseSnackbar () {
-        setErrorSnackbar(false)
-    }
-
 
     return (
         <>
@@ -92,17 +86,7 @@ function CreateFormPage() {
                             Créer un compte
                         </Link>
                     </div>
-                    <Snackbar
-                        open={errorSnackbar}
-                        autoHideDuration={3000}
-                        message="Erreur lors de la connexion"
-                        onClose={handleCloseSnackbar}
-                        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-                    >
-                        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }} variant={'filled'}>
-                            {errorSnackbarMessage}
-                        </Alert>
-                    </Snackbar>
+                    <CustomSnackbar snackbarOpen={errorSnackbar} setSnackbarOpen={setErrorSnackbar} severity={"error"} alertText={errorSnackbarMessage} />
                 </div>
             )}
         </>
