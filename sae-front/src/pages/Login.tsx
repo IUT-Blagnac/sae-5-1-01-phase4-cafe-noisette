@@ -1,15 +1,18 @@
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
-import { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { login } from "../rest/queries";
 import { useAuthUser } from "../contexts/AuthUserContext";
+import {Alert, Snackbar} from "@mui/material";
 
 function CreateFormPage() {
     //Mise des valeurs par défauts
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [errorSnackbar, setErrorSnackbar] = useState(false);
+    const [errorSnackbarMessage, setErrorSnackbarMessage] = useState("");
     const navigate = useNavigate();
     const authUser = useAuthUser();
 
@@ -32,9 +35,16 @@ function CreateFormPage() {
                 navigate("/projects");
             } else {
                 console.log("Error while logging in: " + response.errorMessage);
+                setErrorSnackbarMessage('Le nom d\'utilisateur ou le mot de passe est incorrect')
+                setErrorSnackbar(true)
             }
         });
     };
+    
+    
+    function handleCloseSnackbar () {
+        setErrorSnackbar(false)
+    }
 
 
     return (
@@ -70,7 +80,7 @@ function CreateFormPage() {
                         onChange={handlePasswordChange}
                     />
 
-                    <Button variant="contained" onClick={handleSubmit}>Se connecter</Button>
+                    <Button variant="contained" onClick={handleSubmit} disabled={username.trim().length<1||password.length<1}>Se connecter</Button>
 
                     <div style={{display: "flex", alignItems: "center", marginTop: 10}}>
                         <p style={{fontSize: 13, marginRight: 5}}>Vous n'avez pas de compte ?</p>
@@ -82,7 +92,17 @@ function CreateFormPage() {
                             Créer un compte
                         </Link>
                     </div>
-
+                    <Snackbar
+                        open={errorSnackbar}
+                        autoHideDuration={3000}
+                        message="Erreur lors de la connexion"
+                        onClose={handleCloseSnackbar}
+                        anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+                    >
+                        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }} variant={'filled'}>
+                            {errorSnackbarMessage}
+                        </Alert>
+                    </Snackbar>
                 </div>
             )}
         </>

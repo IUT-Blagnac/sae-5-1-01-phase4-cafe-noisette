@@ -118,6 +118,16 @@ function CreateAccount() {
         marginBottom: 3,
     };
 
+    function disableCreateAccount () {
+        if (!username || !firstName || !lastName || !password || !email || !role) {
+            return true
+        }
+        if (role === 'STUDENT_ALT' || role === 'STUDENT_INIT') {
+            return !nickname
+        }
+        return false
+    }
+
     return (
         <>
             {authUser.token ? (
@@ -227,7 +237,7 @@ function CreateAccount() {
 
                     {error && <p style={{ color: 'red' }}>{error}</p>}
 
-                    <Button variant="contained" onClick={handleSubmit}>Créer votre compte</Button>
+                    <Button variant="contained" onClick={handleSubmit} disabled={disableCreateAccount()}>Créer votre compte</Button>
 
                     <div style={{ display: "flex", alignItems: "center", marginTop: 10 }}>
                         <p style={{ fontSize: 13, marginRight: 5 }}>Vous avez déjà un compte ?</p>
