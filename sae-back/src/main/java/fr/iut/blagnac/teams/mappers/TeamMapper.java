@@ -1,11 +1,7 @@
 package fr.iut.blagnac.teams.mappers;
 
-import fr.iut.blagnac.project.mappers.ProjectMapper;
 import fr.iut.blagnac.teams.dtos.TeamDTO;
 import fr.iut.blagnac.teams.entities.TeamEntity;
-import fr.iut.blagnac.users.dtos.UserDTO;
-import fr.iut.blagnac.users.entities.UserEntity;
-import fr.iut.blagnac.users.mappers.UserMapper;
 
 import java.util.ArrayList;
 

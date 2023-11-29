@@ -1,4 +1,4 @@
-package fr.iut.blagnac.project.entities;
+package fr.iut.blagnac.projects.entities;
 
 import fr.iut.blagnac.users.entities.UserEntity;
 import jakarta.persistence.*;

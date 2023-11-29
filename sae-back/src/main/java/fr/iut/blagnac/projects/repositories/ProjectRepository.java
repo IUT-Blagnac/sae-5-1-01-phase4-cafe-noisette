@@ -1,8 +1,8 @@
-package fr.iut.blagnac.project.repositories;
+package fr.iut.blagnac.projects.repositories;
 
 import java.util.List;
 
-import fr.iut.blagnac.project.entities.ProjectEntity;
+import fr.iut.blagnac.projects.entities.ProjectEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 

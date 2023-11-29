@@ -1,7 +1,7 @@
-package fr.iut.blagnac.project.controller;
+package fr.iut.blagnac.projects.controllers;
 
-import fr.iut.blagnac.project.dtos.ProjectDTO;
-import fr.iut.blagnac.project.services.ProjectService;
+import fr.iut.blagnac.projects.dtos.ProjectDTO;
+import fr.iut.blagnac.projects.services.ProjectService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

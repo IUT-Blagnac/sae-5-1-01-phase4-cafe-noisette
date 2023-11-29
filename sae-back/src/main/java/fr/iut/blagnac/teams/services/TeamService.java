@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
-import fr.iut.blagnac.project.entities.ProjectEntity;
-import fr.iut.blagnac.project.repositories.ProjectRepository;
+import fr.iut.blagnac.projects.entities.ProjectEntity;
+import fr.iut.blagnac.projects.repositories.ProjectRepository;
 import fr.iut.blagnac.teams.dtos.TeamDTO;
 import fr.iut.blagnac.teams.entities.TeamEntity;
 import fr.iut.blagnac.teams.mappers.TeamMapper;

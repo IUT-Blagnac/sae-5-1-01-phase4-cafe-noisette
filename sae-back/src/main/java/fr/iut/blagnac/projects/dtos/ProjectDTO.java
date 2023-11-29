@@ -1,4 +1,4 @@
-package fr.iut.blagnac.project.dtos;
+package fr.iut.blagnac.projects.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

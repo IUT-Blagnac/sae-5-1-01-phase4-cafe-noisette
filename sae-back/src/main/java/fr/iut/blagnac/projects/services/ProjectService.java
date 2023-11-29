@@ -1,11 +1,11 @@
-package fr.iut.blagnac.project.services;
+package fr.iut.blagnac.projects.services;
 
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
-import fr.iut.blagnac.project.dtos.ProjectDTO;
-import fr.iut.blagnac.project.entities.ProjectEntity;
-import fr.iut.blagnac.project.mappers.ProjectMapper;
-import fr.iut.blagnac.project.repositories.ProjectRepository;
+import fr.iut.blagnac.projects.dtos.ProjectDTO;
+import fr.iut.blagnac.projects.entities.ProjectEntity;
+import fr.iut.blagnac.projects.mappers.ProjectMapper;
+import fr.iut.blagnac.projects.repositories.ProjectRepository;
 import fr.iut.blagnac.users.entities.UserEntity;
 import fr.iut.blagnac.users.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;

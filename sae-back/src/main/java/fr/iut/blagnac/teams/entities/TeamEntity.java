@@ -1,6 +1,6 @@
 package fr.iut.blagnac.teams.entities;
 
-import fr.iut.blagnac.project.entities.ProjectEntity;
+import fr.iut.blagnac.projects.entities.ProjectEntity;
 import fr.iut.blagnac.users.entities.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;

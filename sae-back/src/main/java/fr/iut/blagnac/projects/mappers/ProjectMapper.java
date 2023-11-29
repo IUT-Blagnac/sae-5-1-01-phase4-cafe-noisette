@@ -1,7 +1,7 @@
-package fr.iut.blagnac.project.mappers;
+package fr.iut.blagnac.projects.mappers;
 
-import fr.iut.blagnac.project.dtos.ProjectDTO;
-import fr.iut.blagnac.project.entities.ProjectEntity;
+import fr.iut.blagnac.projects.dtos.ProjectDTO;
+import fr.iut.blagnac.projects.entities.ProjectEntity;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
 import fr.iut.blagnac.users.mappers.UserMapper;
