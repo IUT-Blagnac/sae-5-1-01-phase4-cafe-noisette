@@ -6,12 +6,7 @@ import fr.iut.blagnac.teams.services.TeamService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
@@ -62,14 +57,14 @@ public class TeamController {
 
     @GET
     @RolesAllowed("**")
-    @Path("/user/{id}")
+    @Path("/filter")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamByUser(Long id) {
+    public Response getTeamByUser(@QueryParam("userId") Long userId) {
         try {
-            if (id == null){
+            if (userId == null){
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            TeamDTO team = teamService.getTeamByUser(id);
+            TeamDTO team = teamService.getTeamByUser(userId);
             return Response.ok(team).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();

@@ -47,11 +47,6 @@ public class TeamService {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.TEAM_NOT_FOUND);
             }
 
-            if(!checkIfUserIsInTeam(securityContext, teamEntity, true)) {
-                LOGGER.error("User not in this team");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_IN_TEAM);
-            }
-
             TeamDTO teamDTO = TeamMapper.toDTO(teamEntity);
 
             return teamDTO;
@@ -146,16 +141,5 @@ public class TeamService {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
-    }
-
-    private boolean checkIfUserIsInTeam(SecurityContext securityContext, TeamEntity teamEntity, boolean adminBypass) {
-        if (adminBypass && securityContext.isUserInRole("ADMIN")) {
-            return true;
-        }
-        UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
-        if (userEntity.getTeam() == null) {
-            return false;
-        }
-        return userEntity.getTeam().getId().equals(teamEntity.getId());
     }
 }

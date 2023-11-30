@@ -25,7 +25,7 @@ public class TeamDTO {
     private String github;
 
     @JsonProperty("projectId")
-    private Long ProjectId;
+    private Long projectId;
 
     @JsonProperty("membersId")
     private  ArrayList<Long> membersId;
