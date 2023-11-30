@@ -3,6 +3,7 @@ package fr.iut.blagnac.projects.controllers;
 import fr.iut.blagnac.projects.dtos.ProjectDTO;
 import fr.iut.blagnac.projects.services.ProjectService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -17,6 +18,7 @@ public class ProjectController {
     ProjectService projectService;
 
     @GET
+    @RolesAllowed("**")
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProject(@PathParam("id") String id) {
@@ -29,7 +31,7 @@ public class ProjectController {
     }
 
     @POST
-    @PermitAll
+    @RolesAllowed({"TEACHER"})
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,6 +44,7 @@ public class ProjectController {
     }
 
     @GET
+    @RolesAllowed("**")
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProjects() {
