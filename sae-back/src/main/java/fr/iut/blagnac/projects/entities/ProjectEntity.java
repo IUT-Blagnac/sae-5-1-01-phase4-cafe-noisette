@@ -23,10 +23,7 @@ public class ProjectEntity {
     private String description;
 
     @OneToMany
-    @JoinTable(
-            name = "project_contacts",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinColumn(name = "contact_ids")
     private ArrayList<UserEntity> contacts;
 
 }
