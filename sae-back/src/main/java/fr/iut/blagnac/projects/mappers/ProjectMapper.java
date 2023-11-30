@@ -8,7 +8,6 @@ import fr.iut.blagnac.users.mappers.UserMapper;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 @RegisterForReflection
 public class ProjectMapper {
@@ -28,8 +27,8 @@ public class ProjectMapper {
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
         if(entity.getContacts() != null) {
-            Collection<UserEntity> userList = entity.getContacts();
-            Collection<Long> idList = new ArrayList<Long>();;
+            ArrayList<UserEntity> userList = entity.getContacts();
+            ArrayList<Long> idList = new ArrayList<>();
             for(UserEntity user : userList) {
                 UserDTO userDTO = UserMapper.toDTO(user);
                 idList.add(userDTO.getId());
