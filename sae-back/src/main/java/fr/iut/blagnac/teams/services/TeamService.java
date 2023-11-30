@@ -2,6 +2,7 @@ package fr.iut.blagnac.teams.services;
 
 import java.util.ArrayList;
 
+import jakarta.ws.rs.core.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,13 +38,18 @@ public class TeamService {
     ProjectRepository projectRepository;
 
     
-    public TeamDTO getTeam(Long id) {
+    public TeamDTO getTeam(Long id, SecurityContext securityContext) {
         try {
             TeamEntity teamEntity = teamRepository.findById(id);
 
             if (teamEntity == null) {
-                LOGGER.error("User not found");
-                return null;
+                LOGGER.error("Team not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.TEAM_NOT_FOUND);
+            }
+
+            if(!checkIfUserIsInTeam(securityContext, teamEntity, true)) {
+                LOGGER.error("User not in this team");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_IN_TEAM);
             }
 
             TeamDTO teamDTO = TeamMapper.toDTO(teamEntity);
@@ -51,7 +57,7 @@ public class TeamService {
             return teamDTO;
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -61,7 +67,7 @@ public class TeamService {
 
             if(teamEntity == null) {
                 LOGGER.error("User not found");
-                return null;
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
             TeamDTO teamDTO = TeamMapper.toDTO(teamEntity);
@@ -69,7 +75,7 @@ public class TeamService {
             return teamDTO;
         } catch (PersistenceException e){
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -80,7 +86,7 @@ public class TeamService {
 
             if (teamEntity == null) {
                 LOGGER.error("User not found");
-                return null;
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
             TeamDTO teamDTO = TeamMapper.toDTO(teamEntity);
@@ -88,7 +94,7 @@ public class TeamService {
 
          } catch (PersistenceException e){
             LOGGER.error("Error while getting user", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -123,20 +129,33 @@ public class TeamService {
 
     @Transactional
     public TeamDTO addMember(TeamDTO teamDTO, UserDTO userDTO) {
-        
-        TeamEntity teamEntity = TeamMapper.toEntity(teamDTO);
-        UserEntity userEntity = UserMapper.toEntity(userDTO);
+        try {
+            TeamEntity teamEntity = TeamMapper.toEntity(teamDTO);
+            UserEntity userEntity = UserMapper.toEntity(userDTO);
 
-        if (userEntity.getTeam() != null) {
-            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.ALREADY_IN_TEAM);
+            if (userEntity.getTeam() != null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.ALREADY_IN_TEAM);
+            }
+
+            ArrayList<UserEntity> dtoTeamMembers;
+            dtoTeamMembers = teamEntity.getMembers();
+            dtoTeamMembers.add(userEntity);
+
+            return TeamMapper.toDTO(teamEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
+    }
 
-        ArrayList<UserEntity> dtoTeamMembers;
-        dtoTeamMembers = teamEntity.getMembers();
-        dtoTeamMembers.add(userEntity);
-        
-         return TeamMapper.toDTO(teamEntity);
-
-
+    private boolean checkIfUserIsInTeam(SecurityContext securityContext, TeamEntity teamEntity, boolean adminBypass) {
+        if (adminBypass && securityContext.isUserInRole("ADMIN")) {
+            return true;
+        }
+        UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+        if (userEntity.getTeam() == null) {
+            return false;
+        }
+        return userEntity.getTeam().getId().equals(teamEntity.getId());
     }
 }

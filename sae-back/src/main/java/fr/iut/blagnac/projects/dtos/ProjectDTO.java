@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Collection;
+
+import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -26,5 +27,5 @@ public class ProjectDTO {
     private String description;
 
     @JsonProperty("contactIds")
-    private Collection<Long> contactIds;
+    private ArrayList<Long> contactIds;
 }

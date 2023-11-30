@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Collection;
 import java.util.ArrayList;
 
 @ApplicationScoped
@@ -37,7 +36,7 @@ public class ProjectService {
 
             if (projectEntity == null) {
                 LOGGER.error("Project not found");
-                return null;
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
             }
 
             ProjectDTO projectDTO = ProjectMapper.toDTO(projectEntity);
@@ -45,7 +44,7 @@ public class ProjectService {
             return projectDTO;
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting project", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
@@ -55,7 +54,7 @@ public class ProjectService {
 
             if (projectEntity == null) {
                 LOGGER.error("Project not found");
-                return null;
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
             }
 
             ProjectDTO projectDTO = ProjectMapper.toDTO(projectEntity);
@@ -63,42 +62,33 @@ public class ProjectService {
             return projectDTO;
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting project", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 
-    public ProjectDTO[] getProjects(){
-         try {
-            List<ProjectEntity> projectList = projectRepository.get();
-            ProjectEntity[] projectEntity = new ProjectEntity[projectList.size()];
-            projectList.toArray(projectEntity);
+    public ArrayList <ProjectDTO> getProjects() {
+        try {
+            List<ProjectEntity> projectEntities = projectRepository.findAll().stream().toList();
 
-            ProjectDTO[] listProjectDTO = new ProjectDTO[projectList.size()];
-            int id = 0;
-
-            for (ProjectEntity projectEntity2 : projectEntity) {
-            
-                ProjectDTO projectDTO = ProjectMapper.toDTO(projectEntity2);
-                listProjectDTO[id] = projectDTO;
-
-                id+=1;
+            ArrayList<ProjectDTO> projectDTOs = new ArrayList<>();
+            for(ProjectEntity projectEntity : projectEntities) {
+                projectDTOs.add(ProjectMapper.toDTO(projectEntity));
             }
-            
-            return listProjectDTO;
-            
 
-            } catch (PersistenceException e) {
-                LOGGER.error("Error while getting projects", e);
-                throw e;
-            }
+            return projectDTOs;
+
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting projects", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
     }
 
     @Transactional
     public ProjectDTO createProject(ProjectDTO projectDTO) {
         try {
             ProjectEntity projectEntity = ProjectMapper.toEntity(projectDTO);
-            Collection<Long> idList = projectDTO.getContactIds();
-            Collection<UserEntity> userList = new ArrayList<UserEntity>();
+            List<Long> idList = projectDTO.getContactIds().stream().toList();
+            ArrayList<UserEntity> userList = new ArrayList<>();
             for(Long id : idList) {
                 UserEntity userEntity = userRepository.findById(id);
 
@@ -118,7 +108,7 @@ public class ProjectService {
             return ProjectMapper.toDTO(projectEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting project", e);
-            throw e;
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
 }

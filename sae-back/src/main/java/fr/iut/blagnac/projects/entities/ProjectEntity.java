@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Collection;
+
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -26,6 +27,6 @@ public class ProjectEntity {
             name = "project_contacts",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Collection<UserEntity> contacts;
+    private ArrayList<UserEntity> contacts;
 
 }

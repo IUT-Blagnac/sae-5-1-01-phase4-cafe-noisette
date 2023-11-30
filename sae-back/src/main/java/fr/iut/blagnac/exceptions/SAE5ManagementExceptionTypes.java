@@ -13,7 +13,10 @@ public enum SAE5ManagementExceptionTypes {
     PERSISTENCE_ERROR("Persistence error", 500),
     USER_ALREADY_EXISTS("User already exists", 409),
     USER_DOES_NOT_EXIST("User does not exist", 404),
-    ALREADY_IN_TEAM("User is already in a team",409);
+    ALREADY_IN_TEAM("User is already in a team",409),
+    USER_NOT_IN_TEAM("User is not in this team", 403),
+    PROJECT_NOT_FOUND("Project not found", 404),
+    TEAM_NOT_FOUND("Team not found", 404);
 
     private final String message;
     private final int status;
