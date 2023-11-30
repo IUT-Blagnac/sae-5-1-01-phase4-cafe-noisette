@@ -25,7 +25,7 @@ public class TeamController {
     @RolesAllowed({"ADMIN"})
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("id") String id) {
+    public Response getTeam(@PathParam("id") String id) {
         if (id == null || id.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -35,11 +35,11 @@ public class TeamController {
     }
 
     @POST
-    @PermitAll
+    @RolesAllowed({"STUDENT_INIT"})
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(TeamDTO teamDTO) {
+    public Response createTeam(TeamDTO teamDTO) {
         if (teamDTO == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -48,6 +48,7 @@ public class TeamController {
     }
 
     @GET
+    @RolesAllowed("**")
     @Path("/user/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTeamByUser(Long id) {
