@@ -11,7 +11,7 @@ import {useAuthUser} from "../../contexts/AuthUserContext";
 function ProjectList () {
     const [newProject, setNewProject] = React.useState({name:'', description:''} as Project)
     const authUser = useAuthUser();
-    const editRights = authUser.user?.roles.includes('ADMIN')
+    const editRights = authUser.user?.roles.includes('TEACHER') || authUser.user?.roles.includes('ADMIN')
     const [clients, setClients] = React.useState([{id:1,email:'email@thales', username:'Bryva',firstname:'Bryce',lastname:'Fuertes',roles:['CONTACT']}] as User[])
     const [projects, setProjects] = React.useState([] as Project[])
 
