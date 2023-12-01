@@ -3,6 +3,8 @@ package fr.iut.blagnac.teams.controllers;
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.teams.dtos.TeamDTO;
 import fr.iut.blagnac.teams.services.TeamService;
+import fr.iut.blagnac.users.dtos.UserDTO;
+import io.vertx.mutiny.ext.auth.User;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -71,5 +73,24 @@ public class TeamController {
         }
     }
 
+    @PUT
+    @RolesAllowed({"ADMIN","STUDENT_INIT"})
+    @Path("/teams/{teamId}/addMember")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addTeamMember(@PathParam("teamId")Long teamId, UserDTO userDTO) {
+        
+        try {
+            if (teamId == null || userDTO == null) {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+           TeamDTO team = teamService.addMember(teamId,userDTO,securityContext);
+           return Response.ok(team).build();
+           
+        } catch (SAE5ManagementException sme) {
+           return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+    }
+
+    }
 }
 
