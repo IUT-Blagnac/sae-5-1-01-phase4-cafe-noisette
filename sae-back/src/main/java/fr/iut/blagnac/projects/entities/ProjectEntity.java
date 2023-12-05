@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,6 +24,6 @@ public class ProjectEntity {
 
     @OneToMany
     @JoinColumn(name = "contact_ids")
-    private ArrayList<UserEntity> contacts;
+    private Set<UserEntity> contacts;
 
 }
