@@ -13,11 +13,11 @@ import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 
-import java.util.List;
+import java.util.*;
 
+import jakarta.ws.rs.core.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
 
 @ApplicationScoped
 public class ProjectService {
@@ -84,11 +84,11 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectDTO createProject(ProjectDTO projectDTO) {
+    public ProjectDTO createProject(ProjectDTO projectDTO, SecurityContext securityContext) {
         try {
             ProjectEntity projectEntity = ProjectMapper.toEntity(projectDTO);
-            List<Long> idList = projectDTO.getContactIds().stream().toList();
-            ArrayList<UserEntity> userList = new ArrayList<>();
+            Set<Long> idList = projectDTO.getContactIds();
+            Set<UserEntity> userList = new LinkedHashSet<>();
             for(Long id : idList) {
                 UserEntity userEntity = userRepository.findById(id);
 
@@ -106,6 +106,55 @@ public class ProjectService {
             projectRepository.persist(projectEntity);
             LOGGER.error("project persisted");
             return ProjectMapper.toDTO(projectEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting project", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    @Transactional
+    public ProjectDTO updateProject(ProjectDTO changedProject, SecurityContext securityContext) {
+        try {
+
+            ProjectEntity oldProject = projectRepository.findById(changedProject.getId());
+            if(oldProject == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
+            }
+            if(securityContext.isUserInRole("ADMIN")) {
+                ProjectEntity updateProject = ProjectMapper.toEntity(changedProject);
+
+                if (changedProject.getContactIds() != null) {
+                    Set<Long> idList = changedProject.getContactIds();
+                    Set<UserEntity> userList = new LinkedHashSet<>();
+                    for (Long id : idList) {
+                        UserEntity userEntity = userRepository.findById(id);
+
+                        if (userEntity == null) {
+                            LOGGER.error("user not found");
+                            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+                        }
+
+                        userList.add(userEntity);
+                    }
+
+                    oldProject.setContacts(userList);
+                }
+
+                if (updateProject.getName() != null) {
+                    oldProject.setName(updateProject.getName());
+                }
+
+                if (updateProject.getDescription() != null) {
+                    oldProject.setDescription(updateProject.getDescription());
+                }
+
+                projectRepository.persist(oldProject);
+                LOGGER.error("project persisted");
+                return ProjectMapper.toDTO(oldProject);
+            }
+            else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
+            }
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting project", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,10 +23,7 @@ public class ProjectEntity {
     private String description;
 
     @OneToMany
-    @JoinTable(
-            name = "project_contacts",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private ArrayList<UserEntity> contacts;
+    @JoinColumn(name = "contact_ids")
+    private Set<UserEntity> contacts;
 
 }

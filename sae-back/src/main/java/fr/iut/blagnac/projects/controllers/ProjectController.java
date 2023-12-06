@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,9 @@ public class ProjectController {
 
     @Inject
     ProjectService projectService;
+
+    @Inject
+    SecurityContext securityContext;
 
     @GET
     @RolesAllowed("**")
@@ -37,7 +41,7 @@ public class ProjectController {
     }
 
     @POST
-    @RolesAllowed({"TEACHER"})
+    @RolesAllowed({"TEACHER", "ADMIN"})
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -46,7 +50,7 @@ public class ProjectController {
             if (projectDTO == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            ProjectDTO project = projectService.createProject(projectDTO);
+            ProjectDTO project = projectService.createProject(projectDTO, securityContext);
             return Response.ok(project).build();
         } catch (
                 SAE5ManagementException sme) {
@@ -69,5 +73,19 @@ public class ProjectController {
 
     }
 
+    @PUT
+    @RolesAllowed({"TEACHER", "ADMIN"})
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateProject(ProjectDTO changedProject) {
+        try {
+            ProjectDTO updatedProject = projectService.updateProject(changedProject, securityContext);
 
+            return Response.ok(updatedProject).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+
+    }
 }

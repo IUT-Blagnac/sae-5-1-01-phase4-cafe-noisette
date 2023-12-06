@@ -16,6 +16,7 @@ import fr.iut.blagnac.teams.mappers.TeamMapper;
 import fr.iut.blagnac.teams.repositories.TeamRepository;
 import fr.iut.blagnac.users.dtos.UserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
+import fr.iut.blagnac.users.enums.UserRole;
 import fr.iut.blagnac.users.mappers.UserMapper;
 import fr.iut.blagnac.users.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -123,20 +124,58 @@ public class TeamService {
     }
 
     @Transactional
-    public TeamDTO addMember(TeamDTO teamDTO, UserDTO userDTO) {
+    public TeamDTO addMember(Long teamId , UserDTO userDTO, SecurityContext securityContext) {
         try {
-            TeamEntity teamEntity = TeamMapper.toEntity(teamDTO);
-            UserEntity userEntity = UserMapper.toEntity(userDTO);
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
-            if (userEntity.getTeam() != null) {
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.ALREADY_IN_TEAM);
+            if (userEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
-            ArrayList<UserEntity> dtoTeamMembers;
-            dtoTeamMembers = teamEntity.getMembers();
-            dtoTeamMembers.add(userEntity);
+            if (
+                securityContext.isUserInRole("ADMIN") || 
+                userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
+              ) {
+                TeamEntity teamEntity = userEntity.getTeam();
+                UserEntity targetEntity;
 
-            return TeamMapper.toDTO(teamEntity);
+                if (userDTO.getId() != null) {
+                    targetEntity = userRepository.findById(userDTO.getId());
+                } else if (userDTO.getUsername() != null){
+                    targetEntity = userRepository.findByUsername(userDTO.getUsername());
+                } else {
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
+                }
+
+                if (
+                    targetEntity != null && 
+                    targetEntity.getTeam() != null && 
+                    (targetEntity.getRoles().contains(UserRole.STUDENT_ALT) || targetEntity.getRoles().contains(UserRole.STUDENT_INIT))
+                ){
+                    teamEntity.getMembers().add(targetEntity);
+                    return TeamMapper.toDTO(teamEntity);
+                } else {
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);  
+                }
+            } else {
+              throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);  
+            }
+
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+		
+    }
+
+    public ArrayList<TeamDTO> getFilteredTeams(Long id, String name, Long projectId, Long leaderId) {
+        try {
+            ArrayList<TeamEntity> teamEntities = teamRepository.getFilteredTeams(id, name, projectId, leaderId);
+            ArrayList<TeamDTO> teamDTOs = new ArrayList<>();
+            for (TeamEntity teamEntity : teamEntities) {
+                teamDTOs.add(TeamMapper.toDTO(teamEntity));
+            }
+            return teamDTOs;
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);

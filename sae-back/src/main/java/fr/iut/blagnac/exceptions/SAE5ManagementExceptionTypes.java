@@ -16,7 +16,9 @@ public enum SAE5ManagementExceptionTypes {
     ALREADY_IN_TEAM("User is already in a team",409),
     USER_NOT_IN_TEAM("User is not in this team", 403),
     PROJECT_NOT_FOUND("Project not found", 404),
-    TEAM_NOT_FOUND("Team not found", 404);
+    TEAM_NOT_FOUND("Team not found", 404),
+    USER_CANNOT_JOIN_THIS_TEAM("User can not join this team", 403);
+
 
     private final String message;
     private final int status;
