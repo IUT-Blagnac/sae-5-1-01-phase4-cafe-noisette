@@ -65,12 +65,12 @@ public class TeamController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTeams(
             @QueryParam("id") Long id,
-            @QueryParam("userId") Long userId,
+            @QueryParam("name") String name,
             @QueryParam("projectId") Long projectId,
             @QueryParam("leaderId") Long leaderId
     ) {
         try {
-            ArrayList<TeamDTO> teamDTOs = teamService.getFilteredTeams(id, userId, projectId, leaderId);
+            ArrayList<TeamDTO> teamDTOs = teamService.getFilteredTeams(id, name, projectId, leaderId);
             return Response.ok(teamDTOs).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();

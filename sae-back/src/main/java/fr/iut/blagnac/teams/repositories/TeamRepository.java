@@ -21,16 +21,14 @@ public class TeamRepository implements PanacheRepository<TeamEntity>  {
 
     public TeamEntity findByUser(UserEntity user) {
         return find("id", user.getTeam()).firstResult();
-
-
     }
 
-    public ArrayList<TeamEntity> getFilteredTeams(Long id, Long userId, Long projectId, Long leaderId) {
+    public ArrayList<TeamEntity> getFilteredTeams(Long id, String name, Long projectId, Long leaderId) {
         ArrayList<TeamEntity> teams = new ArrayList<>();
         if (id != null) {
             teams.add(findById(id));
-        } else if (userId != null) {
-            teams.add(findByUser(userRepository.findById(userId)));
+        } else if (name != null) {
+            teams.add(findByName(name));
         } else if (projectId != null) {
             teams.add(find("project_id", projectId).firstResult());
         } else if (leaderId != null) {
