@@ -26,3 +26,7 @@ export const getMe = async () => {
 export const getProjects = async () => {
     return await get<Project[]>('projects', true);
 }
+
+export const postProject = async (project: Project) => {
+    return await post<Project, Project>('projects', project);
+}

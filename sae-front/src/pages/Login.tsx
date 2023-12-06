@@ -5,14 +5,12 @@ import React, { useState, ChangeEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { login } from "../rest/queries";
 import { useAuthUser } from "../contexts/AuthUserContext";
-import CustomSnackbar from "../elements/CustomSnackbar";
+import toast from "react-hot-toast";
 
 function CreateFormPage() {
     //Mise des valeurs par défauts
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [errorSnackbar, setErrorSnackbar] = useState(false);
-    const [errorSnackbarMessage, setErrorSnackbarMessage] = useState("");
     const navigate = useNavigate();
     const authUser = useAuthUser();
 
@@ -35,8 +33,7 @@ function CreateFormPage() {
                 navigate("/projects");
             } else {
                 console.log("Error while logging in: " + response.errorMessage);
-                setErrorSnackbarMessage('Le nom d\'utilisateur ou le mot de passe est incorrect')
-                setErrorSnackbar(true)
+                toast.error('Le nom d\'utilisateur ou le mot de passe est incorrect');
             }
         });
     };
@@ -86,7 +83,6 @@ function CreateFormPage() {
                             Créer un compte
                         </Link>
                     </div>
-                    <CustomSnackbar snackbarOpen={errorSnackbar} setSnackbarOpen={setErrorSnackbar} severity={"error"} alertText={errorSnackbarMessage} />
                 </div>
             )}
         </>

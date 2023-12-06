@@ -5,8 +5,9 @@ import {Project} from "../../models/Project";
 import TextField from "@mui/material/TextField";
 import {User} from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
-import {getProjects} from "../../rest/queries";
+import {getProjects, postProject} from "../../rest/queries";
 import {useAuthUser} from "../../contexts/AuthUserContext";
+import toast from "react-hot-toast";
 
 function ProjectList () {
     const [newProject, setNewProject] = React.useState({name:'', description:''} as Project)
@@ -33,15 +34,26 @@ function ProjectList () {
     }
 
     function handleAddProject () {
-        if (newProject.name.trim().length >= 2 && newProject.description.trim().length >= 5) {
-            setProjects([...projects, {
-                name: newProject.name.trim(),
-                description: newProject.description.trim(),
-                id: projects.length + 1,
-                client: newProject.client
-            }])
-            setNewProject({name:'', description:'',id:0,client: null})
+        if (newProject.name.trim().length<2) {
+            toast.error('Le nom du projet doit contenir au moins 2 caractères')
+            return
         }
+        if (newProject.description.trim().length<2) {
+            toast.error('La description du projet doit contenir au moins 2 caractères')
+            return
+        }
+        postProject(newProject).then((response) => {
+            if (response.responseCode === 200) {
+                if (response.data) {
+                    setProjects([...projects, response.data]);
+                    setNewProject({name:'', description:'', client:clients[0], id:0})
+                }
+            } else {
+                console.log("Error while getting projects: " + response.errorMessage)
+            }
+        }).catch((error) => {
+            toast('Une erreur est survenue lors de la création du projet')
+        })
     }
 
     function handleRemoveProject (project: Project) {
@@ -80,7 +92,7 @@ function ProjectList () {
                     <FormControl fullWidth sx={{mt:2}} size={'small'}>
                         <InputLabel>Client</InputLabel>
                         <Select label={'Client'} value={newProject.client?.id} onChange={(event) => setNewProject({...newProject, client:clients.find((client) => client.id === event.target.value)})}>
-                                <MenuItem key={0} value={''}></MenuItem>
+                            <MenuItem key={0} value={''}></MenuItem>
                             {clients.map((client) => (
                                 <MenuItem key={client.id} value={client.id}>{client.lastname} {client.firstname}</MenuItem>
                             ))}
@@ -90,7 +102,7 @@ function ProjectList () {
                 </Card>}
             </Box>
         </Box>
-)
+    )
 }
 
 export default ProjectList;

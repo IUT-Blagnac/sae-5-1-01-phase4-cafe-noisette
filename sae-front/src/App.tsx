@@ -11,11 +11,13 @@ import {Box, CssBaseline, ThemeProvider} from "@mui/material";
 import {useTheme} from "./utils/theme";
 import ProjectList from "./pages/projects/ProjectList";
 import {AuthUserProvider} from "./contexts/AuthUserContext";
+import {Toaster} from "react-hot-toast";
 
 function App() {
     const theme = useTheme()
     return (
         <ThemeProvider theme={theme} >
+            <Toaster/>
             <AuthUserProvider>
                 <CssBaseline />
                 <Box sx={{marginTop:'80px'}}>
