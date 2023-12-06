@@ -13,6 +13,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
+import java.util.ArrayList;
+
 @ApplicationScoped
 @Path("/teams")
 public class TeamController {
@@ -61,13 +63,15 @@ public class TeamController {
     @RolesAllowed("**")
     @Path("/filter")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamByUser(@QueryParam("userId") Long userId) {
+    public Response getTeams(
+            @QueryParam("id") Long id,
+            @QueryParam("userId") Long userId,
+            @QueryParam("projectId") Long projectId,
+            @QueryParam("leaderId") Long leaderId
+    ) {
         try {
-            if (userId == null){
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-            TeamDTO team = teamService.getTeamByUser(userId);
-            return Response.ok(team).build();
+            ArrayList<TeamDTO> teamDTOs = teamService.getFilteredTeams(id, userId, projectId, leaderId);
+            return Response.ok(teamDTOs).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }

@@ -5,11 +5,17 @@ import fr.iut.blagnac.users.entities.UserEntity;
 import fr.iut.blagnac.users.repositories.UserRepository;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
 
 @ApplicationScoped
 public class TeamRepository implements PanacheRepository<TeamEntity>  {
 
-     public TeamEntity findByName(String Name) {
+    @Inject
+    UserRepository userRepository;
+
+    public TeamEntity findByName(String Name) {
         return find("name", Name).firstResult();
     }
 
@@ -18,5 +24,20 @@ public class TeamRepository implements PanacheRepository<TeamEntity>  {
 
 
     }
-    
+
+    public ArrayList<TeamEntity> getFilteredTeams(Long id, Long userId, Long projectId, Long leaderId) {
+        ArrayList<TeamEntity> teams = new ArrayList<>();
+        if (id != null) {
+            teams.add(findById(id));
+        } else if (userId != null) {
+            teams.add(findByUser(userRepository.findById(userId)));
+        } else if (projectId != null) {
+            teams.add(find("project_id", projectId).firstResult());
+        } else if (leaderId != null) {
+            teams.add(find("leader_id", leaderId).firstResult());
+        } else {
+            teams.addAll(listAll());
+        }
+        return teams;
+    }
 }

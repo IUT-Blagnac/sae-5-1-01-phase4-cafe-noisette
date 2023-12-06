@@ -167,4 +167,18 @@ public class TeamService {
         }
 		
     }
+
+    public ArrayList<TeamDTO> getFilteredTeams(Long id, Long userId, Long projectId, Long leaderId) {
+        try {
+            ArrayList<TeamEntity> teamEntities = teamRepository.getFilteredTeams(id, userId, projectId, leaderId);
+            ArrayList<TeamDTO> teamDTOs = new ArrayList<>();
+            for (TeamEntity teamEntity : teamEntities) {
+                teamDTOs.add(TeamMapper.toDTO(teamEntity));
+            }
+            return teamDTOs;
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
 }
