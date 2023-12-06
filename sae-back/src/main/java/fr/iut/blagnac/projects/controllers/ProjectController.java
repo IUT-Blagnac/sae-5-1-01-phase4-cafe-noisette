@@ -77,6 +77,7 @@ public class ProjectController {
     @RolesAllowed({"TEACHER", "ADMIN"})
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProject(ProjectDTO changedProject) {
         try {
             ProjectDTO updatedProject = projectService.updateProject(changedProject, securityContext);
