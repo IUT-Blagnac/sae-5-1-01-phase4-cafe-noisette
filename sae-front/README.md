@@ -17,10 +17,30 @@ npm start
 
 ## Build de l'application
 
+### Paramétrage
+
+Avant de build l'application, il faut paramétrer l'URL de l'API REST (backend), selon l'environnement de déploiement.
+
+Le fichier [.env](.env) contient les informations nécessaires pour paramétrer l'application.
+
+- `REACT_APP_API_URL` : URL de l'API REST (backend)
+
 ```bash
 npm run build
 ```
 
 ## Déploiement de l'application
 
-TODO (via github pages)
+### Installation de l'outil de déploiement
+
+```bash
+npm install -g serve
+```
+
+### Lancement de l'application
+
+```bash
+serve -s build
+```
+
+Cette commande va lancer un serveur web sur le port 3000.
