@@ -97,6 +97,7 @@ function CreateAccount() {
         createAccount(user)
             .then((response) => {
                 if (response.responseCode === 200) {
+                    toast.success("Votre compte a été créé avec succès !");
                     navigate('/login');
                 } else {
                     toast.error("Une erreur est survenue lors de la création de votre compte: '" + response.errorMessage + "'");

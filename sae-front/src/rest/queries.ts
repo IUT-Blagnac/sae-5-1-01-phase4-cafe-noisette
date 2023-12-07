@@ -28,5 +28,5 @@ export const getProjects = async () => {
 }
 
 export const postProject = async (project: Project) => {
-    return await post<Project, Project>('projects', project);
+    return await post<Project, Project>('projects', project, true);
 }

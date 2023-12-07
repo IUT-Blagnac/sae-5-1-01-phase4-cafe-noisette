@@ -27,6 +27,7 @@ function CreateFormPage() {
         login(username, password).then((response) => {
             if (response.responseCode === 200) {
                 if (response.data) {
+                    toast.success('Connexion réussie');
                     authUser.updateToken(response.data.token);
                     authUser.refreshUser();
                 }
