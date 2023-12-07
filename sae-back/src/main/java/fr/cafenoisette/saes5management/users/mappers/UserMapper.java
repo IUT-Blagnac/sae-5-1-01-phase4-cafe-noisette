@@ -5,7 +5,10 @@ import fr.cafenoisette.saes5management.users.dtos.subdtos.ClientUserDTO;
 import fr.cafenoisette.saes5management.users.dtos.subdtos.StudentUserDTO;
 import fr.cafenoisette.saes5management.users.dtos.UserDTO;
 import fr.cafenoisette.saes5management.users.entities.UserEntity;
+import fr.cafenoisette.saes5management.users.enums.UserRole;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import java.util.Set;
 
 @RegisterForReflection
 public class UserMapper {
@@ -21,7 +24,12 @@ public class UserMapper {
         PBKDF2Encoder encoder = new PBKDF2Encoder();
 
         entity.setPassword(encoder.encode(dto.getPassword()));
-        entity.setRoles(dto.getRoles());
+
+        Set<UserRole> roles = dto.getRoles();
+        if (roles != null && !roles.isEmpty()) {
+            roles.removeIf(role -> role.equals(UserRole.ADMIN));
+            entity.setRoles(roles);
+        }
 
 //        if(dto.getPlayerInfo() != null){
 //            entity.setPlayerInfo(PlayerInfoMapper.toEntity(dto.getPlayerInfo()));

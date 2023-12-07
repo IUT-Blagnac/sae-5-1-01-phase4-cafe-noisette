@@ -22,6 +22,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.SecurityContext;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -224,6 +225,26 @@ public class UserService {
             userRepository.persist(userEntity);
             LOGGER.info("User " + userEntity.getUsername() + " updated");
             return UserMapper.toDTO(userEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    @Transactional
+    public void createFirstAdminUser(UserDTO admin) {
+        try {
+            if (userRepository.findByUsername(admin.getUsername()) != null) {
+                LOGGER.error("User already exists");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_ALREADY_EXISTS);
+            }
+
+            UserEntity userEntity = UserMapper.toEntity(admin);
+            userEntity.setRoles(new HashSet<>());
+            userEntity.getRoles().add(UserRole.ADMIN);
+
+            userRepository.persist(userEntity);
+            LOGGER.info("User " + userEntity.getUsername() + " created");
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
