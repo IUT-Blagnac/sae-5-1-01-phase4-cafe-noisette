@@ -87,7 +87,7 @@ public class ProjectService {
     public ProjectDTO createProject(ProjectDTO projectDTO, SecurityContext securityContext) {
         try {
             ProjectEntity projectEntity = ProjectMapper.toEntity(projectDTO);
-            Set<Long> idList = projectDTO.getContactIds();
+            Set<Long> idList = projectDTO.getClientIds();
             Set<UserEntity> userList = new LinkedHashSet<>();
             for(Long id : idList) {
                 UserEntity userEntity = userRepository.findById(id);
@@ -100,8 +100,8 @@ public class ProjectService {
                 userList.add(userEntity);
             }
 
-            projectEntity.setContacts(userList);
-            LOGGER.error("added contact");
+            projectEntity.setClients(userList);
+            LOGGER.error("added client");
 
             projectRepository.persist(projectEntity);
             LOGGER.error("project persisted");
@@ -123,8 +123,8 @@ public class ProjectService {
             if(securityContext.isUserInRole("ADMIN")) {
                 ProjectEntity updateProject = ProjectMapper.toEntity(changedProject);
 
-                if (changedProject.getContactIds() != null) {
-                    Set<Long> idList = changedProject.getContactIds();
+                if (changedProject.getClientIds() != null) {
+                    Set<Long> idList = changedProject.getClientIds();
                     Set<UserEntity> userList = new LinkedHashSet<>();
                     for (Long id : idList) {
                         UserEntity userEntity = userRepository.findById(id);
@@ -137,7 +137,7 @@ public class ProjectService {
                         userList.add(userEntity);
                     }
 
-                    oldProject.setContacts(userList);
+                    oldProject.setClients(userList);
                 }
 
                 if (updateProject.getName() != null) {

@@ -6,6 +6,8 @@ import fr.iut.blagnac.authentication.utils.PermissionChecker;
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.exceptions.SAE5ManagementExceptionTypes;
 import fr.iut.blagnac.users.dtos.UserDTO;
+import fr.iut.blagnac.users.dtos.subdtos.ClientUserDTO;
+import fr.iut.blagnac.users.dtos.subdtos.StudentUserDTO;
 import fr.iut.blagnac.users.entities.PlayerInfoEntity;
 import fr.iut.blagnac.users.entities.UserEntity;
 import fr.iut.blagnac.users.enums.UserRole;
@@ -19,6 +21,7 @@ import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.SecurityContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -77,32 +80,69 @@ public class UserService {
         return userDTO;
     }
 
-    public UserDTO[] getUsersByRole(UserRole role){
-        try{
-
+    public List<UserDTO> getUsersByRole(UserRole role){
+        try {
             List<UserEntity> userList = userRepository.findByRole(role);
-            UserEntity[] userEntities = new UserEntity[userList.size()];
-            userList.toArray(userEntities);
+            List<UserDTO> userDTOList = new ArrayList<>();
 
-            UserDTO[] listUserDTO = new UserDTO[userList.size()];
-            int id = 0;
-
-            for (UserEntity userEntity2 : userEntities) {
-            
-                UserDTO userDTO = UserMapper.toDTO(userEntity2);
-                listUserDTO[id] = userDTO;
-
-                id+=1;
+            for (UserEntity userEntity : userList){
+                userDTOList.add(UserMapper.toDTO(userEntity));
             }
 
-            return listUserDTO;
-
-
-        }catch (PersistenceException e) {
+            return userDTOList;
+        } catch (PersistenceException e) {
             LOGGER.error("Error while getting users with role", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
+    }
 
+    public List<StudentUserDTO> getStudents(
+            Long id,
+            String username,
+            String firstname,
+            String lastname,
+            Long teamId
+    ) {
+        try {
+            List<UserEntity> users = userRepository.getFilteredUsers(id, username, firstname, lastname, null, teamId);
+            List<StudentUserDTO> studentUserDTOList = new ArrayList<>();
+
+            for (UserEntity userEntity : users) {
+                if (userEntity.getRoles().contains(UserRole.STUDENT_INIT) || userEntity.getRoles().contains(UserRole.STUDENT_ALT)) {
+                    studentUserDTOList.add(UserMapper.toStudentDTO(userEntity));
+                }
+            }
+
+            return studentUserDTOList;
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting students", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    public List<ClientUserDTO> getClients(
+            Long id,
+            String username,
+            String firstname,
+            String lastname,
+            String email
+    ) {
+        try {
+            List<UserEntity> users = userRepository.getFilteredUsers(id, username, firstname, lastname, email, null);
+
+            List<ClientUserDTO> clientUserDTOList = new ArrayList<>();
+
+            for (UserEntity userEntity : users) {
+                if (userEntity.getRoles().contains(UserRole.CLIENT)) {
+                    clientUserDTOList.add(UserMapper.toClientDTO(userEntity));
+                }
+            }
+
+            return clientUserDTOList;
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting clients", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
     }
 
     @Transactional

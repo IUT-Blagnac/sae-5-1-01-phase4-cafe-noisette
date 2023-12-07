@@ -26,6 +26,6 @@ public class ProjectDTO {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("contactIds")
-    private Set<Long> contactIds;
+    @JsonProperty("clientIds")
+    private Set<Long> clientIds;
 }

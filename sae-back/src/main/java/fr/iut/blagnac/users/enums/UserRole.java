@@ -9,11 +9,11 @@ public enum UserRole {
     TEACHER("teacher"),
     STUDENT_INIT("student_init"),
     STUDENT_ALT("student_alt"),
-    CONTACT("contact");
+    CLIENT("client");
 
-    private String role;
+    private final String role;
 
-    private UserRole(String role) {
+    UserRole(String role) {
         this.role = role;
     }
 

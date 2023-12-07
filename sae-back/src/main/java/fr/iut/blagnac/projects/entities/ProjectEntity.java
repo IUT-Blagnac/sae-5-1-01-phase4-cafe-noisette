@@ -23,7 +23,7 @@ public class ProjectEntity {
     private String description;
 
     @OneToMany
-    @JoinColumn(name = "contact_ids")
-    private Set<UserEntity> contacts;
+    @JoinColumn(name = "client_ids")
+    private Set<UserEntity> clients;
 
 }

@@ -2,6 +2,8 @@ package fr.iut.blagnac.users.mappers;
 
 import fr.iut.blagnac.authentication.utils.PBKDF2Encoder;
 import fr.iut.blagnac.users.dtos.UserDTO;
+import fr.iut.blagnac.users.dtos.subdtos.ClientUserDTO;
+import fr.iut.blagnac.users.dtos.subdtos.StudentUserDTO;
 import fr.iut.blagnac.users.entities.UserEntity;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
@@ -49,4 +51,38 @@ public class UserMapper {
         return dto;
     }
 
+    public static StudentUserDTO toStudentDTO(UserEntity userEntity) {
+        StudentUserDTO studentUserDTO = new StudentUserDTO();
+        studentUserDTO.setId(userEntity.getId());
+        studentUserDTO.setUsername(userEntity.getUsername());
+        studentUserDTO.setFirstname(userEntity.getFirstname());
+        studentUserDTO.setLastname(userEntity.getLastname());
+        studentUserDTO.setRoles(userEntity.getRoles());
+
+        if (userEntity.getPlayerInfo() != null) {
+            studentUserDTO.setPlayerInfo(PlayerInfoMapper.toDTO(userEntity.getPlayerInfo()));
+        }
+
+        if (userEntity.getTeam() != null) {
+            studentUserDTO.setTeamId(userEntity.getTeam().getId());
+        }
+
+        return studentUserDTO;
+    }
+
+    public static ClientUserDTO toClientDTO(UserEntity userEntity) {
+        ClientUserDTO clientUserDTO = new ClientUserDTO();
+        clientUserDTO.setId(userEntity.getId());
+        clientUserDTO.setUsername(userEntity.getUsername());
+        clientUserDTO.setFirstname(userEntity.getFirstname());
+        clientUserDTO.setLastname(userEntity.getLastname());
+        clientUserDTO.setEmail(userEntity.getLastname());
+        clientUserDTO.setRoles(userEntity.getRoles());
+
+        if (userEntity.getPlayerInfo() != null) {
+            clientUserDTO.setPlayerInfo(PlayerInfoMapper.toDTO(userEntity.getPlayerInfo()));
+        }
+
+        return clientUserDTO;
+    }
 }

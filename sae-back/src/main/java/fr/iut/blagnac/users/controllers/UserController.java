@@ -2,6 +2,8 @@ package fr.iut.blagnac.users.controllers;
 
 import fr.iut.blagnac.exceptions.SAE5ManagementException;
 import fr.iut.blagnac.users.dtos.UserDTO;
+import fr.iut.blagnac.users.dtos.subdtos.ClientUserDTO;
+import fr.iut.blagnac.users.dtos.subdtos.StudentUserDTO;
 import fr.iut.blagnac.users.enums.UserRole;
 import fr.iut.blagnac.users.services.UserService;
 import jakarta.annotation.security.PermitAll;
@@ -12,6 +14,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+
+import java.util.List;
 
 @ApplicationScoped
 @Path("/users")
@@ -42,7 +46,7 @@ public class UserController {
     }
 
     @GET
-    @RolesAllowed("**")
+    @RolesAllowed({"ADMIN"})
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(
@@ -56,11 +60,49 @@ public class UserController {
             } else if (username != null) {
                 return getUserByUsername(username);
             } else if (role != null) {
-                UserDTO[] userTab = userService.getUsersByRole(role);
+                List<UserDTO> userTab = userService.getUsersByRole(role);
                 return Response.ok(userTab).build();
             }
             return Response.status(Response.Status.BAD_REQUEST).build();
 
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
+    @GET
+    @RolesAllowed("**")
+    @Path("/students/filter")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStudents(
+            @QueryParam("id") Long id,
+            @QueryParam("username") String username,
+            @QueryParam("firstname") String firstname,
+            @QueryParam("lastname") String lastname,
+            @QueryParam("teamId") Long teamId
+    ) {
+        try {
+            List<StudentUserDTO> userTab = userService.getStudents(id, username, firstname, lastname, teamId);
+            return Response.ok(userTab).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
+    @GET
+    @RolesAllowed("**")
+    @Path("/clients/filter")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getContacts(
+            @QueryParam("id") Long id,
+            @QueryParam("username") String username,
+            @QueryParam("firstname") String firstname,
+            @QueryParam("lastname") String lastname,
+            @QueryParam("email") String email
+    ) {
+        try {
+            List<ClientUserDTO> userTab = userService.getClients(id, username, firstname, lastname, email);
+            return Response.ok(userTab).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }

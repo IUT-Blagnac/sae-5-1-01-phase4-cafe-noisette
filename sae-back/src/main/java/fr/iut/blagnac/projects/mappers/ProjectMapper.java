@@ -26,14 +26,14 @@ public class ProjectMapper {
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
-        if(entity.getContacts() != null) {
-            Set<UserEntity> userList = entity.getContacts();
+        if(entity.getClients() != null) {
+            Set<UserEntity> userList = entity.getClients();
             Set<Long> idList = new LinkedHashSet<>();
             for(UserEntity user : userList) {
                 UserDTO userDTO = UserMapper.toDTO(user);
                 idList.add(userDTO.getId());
             }
-            dto.setContactIds(idList);
+            dto.setClientIds(idList);
         }
 
         return dto;
