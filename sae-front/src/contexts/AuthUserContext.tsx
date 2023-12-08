@@ -1,6 +1,7 @@
 import {createContext, ReactNode, useCallback, useContext, useEffect, useState} from "react";
 import {User} from "../models/User";
 import {getMe} from "../rest/queries";
+import toast from "react-hot-toast";
 
 export interface AuthUser {
     token: string | undefined;
@@ -37,6 +38,7 @@ const useAuthUserValues = () => {
 
     const disconnect = () => {
         setToken(undefined);
+        toast.success('Déconnexion réussie');
         localStorage.removeItem("token");
     }
 

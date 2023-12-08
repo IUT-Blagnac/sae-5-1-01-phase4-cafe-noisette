@@ -1,5 +1,5 @@
 import {User} from "../models/User";
-import {get, post} from "./restUtils";
+import {get, post, put} from "./restUtils";
 import {Project} from "../models/Project";
 
 export const createAccount = async (account: User) => {
@@ -29,4 +29,8 @@ export const getProjects = async () => {
 
 export const postProject = async (project: Project) => {
     return await post<Project, Project>('projects', project, true);
+}
+
+export const putProject = async (project: Project) => {
+    return await put<Project, Project>('projects', project, true);
 }

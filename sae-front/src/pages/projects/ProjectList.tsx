@@ -5,7 +5,7 @@ import {Project} from "../../models/Project";
 import TextField from "@mui/material/TextField";
 import {User} from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
-import {getProjects, postProject} from "../../rest/queries";
+import {getProjects, postProject, putProject} from "../../rest/queries";
 import {useAuthUser} from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 
@@ -35,11 +35,11 @@ function ProjectList () {
 
     function handleAddProject () {
         if (newProject.name.trim().length<2) {
-            toast.error('Le nom du projet doit contenir au moins 2 caractères')
+            toast('Le nom du projet doit contenir au moins 2 caractères',{icon:'❕'})
             return
         }
-        if (newProject.description.trim().length<2) {
-            toast.error('La description du projet doit contenir au moins 2 caractères')
+        if (newProject.description.trim().length<5) {
+            toast.error('La description du projet doit contenir au moins 5 caractères')
             return
         }
         postProject(newProject).then((response) => {
@@ -50,6 +50,7 @@ function ProjectList () {
                 }
             } else {
                 console.log("Error while getting projects: " + response.errorMessage)
+                toast.error('Une erreur est survenue lors de la création du projet (erreur '+response.responseCode+')')
             }
         }).catch((error) => {
             toast('Une erreur est survenue lors de la création du projet')
@@ -61,12 +62,19 @@ function ProjectList () {
     }
 
     function handleUpdateProject (updatedProject: Project) {
-        setProjects(projects.map((project) => {
-            if (project.id === updatedProject.id) {
-                return updatedProject
+        putProject(updatedProject).then((response) => {
+            if (response.responseCode === 200) {
+                if (response.data) {
+                    setProjects(projects.map((project) => project.id === updatedProject.id ? updatedProject : project))
+                }
+            } else {
+                console.log("Error while getting projects: " + response.errorMessage)
+                toast.error('Une erreur est survenue lors de la mise à jour du projet (erreur '+response.responseCode+')')
             }
-            return project
-        }))
+        }
+        ).catch((error) => {
+            toast('Une erreur est survenue lors de la mise à jour du projet')
+        })
     }
 
     return (
@@ -99,7 +107,8 @@ function ProjectList () {
                         </Select>
                     </FormControl>
                     <Button variant={'outlined'} sx={{mt:2}} onClick={handleAddProject}>Ajouter un nouveau projet</Button>
-                </Card>}
+                </Card>
+                }
             </Box>
         </Box>
     )
