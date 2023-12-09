@@ -8,8 +8,11 @@ export interface User {
     email: string;
     playerInfo?: PlayerInfo;
     password: string | null; // only on creation
-    roles: string[];
+    roles: UserRole[];
 }
+
+export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT_INIT' | 'STUDENT_ALT' | 'CLIENT'|'';
+
 
 // Roles :
 //     ADMIN,

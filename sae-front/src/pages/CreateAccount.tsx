@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
 import {Box, Dialog, Typography} from "@mui/material";
 import UserInfos, {skillType} from "./UserInfos";
-import {User} from "../models/User";
+import {User, UserRole} from "../models/User";
 import {createAccount} from "../rest/queries";
 import {useAuthUser} from "../contexts/AuthUserContext";
 import toast from "react-hot-toast";
@@ -17,7 +17,7 @@ function CreateAccount() {
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState<UserRole>("");
     const [error, setError] = useState("");
     const initialSkills: skillType[] = [
         { name: 'globalLevel', label: 'Niveau global en projet de dev :', value: 1, color: 'secondary.main' },
@@ -57,7 +57,7 @@ function CreateAccount() {
                 setEmail(value);
                 break;
             case "role":
-                setRole(value);
+                setRole(value as UserRole);
                 break;
             default:
                 break;
@@ -188,11 +188,10 @@ function CreateAccount() {
                         value={role}
                         onChange={handleChange}
                     >
-                        <MenuItem value="TEACHER">Professeur</MenuItem>
-                        <MenuItem value="STUDENT_INIT">Étudiant initial</MenuItem>
-                        <MenuItem value="STUDENT_ALT">Étudiant alternant</MenuItem>
-                        <MenuItem value="CONTACT">Client</MenuItem>
-                        {/*<MenuItem value="ADMIN">Admin</MenuItem>*/}
+                        <MenuItem value={'TEACHER' as UserRole}>Professeur</MenuItem>
+                        <MenuItem value={'CLIENT' as UserRole}>Client</MenuItem>
+                        <MenuItem value={'STUDENT_INIT' as UserRole}>Étudiant initial</MenuItem>
+                        <MenuItem value={'STUDENT_ALT' as UserRole}>Étudiant alternant</MenuItem>
                     </TextField>
                     <Button
                         variant="outlined"

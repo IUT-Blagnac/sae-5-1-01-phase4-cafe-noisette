@@ -11,7 +11,7 @@ function Navbar() {
     const open = Boolean(anchorEl);
     const { isDarkMode, toggle } = useDarkMode()
     const navigate = useNavigate()
-    const pages = [{name: "Accueil", path: "/"}, {name: "About", path: "/about"}, {name: "Projects", path: "/projects"}]
+    const pages = [{name: "Accueil", path: "/"}, {name: "À propos", path: "/about"}, {name: "Projects", path: "/projects"}]
     const authUser = useAuthUser();
 
     const handleClose = () => {

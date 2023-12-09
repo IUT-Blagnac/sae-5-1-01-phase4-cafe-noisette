@@ -5,7 +5,7 @@ import {Project} from "../../models/Project";
 import TextField from "@mui/material/TextField";
 import {User} from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
-import {getProjects, postProject, putProject} from "../../rest/queries";
+import {getClients, getProjects, postProject, putProject} from "../../rest/queries";
 import {useAuthUser} from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 
@@ -13,11 +13,12 @@ function ProjectList () {
     const [newProject, setNewProject] = React.useState({name:'', description:''} as Project)
     const authUser = useAuthUser();
     const editRights = authUser.user?.roles.includes('TEACHER') || authUser.user?.roles.includes('ADMIN')
-    const [clients, setClients] = React.useState([{id:1,email:'email@thales', username:'Bryva',firstname:'Bryce',lastname:'Fuertes',roles:['CONTACT']}] as User[])
+    const [clients, setClients] = React.useState([] as User[])
     const [projects, setProjects] = React.useState([] as Project[])
 
     useEffect(() => {
         requestProjects();
+        requestClients();
     }, []);
 
     function requestProjects () {
@@ -33,13 +34,35 @@ function ProjectList () {
         )
     }
 
+    function requestClients () {
+        getClients().then((response) => {
+                if (response.responseCode === 200) {
+                    if (response.data) {
+                        console.log('ok'+response.data)
+                        setClients(response.data);
+                    }
+                } else {
+                    console.log("Error while getting projects: " + response.errorMessage);
+                    toast.error('Une erreur est survenue lors de la récupération des clients')
+                }
+            }
+        ).catch((error) => {
+            toast.error('Une erreur est survenue lors de la récupération des clients')
+        }
+        )
+    }
+
     function handleAddProject () {
         if (newProject.name.trim().length<2) {
             toast('Le nom du projet doit contenir au moins 2 caractères',{icon:'❕'})
             return
         }
         if (newProject.description.trim().length<5) {
-            toast.error('La description du projet doit contenir au moins 5 caractères')
+            toast('La description du projet doit contenir au moins 5 caractères',{icon:'❕'})
+            return
+        }
+        if (!newProject.client) {
+            toast('Le projet doit être associé à un client',{icon:'❕'})
             return
         }
         postProject(newProject).then((response) => {
@@ -99,8 +122,7 @@ function ProjectList () {
                     />
                     <FormControl fullWidth sx={{mt:2}} size={'small'}>
                         <InputLabel>Client</InputLabel>
-                        <Select label={'Client'} value={newProject.client?.id} onChange={(event) => setNewProject({...newProject, client:clients.find((client) => client.id === event.target.value)})}>
-                            <MenuItem key={0} value={''}></MenuItem>
+                        <Select label={'Client'}  value={newProject.client ? newProject.client.id : ''} onChange={(event) => setNewProject({...newProject, client:clients.find((client) => client.id === event.target.value)})}>
                             {clients.map((client) => (
                                 <MenuItem key={client.id} value={client.id}>{client.lastname} {client.firstname}</MenuItem>
                             ))}
