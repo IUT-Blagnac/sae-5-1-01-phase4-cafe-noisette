@@ -23,19 +23,35 @@ public class TeamRepository implements PanacheRepository<TeamEntity>  {
         return find("id", user.getTeam()).firstResult();
     }
 
+    /**
+     * Get all teams or a team by id, name, project id or leader id, each parameter is optional and can be combined
+     * @param id id of the team
+     * @param name name of the team
+     * @param projectId id of the project
+     * @param leaderId id of the leader
+     * @return a list of teams
+     */
     public ArrayList<TeamEntity> getFilteredTeams(Long id, String name, Long projectId, Long leaderId) {
-        ArrayList<TeamEntity> teams = new ArrayList<>();
+        // get all teams
+        ArrayList<TeamEntity> teams = new ArrayList<>(listAll());
+        // if id is not null, remove all teams that don't have this id
         if (id != null) {
-            teams.add(findById(id));
-        } else if (name != null) {
-            teams.add(findByName(name));
-        } else if (projectId != null) {
-            teams.add(find("project_id", projectId).firstResult());
-        } else if (leaderId != null) {
-            teams.add(find("leader_id", leaderId).firstResult());
-        } else {
-            teams.addAll(listAll());
+            teams.removeIf(team -> !team.getId().equals(id));
         }
+        // if name is not null, remove all teams that don't have this name
+        if (name != null) {
+            teams.removeIf(team -> !team.getName().equals(name));
+        }
+        // if projectId is not null, remove all teams that don't have this project id
+        if (projectId != null) {
+            teams.removeIf(team -> !team.getProject().getId().equals(projectId));
+        }
+        // if leaderId is not null, remove all teams that don't have this leader id
+        if (leaderId != null) {
+            teams.removeIf(team -> !team.getLeader().getId().equals(leaderId));
+        }
+        // return the list of teams
+
         return teams;
     }
 }
