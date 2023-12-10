@@ -4,5 +4,9 @@ export interface Project {
     id?: number;
     name: string;
     description: string;
-    client: User | null | undefined;
+    clientIds: number[];
+}
+
+export function getUsersFromIds(users: User[], ids: number[]): User[] {
+    return users.filter(user => ids.includes(user.id!));
 }

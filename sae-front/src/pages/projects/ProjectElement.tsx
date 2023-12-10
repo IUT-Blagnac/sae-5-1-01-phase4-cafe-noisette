@@ -1,5 +1,15 @@
 import React from "react";
-import {Box, Button, Card, FormControl, IconButton, InputLabel, Select, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    FormControl,
+    IconButton,
+    InputLabel,
+    Select,
+    SelectChangeEvent,
+    Typography
+} from "@mui/material";
 import {Project} from "../../models/Project";
 import {Delete, Edit} from "@mui/icons-material";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -21,7 +31,8 @@ interface ProjectElementProps {
 function ProjectElement (props: ProjectElementProps) {
     const {project, admin, handleRemoveProject, clients, handleUpdateProject} = props
     const [open, setOpen] = React.useState(false);
-    const [updateProject, setUpdateProject] = React.useState({name:'', description:'', client: null} as Project)
+    const [updateProject, setUpdateProject] = React.useState({name:'', description:'', clientIds:[]} as Project)
+    const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
 
     function handleClose () {
         setOpen(false)
@@ -34,6 +45,11 @@ function ProjectElement (props: ProjectElementProps) {
 
     function handleSelect () {
 
+    }
+
+    function selectClients (event: SelectChangeEvent<unknown>) {
+        setSelectedClientsIds(event.target.value as number[])
+        setUpdateProject({...updateProject, clientIds:selectedClientsIds})
     }
 
     return (
@@ -54,7 +70,7 @@ function ProjectElement (props: ProjectElementProps) {
                     }
                 </Box>
                 <Typography variant={"body1"} sx={{height:'8 em'}}>{project.description}</Typography>
-                <Typography>{project.client?.username}</Typography>
+                <Typography>{project.clientIds.map((id) => clients.find((client) => client.id === id)?.username).join(', ')}</Typography>
                 <Button variant={"contained"} sx={{width:'100%'}} onClick={handleSelect}>Select this project</Button>
             </Card>
 
@@ -82,7 +98,7 @@ function ProjectElement (props: ProjectElementProps) {
                         />
                         <FormControl fullWidth sx={{mt:2}} size={'small'} >
                             <InputLabel>Client</InputLabel>
-                            <Select label={'Client'} value={project.client?.id} name={'Client'} onChange={(event) => setUpdateProject({...updateProject, client:clients.find((client) => client.id === event.target.value)})}>
+                            <Select label={'Clients'} multiple value={selectedClientsIds} name={'Clients'} onChange={(event) => selectClients(event)}>
                                 {clients.map((client) => (
                                     <MenuItem key={client.id} value={client.id}>{client.lastname} {client.firstname}</MenuItem>
                                 ))}

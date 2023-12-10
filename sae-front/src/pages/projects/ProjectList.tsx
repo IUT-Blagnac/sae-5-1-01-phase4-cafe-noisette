@@ -1,4 +1,4 @@
-import {Box, Button, Card, FormControl, InputLabel, Select, Typography} from "@mui/material";
+import {Box, Button, Card, FormControl, InputLabel, Select, SelectChangeEvent, Typography} from "@mui/material";
 import React, {useEffect} from "react";
 import ProjectElement from "./ProjectElement";
 import {Project} from "../../models/Project";
@@ -10,10 +10,11 @@ import {useAuthUser} from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 
 function ProjectList () {
-    const [newProject, setNewProject] = React.useState({name:'', description:''} as Project)
+    const [newProject, setNewProject] = React.useState({name:'', description:'',clientIds:[]} as Project)
     const authUser = useAuthUser();
     const editRights = authUser.user?.roles.includes('TEACHER') || authUser.user?.roles.includes('ADMIN')
     const [clients, setClients] = React.useState([] as User[])
+    const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
     const [projects, setProjects] = React.useState([] as Project[])
 
     useEffect(() => {
@@ -61,15 +62,17 @@ function ProjectList () {
             toast('La description du projet doit contenir au moins 5 caractères',{icon:'❕'})
             return
         }
-        if (!newProject.client) {
+        if (newProject.clientIds.length === 0) {
             toast('Le projet doit être associé à un client',{icon:'❕'})
+            console.log(newProject.clientIds)
             return
         }
         postProject(newProject).then((response) => {
             if (response.responseCode === 200) {
                 if (response.data) {
                     setProjects([...projects, response.data]);
-                    setNewProject({name:'', description:'', client:clients[0], id:0})
+                    setNewProject({name:'', description:'', id:0, clientIds:[]})
+                    setSelectedClientsIds([])
                 }
             } else {
                 console.log("Error while getting projects: " + response.errorMessage)
@@ -82,6 +85,7 @@ function ProjectList () {
 
     function handleRemoveProject (project: Project) {
         setProjects(projects.filter((p) => p.id !== project.id))
+
     }
 
     function handleUpdateProject (updatedProject: Project) {
@@ -100,6 +104,12 @@ function ProjectList () {
         })
     }
 
+    function selectClients(event: SelectChangeEvent<unknown>) {
+        setSelectedClientsIds(event.target.value as number[])
+        setNewProject({...newProject, clientIds:event.target.value as number[]})
+        console.log(newProject)
+    }
+
     return (
         <Box>
             <Typography variant={"h4"} sx={{m:2,display:'flex'}}>Projects</Typography>
@@ -110,9 +120,10 @@ function ProjectList () {
                 ))}
 
                 {editRights && <Card sx={{maxWidth:'400px', height:'400px', m:2,p:2, border:'2px dashed #ccc', borderRadius:'5px'}}>
-                    <TextField label={'Nom du projet'} error={newProject.name.trim().length<2}  size={'small'} onChange={(event) => setNewProject({...newProject, name:event.target.value})} sx={{mt:2,width:'100%'}}/>
+                    <TextField label={'Nom du projet'} value={newProject.name} error={newProject.name.trim().length<2}  size={'small'} onChange={(event) => setNewProject({...newProject, name:event.target.value})} sx={{mt:2,width:'100%'}} />
                     <TextField
                         error={newProject.description.trim().length<5}
+                        value={newProject.description}
                         onChange={(event) => setNewProject({...newProject, description:event.target.value})}
                         sx={{mt:2,width:'100%'}}
                         label={'Description'}
@@ -122,7 +133,7 @@ function ProjectList () {
                     />
                     <FormControl fullWidth sx={{mt:2}} size={'small'}>
                         <InputLabel>Client</InputLabel>
-                        <Select label={'Client'}  value={newProject.client ? newProject.client.id : ''} onChange={(event) => setNewProject({...newProject, client:clients.find((client) => client.id === event.target.value)})}>
+                        <Select label={'Clients'} multiple value={selectedClientsIds} name={'Clients'} onChange={(event) => selectClients(event)}>
                             {clients.map((client) => (
                                 <MenuItem key={client.id} value={client.id}>{client.lastname} {client.firstname}</MenuItem>
                             ))}
