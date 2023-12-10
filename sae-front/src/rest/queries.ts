@@ -1,13 +1,13 @@
-import {User} from "../models/User";
-import {get, post, put} from "./restUtils";
-import {Project} from "../models/Project";
+import { User } from "../models/User";
+import { get, post, put } from "./restUtils";
+import { Project } from "../models/Project";
 
 export const createAccount = async (account: User) => {
     return await post<User, User>('users', account);
 }
 
 export const login = async (username: string, password: string) => {
-    return await post<{username: string, password: string}, {token: string}>('auth/login', {username, password});
+    return await post<{ username: string, password: string }, { token: string }>('auth/login', { username, password });
 }
 
 export const getUserById = async (id: string) => {
@@ -37,4 +37,12 @@ export const postProject = async (project: Project) => {
 
 export const putProject = async (project: Project) => {
     return await put<Project, Project>('projects', project, true);
+}
+
+export const getStudents = async () => {
+    return await get<User[]>('users/students/filter?username=jspEleve2', true);
+}
+
+export const getStudentsByUsername = async (username: String) => {
+    return await get<User[]>('users/students/filter?username=' + username, true);
 }

@@ -15,7 +15,7 @@ import {
 import { Project } from "../models/Project";
 import { getProjects } from "../rest/queries";
 
-const ViewStudentTeam = () => {
+const CreateTeam = () => {
   const [choice1, setChoice1] = useState("");
   const [choice2, setChoice2] = useState("");
   const [choice3, setChoice3] = useState("");
@@ -84,33 +84,28 @@ const ViewStudentTeam = () => {
       <FormControl variant="outlined" sx={{ marginTop: "5%", marginBottom: "3%", width: "40%" }}>
         <InputLabel>Nom de l'équipe</InputLabel>
         <TextField
-            value={choice1}
-            onChange={(e) => setChoice1(e.target.value)}
-            label="Nom de l'équipe"
-            variant="outlined"
-            fullWidth
-            InputProps={{
-            dangerouslySetInnerHTML: {
-                __html: choice1,
-            },
-            }}
-      />
+          value={choice1}
+          onChange={(e) => setChoice1(e.target.value)}
+          label="Nom de l'équipe"
+          variant="outlined"
+          fullWidth
+        />
       </FormControl>
 
-<FormControl variant="outlined" sx={{ marginBottom: "7%", width: "40%" }}>
-  <InputLabel>Liste des sujets</InputLabel>
-  <Select
-    value={choice2}
-    onChange={(e) => setChoice2(e.target.value)}
-    label="Liste des sujets resntants"
-  >
-    {projects.map((project) => (
-      <MenuItem key={project.id} value={project.id}>
-        {project.name}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
+      <FormControl variant="outlined" sx={{ marginBottom: "7%", width: "40%" }}>
+        <InputLabel>Liste des sujets</InputLabel>
+        <Select
+          value={choice2}
+          onChange={(e) => setChoice2(e.target.value)}
+          label="Liste des sujets resntants"
+        >
+          {projects.map((project) => (
+            <MenuItem key={project.id} value={project.id}>
+              {project.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <Button variant="contained" color="primary" onClick={handleConfirmClick}>
         Confirmer
@@ -123,9 +118,9 @@ const ViewStudentTeam = () => {
       )}
 
 
-      
+
     </Box>
   );
 };
 
-export default ViewStudentTeam;
+export default CreateTeam;
