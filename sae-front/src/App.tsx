@@ -6,6 +6,8 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import ViewStudent from "./pages/ViewStudent";
+import CreateTeam from "./pages/CreateTeam";
+import ViewStudentTeam from "./pages/ViewStudentTeam";
 import Navbar from "./elements/Navbar";
 import {Box, CssBaseline, ThemeProvider} from "@mui/material";
 import {useTheme} from "./utils/theme";
@@ -31,6 +33,8 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/login/createAccount" element={<CreateAccount />} />
                         <Route path="/ViewStudent" element={<ViewStudent />} />
+                        <Route path="/ViewStudent/CreateTeam" element={<CreateTeam />} />
+                        <Route path="/ViewStudentTeam" element={<ViewStudentTeam />} />
                     </Routes>
                 </Box>
             </AuthUserProvider>
