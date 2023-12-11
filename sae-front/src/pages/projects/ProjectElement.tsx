@@ -108,7 +108,10 @@ function ProjectElement (props: ProjectElementProps) {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Annuler</Button>
-                    <Button onClick={() => (handleUpdateProject(updateProject), handleClose())} autoFocus>
+                    <Button onClick={() => {
+                        handleUpdateProject(updateProject)
+                        handleClose()
+                    }} autoFocus>
                         Modifier
                     </Button>
                 </DialogActions>
