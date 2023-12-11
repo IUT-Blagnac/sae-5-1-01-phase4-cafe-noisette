@@ -1,6 +1,7 @@
 package fr.cafenoisette.saes5management.teams.dtos;
 
-import java.util.ArrayList;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class TeamDTO {
     private Long projectId;
 
     @JsonProperty("membersId")
-    private  ArrayList<Long> membersId;
+    private Set<Long> membersId;
 
     @JsonProperty("leaderId")
     private Long leaderId;
