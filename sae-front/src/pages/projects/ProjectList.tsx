@@ -70,8 +70,9 @@ function ProjectList () {
         postProject(newProject).then((response) => {
             if (response.responseCode === 200) {
                 if (response.data) {
+                    toast.success('Projet créé avec succès')
                     setProjects([...projects, response.data]);
-                    setNewProject({name:'', description:'', id:0, clientIds:[]})
+                    setNewProject({name:'', description:'', clientIds:[]})
                     setSelectedClientsIds([])
                 }
             } else {
