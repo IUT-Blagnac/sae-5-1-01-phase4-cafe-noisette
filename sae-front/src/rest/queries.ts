@@ -1,6 +1,7 @@
 import { User } from "../models/User";
 import { get, post, put } from "./restUtils";
 import { Project } from "../models/Project";
+import { Team } from "../models/Team";
 
 export const createAccount = async (account: User) => {
     return await post<User, User>('users', account);
@@ -40,9 +41,13 @@ export const putProject = async (project: Project) => {
 }
 
 export const getStudents = async () => {
-    return await get<User[]>('users/students/filter?username=jspEleve2', true);
+    return await get<User[]>('users/students/filter', true);
 }
 
 export const getStudentsByUsername = async (username: String) => {
     return await get<User[]>('users/students/filter?username=' + username, true);
+}
+
+export const postTeam = async (team: Team) => {
+    return await post<Team, Team>('teams', team, true);
 }

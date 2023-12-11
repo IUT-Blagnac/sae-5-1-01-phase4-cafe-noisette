@@ -2,9 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
   FormControl,
   InputLabel,
   MenuItem,
@@ -13,40 +10,38 @@ import {
   Typography,
 } from "@mui/material";
 import { Project } from "../models/Project";
-import { getProjects } from "../rest/queries";
+import { getProjects, postTeam } from "../rest/queries";
+import toast from "react-hot-toast";
+import { Team } from "../models/Team";
+import { useAuthUser } from "../contexts/AuthUserContext";
 
 const CreateTeam = () => {
-  const [choice1, setChoice1] = useState("");
-  const [choice2, setChoice2] = useState("");
-  const [choice3, setChoice3] = useState("");
-  const [confirmationMessage, setConfirmationMessage] = useState("");
-  const [teamInfo, setTeamInfo] = useState({
-    teamName: "",
-    numberOfMembers: "",
-    contact: "",
-    leader: "",
-  });
-  const [showTeamInfoDialog, setShowTeamInfoDialog] = useState(false);
+  const authUser = useAuthUser();
+  const [nameTeam, setNameTeam] = useState("");
+  const [projectIdTeam, setProjectIdTeam] = useState(0);
   const [projects, setProjects] = useState([] as Project[]);
 
   const handleConfirmClick = () => {
-    console.log("Liste des sujets:", choice2);
-    setConfirmationMessage("La demande est envoyée");
-  };
 
-  const handleTeamInfoClick = () => {
-    setShowTeamInfoDialog(true);
-  };
+    const newTeam = {name: nameTeam, github: '', projectId: projectIdTeam, membersId: [authUser.user?.id], leaderId: authUser.user?.id} as Team;
+    
+    postTeam(newTeam).then((response) => {
 
-  const handleTeamInfoChange = (field: string, value: string) => {
-    setTeamInfo((prevTeamInfo) => ({
-      ...prevTeamInfo,
-      [field]: value,
-    }));
-  };
+      console.log("Post Team Response:", response);
+      if (response.responseCode === 200) {
+          if (response.data) {
+            setNameTeam("")
+            setProjectIdTeam(0)
+            toast.success("L'équipe a été créée")
+          }
+      } else {
+          console.log("Error while creating team: " + response.errorMessage)
+          toast.error("Une erreur est survenue lors de la création de l'équipe (erreur "+response.responseCode+")")
+      }
+    }).catch((error) => {
+        toast("Une erreur est survenue lors de la création de l'équipe")
+    })
 
-  const handleTeamInfoDialogClose = () => {
-    setShowTeamInfoDialog(false);
   };
 
   useEffect(() => {
@@ -82,10 +77,9 @@ const CreateTeam = () => {
       </Typography>
 
       <FormControl variant="outlined" sx={{ marginTop: "5%", marginBottom: "3%", width: "40%" }}>
-        <InputLabel>Nom de l'équipe</InputLabel>
         <TextField
-          value={choice1}
-          onChange={(e) => setChoice1(e.target.value)}
+          value={nameTeam}
+          onChange={(e) => setNameTeam(e.target.value)}
           label="Nom de l'équipe"
           variant="outlined"
           fullWidth
@@ -95,9 +89,9 @@ const CreateTeam = () => {
       <FormControl variant="outlined" sx={{ marginBottom: "7%", width: "40%" }}>
         <InputLabel>Liste des sujets</InputLabel>
         <Select
-          value={choice2}
-          onChange={(e) => setChoice2(e.target.value)}
-          label="Liste des sujets resntants"
+          value={projectIdTeam}
+          onChange={(e) => setProjectIdTeam(e.target.value as number)}
+          label="Liste des sujets restants"
         >
           {projects.map((project) => (
             <MenuItem key={project.id} value={project.id}>
@@ -110,14 +104,6 @@ const CreateTeam = () => {
       <Button variant="contained" color="primary" onClick={handleConfirmClick}>
         Confirmer
       </Button>
-
-      {confirmationMessage && (
-        <Typography variant="body1" color="green" sx={{ marginTop: 2 }}>
-          {confirmationMessage}
-        </Typography>
-      )}
-
-
 
     </Box>
   );

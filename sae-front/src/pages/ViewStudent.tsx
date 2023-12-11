@@ -41,12 +41,12 @@ function ViewStudent() {
     )
   }
 
-  const handleViewButtonClick = (name: string) => {
-    setInvitedUserName(name);
+  const handleViewButtonClick = (student: User) => {
+    setInvitedUserName(student.playerInfo!.nickname);
     setInfoBoxOpen(true);
     // Logique pour gérer le clic sur le bouton "Voir fiche utilisateur"
-    console.log(`Voir fiche utilisateur de ${name}`);
-    getStudentsByUsername(name).then((response) => {
+    console.log(`Voir fiche utilisateur de ${student.playerInfo!.nickname}`);
+    getStudentsByUsername(student.username).then((response) => {
       if (response.responseCode === 200) {
         if (response.data) {
 
@@ -69,8 +69,8 @@ function ViewStudent() {
     )
   };
 
-  const handleInviteButtonClick = (name: string) => {
-    setInvitedUserName(name);
+  const handleInviteButtonClick = (student: User) => {
+    setInvitedUserName(student.playerInfo!.nickname);
     setInviteDialogOpen(true);
   };
 
@@ -110,13 +110,13 @@ function ViewStudent() {
         >
           <div style={{ display: "flex", alignItems: "center" }}>
             <AccountBoxIcon style={{ marginRight: "10px" }} />
-            {student.username}
+            {student.playerInfo?.nickname}
           </div>
           <div>
             <Button
               variant="contained"
               color="primary"
-              onClick={() => handleViewButtonClick(student.username)}
+              onClick={() => handleViewButtonClick(student)}
               style={{ marginRight: "10px" }}
             >
               Voir fiche utilisateur
@@ -124,7 +124,7 @@ function ViewStudent() {
             <Button
               variant="contained"
               color="secondary"
-              onClick={() => handleInviteButtonClick(student.username)}
+              onClick={() => handleInviteButtonClick(student)}
             >
               Inviter utilisateur
             </Button>

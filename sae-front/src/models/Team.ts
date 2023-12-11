@@ -5,7 +5,7 @@ export interface Team {
     id?: number;
     name: string;
     github: string;
-    project: Project;
-    members: User[];
-    leader: User;
+    projectId: number;
+    membersId: number[];
+    leaderId: number;
 }
