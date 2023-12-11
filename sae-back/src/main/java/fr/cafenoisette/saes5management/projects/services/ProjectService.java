@@ -101,10 +101,10 @@ public class ProjectService {
             }
 
             projectEntity.setClients(userList);
-            LOGGER.error("added client");
+            LOGGER.info("added client");
 
             projectRepository.persist(projectEntity);
-            LOGGER.error("project persisted");
+            LOGGER.info("project persisted");
             return ProjectMapper.toDTO(projectEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting project", e);
@@ -149,7 +149,7 @@ public class ProjectService {
                 }
 
                 projectRepository.persist(oldProject);
-                LOGGER.error("project persisted");
+                LOGGER.info("project persisted");
                 return ProjectMapper.toDTO(oldProject);
             }
             else {

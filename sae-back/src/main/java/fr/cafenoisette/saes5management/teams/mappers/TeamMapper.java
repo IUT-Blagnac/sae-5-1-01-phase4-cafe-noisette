@@ -3,7 +3,8 @@ package fr.cafenoisette.saes5management.teams.mappers;
 import fr.cafenoisette.saes5management.teams.entities.TeamEntity;
 import fr.cafenoisette.saes5management.teams.dtos.TeamDTO;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TeamMapper {
 
@@ -22,7 +23,7 @@ public class TeamMapper {
         dto.setName(entity.getName());
         dto.setGithub(entity.getGithub());
 
-        ArrayList<Long> dtoTeamMembers = new ArrayList<>();
+        Set<Long> dtoTeamMembers = new HashSet<>();
         entity.getMembers().forEach(member -> {
             dtoTeamMembers.add(member.getId());
         });
