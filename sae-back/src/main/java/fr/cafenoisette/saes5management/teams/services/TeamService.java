@@ -1,6 +1,8 @@
 package fr.cafenoisette.saes5management.teams.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementExceptionTypes;
@@ -106,7 +108,7 @@ public class TeamService {
 
             teamRepository.persist(teamEntity);
             
-            ArrayList<UserEntity> teamMembersEntities = new ArrayList<>();
+            Set<UserEntity> teamMembersEntities = new HashSet<>();
             teamDTO.getMembersId().forEach(t -> {
                 UserEntity user = userRepository.findById(t);
                 user.setTeam(teamEntity);

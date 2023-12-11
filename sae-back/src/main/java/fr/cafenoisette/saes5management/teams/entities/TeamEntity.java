@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,7 +30,7 @@ public class TeamEntity {
 
     @OneToMany
     @JoinColumn(name = "members_id")
-    private ArrayList<UserEntity> members;
+    private Set<UserEntity> members;
 
     @OneToOne
     @JoinColumn(name = "leader_id")
