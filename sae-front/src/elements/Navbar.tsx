@@ -5,6 +5,7 @@ import {Castle} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {useAuthUser} from "../contexts/AuthUserContext";
 import MenuItem from "@mui/material/MenuItem";
+import toast from "react-hot-toast";
 
 function Navbar() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,6 +21,7 @@ function Navbar() {
 
     function handleDisconnect() {
         authUser.disconnect()
+        toast.success('Déconnexion réussie');
         navigate('/')
     }
 
