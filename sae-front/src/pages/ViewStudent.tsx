@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from "@mui/material";
-import { getStudents, getStudentsByUsername, getUserByUsername, putStudent } from "../rest/queries";
+import { getStudents, getStudentsByUsername, getUserByUsername } from "../rest/queries";
 import { User } from "../models/User";
 import { PlayerInfo } from "../models/PlayerInfo";
 import UserInfos, { skillType } from "./UserInfos";
@@ -81,18 +81,7 @@ function ViewStudent() {
     //invite
     if (selectedUser.teamId === null) {
       selectedUser.teamId = authUser.user?.teamId as number;
-      putStudent(selectedUser).then((response) => {
-        if (response.responseCode === 200) {
-          if (response.data) {
-            toast.success("L'étudiant a bien été invité !")
-          }
-        } else {
-          toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
-        }
-      }
-      ).catch((error) => {
-        toast("Une erreur est survenue lors de la mise à jour de l'étudiant")
-      })
+
     } else {
       toast.error("L'étudiant est déjà dans une équipe.")
     }

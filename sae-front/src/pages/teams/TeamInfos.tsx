@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Typography } from "@mui/material";
-import { getStudents, getStudentsByUsername, getTeamsWithTeamId, putStudent } from "../../rest/queries";
+import { addMemberTeam, getStudents, getStudentsByUsername, getTeamsWithTeamId } from "../../rest/queries";
 import { User } from "../../models/User";
 import { PlayerInfo } from "../../models/PlayerInfo";
 import UserInfos, { skillType } from "../UserInfos";
@@ -76,9 +76,10 @@ function TeamInfos() {
     const handleInviteConfirmation = () => {
         //invite
         if (selectedUser.teamId === null) {
-            const updatedUser = Object.assign({}, selectedUser);
-            updatedUser.teamId = authUser.user?.teamId as number;
-            putStudent(updatedUser).then((response) => {
+
+            selectedUser.teamId = authUser.user?.teamId as number;
+
+            addMemberTeam(selectedUser, team.id as number).then((response) => {
                 if (response.responseCode === 200) {
                     if (response.data) {
                         toast.success("L'étudiant a bien été invité !")
@@ -204,14 +205,16 @@ function TeamInfos() {
                 </Box>
 
             ))}
-            <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleInviteMembersButtonClick()}
-                style={{ marginRight: "10px" }}
-            >
-                Inviter des membres
-            </Button>
+            {team.leaderId === authUser.user?.id && (
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleInviteMembersButtonClick()}
+                    style={{ marginRight: "10px" }}
+                >
+                    Inviter des membres
+                </Button>
+            )}
 
             {/* Boîtes d'informations */}
             <Dialog
