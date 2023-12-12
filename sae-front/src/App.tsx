@@ -61,7 +61,11 @@ function App() {
                                 <TeamInfos />
                             </RoleProtection>
                         } />
-                        <Route path="/projectsClient" element={<ProjectsInfosClient />} />
+                        <Route path="clients/projects" element={
+                            <RoleProtection allowedRoles={["CLIENT"]}>
+                                <ProjectsInfosClient />
+                            </RoleProtection>
+                        } />
                         {/*<Route path="students/team" element={*/}
                         {/*    <RoleProtection allowedRoles={["STUDENT_INIT"]}>*/}
                         {/*        <ViewStudentTeam />*/}
