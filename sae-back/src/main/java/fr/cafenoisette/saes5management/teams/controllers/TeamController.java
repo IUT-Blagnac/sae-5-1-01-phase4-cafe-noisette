@@ -86,9 +86,9 @@ public class TeamController {
             if (teamId == null || userDTO == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-           TeamDTO team = teamService.addMember(teamId,userDTO,securityContext);
+           TeamDTO team = teamService.addMember(teamId, userDTO, securityContext);
            return Response.ok(team).build();
-           
+
         } catch (SAE5ManagementException sme) {
            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
     }

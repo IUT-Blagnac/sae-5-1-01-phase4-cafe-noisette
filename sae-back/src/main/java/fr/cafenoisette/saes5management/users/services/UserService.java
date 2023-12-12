@@ -235,7 +235,7 @@ public class UserService {
     public void createFirstAdminUser(UserDTO admin) {
         try {
             if (userRepository.findByUsername(admin.getUsername()) != null) {
-                LOGGER.error("User already exists");
+                LOGGER.warn("Admin user already exists, skipping");
                 return;
             }
 

@@ -170,6 +170,7 @@ public class TeamService {
                 if (targetEntity.getRoles().contains(UserRole.STUDENT_ALT) || targetEntity.getRoles().contains(UserRole.STUDENT_INIT)) {
                     LOGGER.info("Adding " + targetEntity.getUsername() + " (" + targetEntity.getId() + ") to team " + teamEntity.getId());
                     teamEntity.getMembers().add(targetEntity);
+                    targetEntity.setTeam(teamEntity);
                     return TeamMapper.toDTO(teamEntity);
                 } else {
                     LOGGER.error("target user is not a student");
