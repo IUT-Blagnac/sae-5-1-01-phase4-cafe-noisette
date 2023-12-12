@@ -1,6 +1,6 @@
-import {createContext, ReactNode, useCallback, useContext, useEffect, useState} from "react";
-import {User} from "../models/User";
-import {getMe} from "../rest/queries";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { User } from "../models/User";
+import { getMe } from "../rest/queries";
 
 export interface AuthUser {
     token: string | undefined;
@@ -23,15 +23,15 @@ const useAuthUserValues = () => {
     const refreshUser = useCallback(() => {
         if (token) {
             getMe().then((response) => {
-                    if (response.responseCode === 200) {
-                        if (response.data) {
-                            setUser(response.data);
-                        }
-                    } else {
-                        disconnect()
-                        console.log("Error while logging in: " + response.errorMessage);
+                if (response.responseCode === 200) {
+                    if (response.data) {
+                        setUser(response.data);
                     }
+                } else {
+                    disconnect()
+                    console.log("Error while logging in: " + response.errorMessage);
                 }
+            }
             );
         }
     }, [token]);
@@ -39,6 +39,7 @@ const useAuthUserValues = () => {
     const disconnect = () => {
         setToken(undefined);
         localStorage.removeItem("token");
+        setUser(undefined);
     }
 
     useEffect(() => {
@@ -47,12 +48,12 @@ const useAuthUserValues = () => {
         }
     }, [token, refreshUser]);
 
-    return {token, user, updateToken, refreshUser, disconnect} as AuthUser;
+    return { token, user, updateToken, refreshUser, disconnect } as AuthUser;
 }
 
 export const AuthUserContext = createContext<AuthUser | null>(null)
 
-export const AuthUserProvider = (props: {children: ReactNode}) => {
+export const AuthUserProvider = (props: { children: ReactNode }) => {
     const authUser = useAuthUserValues();
 
     return (
