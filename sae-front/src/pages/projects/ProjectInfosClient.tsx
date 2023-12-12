@@ -94,13 +94,13 @@ function ProjectsInfosClient() {
                             display: 'flex',
                             alignItems: 'center'
                         }}>
-                            {teams.length > 0 && teams.map((team, teamIndex) => (
+                            {teams.filter((team) => team.projectId === project.id).length > 0 && teams.filter((team) => team.projectId === project.id).map((team, teamIndex) => (
                                 <Box key={teamIndex}>
                                     <Card sx={{ height: '400px', width: '400px', m: 2, p: 2, display: 'flex', flexDirection: 'column', }}>
                                         <Typography variant={"h4"} sx={{ marginBottom: '20px', textAlign: 'center' }}>{team.name}</Typography>
                                         {students.filter((student) => student.teamId === team.id).map((student, studentIndex) => (
                                             <Card key={studentIndex} sx={{ marginBottom: '5px' }}>
-                                                <Button key={studentIndex} sx={{ width: '100%' }} onClick={() => console.log(student)}><span style={{ color: 'white', marginRight: '5px' }}> {student.firstname} {student.lastname} </span> {student.id === team.leaderId && <span> [LEADER] </span>}</Button>
+                                                <Button color='inherit' sx={{ width: '100%' }} onClick={() => console.log(student)}><Typography style={{ marginRight: '5px' }}> {student.firstname} {student.lastname} </Typography> {student.id === team.leaderId && <Typography color='primary'> [LEADER] </Typography>}</Button>
                                             </Card>
                                         ))}
 
@@ -108,7 +108,7 @@ function ProjectsInfosClient() {
                                     </Card>
                                 </Box>
                             ))}
-                            {teams.length === 0 && (
+                            {teams.filter((team) => team.projectId === project.id).length === 0 && (
                                 <Typography color="primary" sx={{ fontSize: '20px', textTransform: 'uppercase' }}>Aucune équipe sur ce projet</Typography>
                             )}
                         </Box>
