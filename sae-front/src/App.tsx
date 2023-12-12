@@ -15,6 +15,7 @@ import { AuthUserProvider } from "./contexts/AuthUserContext";
 import { Toaster } from "react-hot-toast";
 import TeamInfos from './pages/teams/TeamInfos';
 import {RoleProtection} from "./components/RoleProtection";
+import ProjectsInfosClient from './pages/projects/ProjectInfosClient';
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
                                 <TeamInfos />
                             </RoleProtection>
                         } />
+                        <Route path="/projectsClient" element={<ProjectsInfosClient />} />
                         {/*<Route path="students/team" element={*/}
                         {/*    <RoleProtection allowedRoles={["STUDENT_INIT"]}>*/}
                         {/*        <ViewStudentTeam />*/}

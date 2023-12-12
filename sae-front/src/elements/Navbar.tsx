@@ -1,9 +1,9 @@
 import React from "react";
-import {AppBar, Box, Button, IconButton, Menu, Switch, Toolbar} from "@mui/material";
+import { AppBar, Box, Button, IconButton, Menu, Switch, Toolbar } from "@mui/material";
 import { useDarkMode } from 'usehooks-ts'
-import {Castle} from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
-import {useAuthUser} from "../contexts/AuthUserContext";
+import { Castle } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { useAuthUser } from "../contexts/AuthUserContext";
 import MenuItem from "@mui/material/MenuItem";
 import toast from "react-hot-toast";
 
@@ -15,13 +15,14 @@ function Navbar() {
     const authUser = useAuthUser();
     // eslint-disable-next-line no-lone-blocks
     {/* Mise en place des contidions d'affichage de la navbar*/}
-    const pages = [ {name: "Accueil", path: "/", isVisible: true}, 
-                    {name: "À propos", path: "/about",  isVisible: true}, 
+    const pages = [ {name: "Accueil", path: "/", isVisible: true},
+                    {name: "À propos", path: "/about",  isVisible: true},
                     {name: "Projects", path: "/projects",  isVisible: true},
                     {name: "Voir les étudiants", path: "/students",  isVisible: authUser.user?.teamId!==null && authUser.user?.roles.includes('STUDENT_INIT')},
                     {name: "Création d'une équipe", path: "/teams/create",  isVisible: authUser.user?.teamId===null && authUser.user?.roles.includes('STUDENT_INIT')},
                     {name: "Informations de l'équipe", path: "teams/infos",  isVisible: (authUser.user?.roles.includes('STUDENT_INIT') && authUser.user.teamId!==null ) || (authUser.user?.roles.includes('STUDENT_ALT') && authUser.user.teamId!==null)},
                     {name: "Créer un projet", path: "/projects/create",  isVisible: authUser.user?.roles.includes('TEACHER')},
+                    { name: "Informations sur mes projets", path: "/projectsClient", isVisible: authUser.user?.roles.includes('CLIENT') },
                   ]
 
     const handleClose = () => {
@@ -63,14 +64,14 @@ function Navbar() {
                     </Box>
                     <Switch checked={isDarkMode} onChange={toggle} />
                     <Box hidden={!!authUser.token}> <Button color="inherit" onClick={() => navigate('/login')}>Login</Button> </Box>
-                    { authUser.token &&
-                    <Box sx={{display:"flex"}}>
-                        <Button color="inherit" onClick={(event) =>  setAnchorEl(event.currentTarget)}>{authUser.user?.username}</Button>
-                        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                            {/*<MenuItem onClick={() => {navigate('/profile'); handleClose()}}>Profile</MenuItem>*/}
-                            <MenuItem onClick={() => handleDisconnect()}>Déconnexion</MenuItem>
-                        </Menu>
-                    </Box>
+                    {authUser.token &&
+                        <Box sx={{ display: "flex" }}>
+                            <Button color="inherit" onClick={(event) => setAnchorEl(event.currentTarget)}>{authUser.user?.username}</Button>
+                            <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                                {/*<MenuItem onClick={() => {navigate('/profile'); handleClose()}}>Profile</MenuItem>*/}
+                                <MenuItem onClick={() => handleDisconnect()}>Déconnexion</MenuItem>
+                            </Menu>
+                        </Box>
                     }
                 </Toolbar>
             </AppBar>
