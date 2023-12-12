@@ -29,7 +29,6 @@ function ViewStudent() {
   useEffect(() => {
     if (authUser.user !== undefined) {
         requestStudents();
-        requestTeam();
     }
 }, [authUser.user]);
 
@@ -38,6 +37,9 @@ function ViewStudent() {
       if (response.responseCode === 200) {
         if (response.data) {
           setStudents(response.data);
+          if(authUser.user?.teamId !== null){
+            requestTeam(response.data.filter((student) => student.teamId === null));
+          }
         }
       } else {
         console.log("Error while getting students: " + response.errorMessage);
@@ -46,12 +48,19 @@ function ViewStudent() {
     )
   }
 
-  function requestTeam() {
+  function requestTeam(studentsWithoutTeam: User[]) {
     const teamId = authUser.user?.teamId as number;
     getTeamsWithTeamId(teamId).then((response) => {
         if (response.responseCode === 200) {
             if (response.data) {
-                setTeam(response.data[0])
+                setTeam(response.data[0]);
+                if(response.data[0].leaderId === authUser.user?.id){
+                  if(studentsWithoutTeam.length !== 0){
+                    toast.error("Il y a "+ studentsWithoutTeam.length + " étudiants sans équipe")
+                  } else {
+                    toast.success("Il n'y a pas d'étudiant sans équipe")
+                  }
+                }
             }
         } else {
             console.log("Error while getting team: " + response.errorMessage);
