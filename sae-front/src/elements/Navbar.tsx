@@ -13,13 +13,14 @@ function Navbar() {
     const { isDarkMode, toggle } = useDarkMode()
     const navigate = useNavigate()
     const authUser = useAuthUser();
+    // eslint-disable-next-line no-lone-blocks
     {/* Mise en place des contidions d'affichage de la navbar*/}
     const pages = [ {name: "Accueil", path: "/", isVisible: true}, 
                     {name: "À propos", path: "/about",  isVisible: true}, 
                     {name: "Projects", path: "/projects",  isVisible: true},
                     {name: "Voir les étudiants", path: "/students",  isVisible: authUser.user?.teamId!==null && authUser.user?.roles.includes('STUDENT_INIT')},
-                    {name: "Création d'une équipe", path: "/CreateTeam",  isVisible: authUser.user?.teamId===null && authUser.user?.roles.includes('STUDENT_INIT')},
-                    {name: "Informations de l'équipe", path: "/teamInfos",  isVisible: (authUser.user?.roles.includes('STUDENT_INIT') && authUser.user.teamId!==null ) || (authUser.user?.roles.includes('STUDENT_ALT') && authUser.user.teamId!==null)},
+                    {name: "Création d'une équipe", path: "/teams/create",  isVisible: authUser.user?.teamId===null && authUser.user?.roles.includes('STUDENT_INIT')},
+                    {name: "Informations de l'équipe", path: "teams/infos",  isVisible: (authUser.user?.roles.includes('STUDENT_INIT') && authUser.user.teamId!==null ) || (authUser.user?.roles.includes('STUDENT_ALT') && authUser.user.teamId!==null)},
                     {name: "Créer un projet", path: "/projects/create",  isVisible: authUser.user?.roles.includes('TEACHER')},
                   ]
 
@@ -50,7 +51,7 @@ function Navbar() {
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {/*Filtrage des pages selon le filtre "isVisible" */}
-                        {pages.filter(page => page.isVisible) .map((page) =>(
+                        {pages.filter(page => page.isVisible).map((page) =>(
                             <Button
                                 key={page.name}
                                 sx={{ my: 2, color: 'white', display: 'block' }}
