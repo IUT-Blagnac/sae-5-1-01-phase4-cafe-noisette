@@ -44,8 +44,17 @@ export const getStudents = async () => {
     return await get<User[]>('users/students/filter', true);
 }
 
+
 export const getStudentsByUsername = async (username: String) => {
     return await get<User[]>('users/students/filter?username=' + username, true);
+}
+
+export const putStudent = async (user: User) => {
+    return await put<User, User>('users', user, true);
+}
+
+export const getTeamsWithTeamId = async (teamId: number) => {
+    return await get<Team[]>('teams/filter?id=' + teamId, true);
 }
 
 export const postTeam = async (team: Team) => {

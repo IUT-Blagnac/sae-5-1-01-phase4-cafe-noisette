@@ -7,26 +7,25 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from "@mui/material";
-import { getStudents, getStudentsByUsername, getUserByUsername } from "../rest/queries";
+import { getStudents, getStudentsByUsername, getUserByUsername, putStudent } from "../rest/queries";
 import { User } from "../models/User";
 import { PlayerInfo } from "../models/PlayerInfo";
 import UserInfos, { skillType } from "./UserInfos";
 import UserInfosView from "./UserInfosView";
+import { useAuthUser } from "../contexts/AuthUserContext";
+import toast from "react-hot-toast";
 
 function ViewStudent() {
   const [students, setStudents] = React.useState([] as User[])
   const [skills, setSkills] = React.useState([] as skillType[])
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
-  const [invitedUserName, setInvitedUserName] = useState('');
+  const [selectedUser, setSelectedUser] = React.useState({} as User);
   const [infoBoxOpen, setInfoBoxOpen] = useState(false);
+  const authUser = useAuthUser();
 
   useEffect(() => {
     requestStudents();
   }, []);
-
-  useEffect(() => {
-    console.log(students);
-  }, [students]);
 
   function requestStudents() {
     getStudents().then((response) => {
@@ -42,7 +41,7 @@ function ViewStudent() {
   }
 
   const handleViewButtonClick = (student: User) => {
-    setInvitedUserName(student.playerInfo!.nickname);
+    setSelectedUser(student);
     setInfoBoxOpen(true);
     // Logique pour gérer le clic sur le bouton "Voir fiche utilisateur"
     console.log(`Voir fiche utilisateur de ${student.playerInfo!.nickname}`);
@@ -70,7 +69,7 @@ function ViewStudent() {
   };
 
   const handleInviteButtonClick = (student: User) => {
-    setInvitedUserName(student.playerInfo!.nickname);
+    setSelectedUser(student);
     setInviteDialogOpen(true);
   };
 
@@ -79,8 +78,24 @@ function ViewStudent() {
   };
 
   const handleInviteConfirmation = () => {
-    // Logique pour confirmer l'invitation
-    console.log(`Inviter utilisateur ${invitedUserName}`);
+    //invite
+    selectedUser.teamId = authUser.user?.teamId as number;
+
+
+    putStudent(selectedUser).then((response) => {
+      if (response.responseCode === 200) {
+        if (response.data) {
+          toast.success("L'étudiant a bien été invité !")
+          selectedUser.teamId = authUser.user?.teamId as number;
+        }
+      } else {
+        toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
+      }
+    }
+    ).catch((error) => {
+      toast("Une erreur est survenue lors de la mise à jour de l'étudiant")
+    })
+
     setInviteDialogOpen(false);
   };
 
@@ -91,7 +106,7 @@ function ViewStudent() {
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Accueil</h1>
-      {students.map((student, index) => (
+      {students.filter((student) => student.teamId === null).map((student, index) => (
         <Box
           key={index}
           sx={{
@@ -142,7 +157,7 @@ function ViewStudent() {
         <DialogTitle id="info-box-title">Information</DialogTitle>
         <DialogContent>
           <DialogContentText id="info-box-description">
-            Vous visualisez la fiche de l'utilisateur : {invitedUserName}.
+            Vous visualisez la fiche de l'utilisateur : {selectedUser.username}.
           </DialogContentText>
         </DialogContent>
         <Box
@@ -176,7 +191,7 @@ function ViewStudent() {
         <DialogTitle id="invite-dialog-title">Confirmation d'invitation</DialogTitle>
         <DialogContent>
           <DialogContentText id="invite-dialog-description">
-            Êtes-vous sûr de vouloir inviter {invitedUserName} dans votre équipe ?
+            Êtes-vous sûr de vouloir inviter {selectedUser.username} dans votre équipe ?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
