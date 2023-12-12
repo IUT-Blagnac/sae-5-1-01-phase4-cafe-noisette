@@ -16,6 +16,7 @@ import { AuthUserProvider, useAuthUser } from "./contexts/AuthUserContext";
 import { Toaster } from "react-hot-toast";
 import TeamInfos from './pages/teams/TeamInfos';
 
+
 function App() {
     const theme = useTheme()
     return (
@@ -37,6 +38,7 @@ function App() {
                         <Route path="/createTeam" element={<CreateTeam />} />
                         <Route path="/teamInfos" element={<TeamInfos />} />
                         <Route path="/ViewStudentTeam" element={<ViewStudentTeam />} />
+        
                     </Routes>
                 </Box>
             </AuthUserProvider>
