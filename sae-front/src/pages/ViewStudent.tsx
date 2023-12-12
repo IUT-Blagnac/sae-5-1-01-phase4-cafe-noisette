@@ -79,22 +79,23 @@ function ViewStudent() {
 
   const handleInviteConfirmation = () => {
     //invite
-    selectedUser.teamId = authUser.user?.teamId as number;
-
-
-    putStudent(selectedUser).then((response) => {
-      if (response.responseCode === 200) {
-        if (response.data) {
-          toast.success("L'étudiant a bien été invité !")
-          selectedUser.teamId = authUser.user?.teamId as number;
+    if (selectedUser.teamId === null) {
+      selectedUser.teamId = authUser.user?.teamId as number;
+      putStudent(selectedUser).then((response) => {
+        if (response.responseCode === 200) {
+          if (response.data) {
+            toast.success("L'étudiant a bien été invité !")
+          }
+        } else {
+          toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
         }
-      } else {
-        toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
       }
+      ).catch((error) => {
+        toast("Une erreur est survenue lors de la mise à jour de l'étudiant")
+      })
+    } else {
+      toast.error("L'étudiant est déjà dans une équipe.")
     }
-    ).catch((error) => {
-      toast("Une erreur est survenue lors de la mise à jour de l'étudiant")
-    })
 
     setInviteDialogOpen(false);
   };
