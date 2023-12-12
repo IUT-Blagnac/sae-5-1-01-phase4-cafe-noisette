@@ -63,7 +63,7 @@ const CreateTeam = () => {
       <FormControl variant="outlined" sx={{ marginTop: "5%", marginBottom: "3%", width: "40%" }}>
         <TextField
           value={nameTeam}
-          onChange={(e) => console.log(authUser.user?.teamId)}
+          onChange={(e) => setNameTeam(e.target.value)}
           label="Nom de l'équipe"
           variant="outlined"
           fullWidth
