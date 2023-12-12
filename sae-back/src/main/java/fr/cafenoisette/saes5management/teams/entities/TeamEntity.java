@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,5 +37,8 @@ public class TeamEntity {
     @JoinColumn(name = "leader_id")
     private UserEntity leader;
 
+    @OneToMany
+    @JoinColumn(name = "project_preferences")
+    private List<ProjectEntity> preferences;
 
 }

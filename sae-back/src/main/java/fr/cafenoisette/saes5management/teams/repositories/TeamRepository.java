@@ -1,5 +1,6 @@
 package fr.cafenoisette.saes5management.teams.repositories;
 
+import fr.cafenoisette.saes5management.projects.entities.ProjectEntity;
 import fr.cafenoisette.saes5management.teams.entities.TeamEntity;
 import fr.cafenoisette.saes5management.users.entities.UserEntity;
 import fr.cafenoisette.saes5management.users.repositories.UserRepository;
@@ -8,6 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class TeamRepository implements PanacheRepository<TeamEntity>  {
@@ -53,5 +55,10 @@ public class TeamRepository implements PanacheRepository<TeamEntity>  {
         // return the list of teams
 
         return teams;
+    }
+
+    public List<ProjectEntity> getPreferences(Long teamId) {
+        TeamEntity teamEntity = findById(teamId);
+        return teamEntity.getPreferences();
     }
 }

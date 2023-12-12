@@ -2,6 +2,7 @@ package fr.cafenoisette.saes5management.teams.services;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
@@ -103,9 +104,6 @@ public class TeamService {
             UserEntity leader = userRepository.findById(teamDTO.getLeaderId());
             teamEntity.setLeader(leader);
 
-            ProjectEntity project = projectRepository.findById(teamDTO.getProjectId());
-            teamEntity.setProject(project);
-
             teamRepository.persist(teamEntity);
             
             Set<UserEntity> teamMembersEntities = new HashSet<>();
@@ -177,6 +175,66 @@ public class TeamService {
                 teamDTOs.add(TeamMapper.toDTO(teamEntity));
             }
             return teamDTOs;
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    public TeamDTO addPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+
+            if (userEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            if (
+                    securityContext.isUserInRole("ADMIN") ||
+                            userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
+            ) {
+                TeamEntity teamEntity = teamRepository.findById(teamId);
+
+                for(Long id: projectIds) {
+                    ProjectEntity projectEntity = projectRepository.findById(id);
+                    teamEntity.getPreferences().add(projectEntity);
+                }
+
+                return TeamMapper.toDTO(teamEntity);
+
+            } else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
+            }
+
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    public TeamDTO addProject(Long teamId, Long projectId, SecurityContext securityContext) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+
+            if (userEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            if (
+                    securityContext.isUserInRole("ADMIN") ||
+                            userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
+            ) {
+                TeamEntity teamEntity = teamRepository.findById(teamId);
+
+                ProjectEntity projectEntity = projectRepository.findById(projectId);
+                teamEntity.setProject(projectEntity);
+
+                return TeamMapper.toDTO(teamEntity);
+
+            } else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
+            }
+
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);

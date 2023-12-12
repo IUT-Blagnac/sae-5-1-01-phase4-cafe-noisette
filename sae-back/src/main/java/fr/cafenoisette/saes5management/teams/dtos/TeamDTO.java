@@ -1,5 +1,6 @@
 package fr.cafenoisette.saes5management.teams.dtos;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,5 +35,7 @@ public class TeamDTO {
     @JsonProperty("leaderId")
     private Long leaderId;
 
+    @JsonProperty("preferencesId")
+    private List<Long> preferencesId;
 
 }
