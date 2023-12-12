@@ -7,20 +7,23 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Typography } from "@mui/material";
-import { getStudents, getStudentsByUsername, getTeamsWithTeamId } from "../../rest/queries";
+import { getStudents, getStudentsByUsername, getTeamsWithTeamId, putStudent } from "../../rest/queries";
 import { User } from "../../models/User";
 import { PlayerInfo } from "../../models/PlayerInfo";
 import UserInfos, { skillType } from "../UserInfos";
 import UserInfosView from "../UserInfosView";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import { Team } from "../../models/Team";
+import toast from "react-hot-toast";
 
 function TeamInfos() {
     const [students, setStudents] = React.useState([] as User[])
     const [team, setTeam] = React.useState({ name: '', github: '', projectId: 0, membersId: [], leaderId: 0 } as Team)
     const [skills, setSkills] = React.useState([] as skillType[])
-    const [currentUsername, setCurrentUsername] = useState('');
+    const [selectedUser, setSelectedUser] = React.useState({} as User);
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
+    const [inviteMembersBoxOpen, setInviteMembersBoxOpen] = useState(false);
+    const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
     const authUser = useAuthUser();
 
     useEffect(() => {
@@ -57,8 +60,52 @@ function TeamInfos() {
         )
     }
 
+    const handleInviteMembersButtonClick = () => {
+        if (students.filter((student) => student.teamId === null).length !== 0) {
+            setInviteMembersBoxOpen(true);
+        } else {
+            toast.error("Aucun étudiant à inviter")
+        }
+    }
+
+    const handleInviteButtonClick = (student: User) => {
+        setSelectedUser(student);
+        setInviteDialogOpen(true);
+    };
+
+    const handleInviteConfirmation = () => {
+        //invite
+        if (selectedUser.teamId === null) {
+            const updatedUser = Object.assign({}, selectedUser);
+            updatedUser.teamId = authUser.user?.teamId as number;
+            putStudent(updatedUser).then((response) => {
+                if (response.responseCode === 200) {
+                    if (response.data) {
+                        toast.success("L'étudiant a bien été invité !")
+                    }
+                } else {
+                    toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
+                }
+            }
+            ).catch((error) => {
+                toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant")
+            })
+        } else {
+            toast.error("L'étudiant est déjà dans une équipe.")
+        }
+
+        setInviteDialogOpen(false);
+
+        if (students.filter((student) => student.teamId === null).length === 0) {
+            setInviteMembersBoxOpen(false);
+        }
+
+
+    };
+
+
     const handleViewButtonClick = (student: User) => {
-        setCurrentUsername(student.playerInfo!.nickname);
+        setSelectedUser(student);
         setInfoBoxOpen(true);
         // Logique pour gérer le clic sur le bouton "Voir fiche utilisateur"
         console.log(`Voir fiche utilisateur de ${student.playerInfo!.nickname}`);
@@ -87,6 +134,14 @@ function TeamInfos() {
 
     const handleInfoBoxClose = () => {
         setInfoBoxOpen(false);
+    };
+
+    const handleInviteMembersBoxClose = () => {
+        setInviteMembersBoxOpen(false);
+    };
+
+    const handleInviteDialogClose = () => {
+        setInviteDialogOpen(false);
     };
 
     return (
@@ -152,13 +207,64 @@ function TeamInfos() {
             <Button
                 variant="contained"
                 color="secondary"
-
+                onClick={() => handleInviteMembersButtonClick()}
                 style={{ marginRight: "10px" }}
             >
                 Inviter des membres
             </Button>
 
-            {/* Boîte d'information */}
+            {/* Boîtes d'informations */}
+            <Dialog
+                open={inviteMembersBoxOpen}
+                onClose={handleInviteMembersBoxClose}
+                aria-labelledby="info-box-title"
+                aria-describedby="info-box-description"
+            >
+                <DialogContent>
+                    {students.filter((student) => student.teamId === null).map((student, index) => (
+                        <Box
+                            key={index}
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                border: "1px solid #ccc",
+                                borderRadius: "5px",
+                                padding: "10px",
+                            }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center", paddingRight: "40px" }}>
+                                <AccountBoxIcon style={{ marginRight: "10px" }} />
+                                {student.playerInfo?.nickname}
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleViewButtonClick(student)}
+                                    style={{ marginBottom: "10px" }}
+                                >
+                                    Voir fiche utilisateur
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={() => handleInviteButtonClick(student)}
+                                >
+                                    Inviter utilisateur
+                                </Button>
+                            </div>
+                        </Box>
+
+                    ))}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleInviteMembersBoxClose} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Dialog
                 open={infoBoxOpen}
                 onClose={handleInfoBoxClose}
@@ -168,7 +274,7 @@ function TeamInfos() {
                 <DialogTitle id="info-box-title">Information</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="info-box-description">
-                        Vous visualisez la fiche de l'utilisateur : {currentUsername}.
+                        Vous visualisez la fiche de l'utilisateur : {selectedUser.username}.
                     </DialogContentText>
                 </DialogContent>
                 <Box
@@ -176,7 +282,7 @@ function TeamInfos() {
                     flexDirection="column"
                     alignItems="center"
                     justifyContent="center"
-                    sx={{ m: 2 }}
+                    sx={{ marginRight: "55px", marginLeft: "55px" }}
                 >
                     <Box
                         display="flex"
@@ -188,6 +294,27 @@ function TeamInfos() {
                 <DialogActions>
                     <Button onClick={handleInfoBoxClose} color="primary">
                         OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={inviteDialogOpen}
+                onClose={handleInviteDialogClose}
+                aria-labelledby="invite-dialog-title"
+                aria-describedby="invite-dialog-description"
+            >
+                <DialogTitle id="invite-dialog-title">Confirmation d'invitation</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="invite-dialog-description">
+                        Êtes-vous sûr de vouloir inviter {selectedUser.username} dans votre équipe ?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleInviteDialogClose} color="primary">
+                        Annuler
+                    </Button>
+                    <Button onClick={handleInviteConfirmation} color="primary">
+                        Confirmer
                     </Button>
                 </DialogActions>
             </Dialog>
