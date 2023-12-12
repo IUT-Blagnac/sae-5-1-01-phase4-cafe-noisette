@@ -63,3 +63,7 @@ export const getTeamsWithTeamId = async (teamId: number) => {
 export const postTeam = async (team: Team) => {
     return await post<Team, Team>('teams', team, true);
 }
+
+export const getAllTeams = async () => {
+    return await get<Team[]>('/teams/filter', true);
+}

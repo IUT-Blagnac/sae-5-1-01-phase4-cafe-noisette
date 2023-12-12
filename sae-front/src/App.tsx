@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import ViewStudent from "./pages/ViewStudent";
 import CreateTeam from "./pages/teams/CreateTeam";
+import Subject from "./pages/Subject";
 import Navbar from "./elements/Navbar";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { useTheme } from "./utils/theme";
@@ -61,6 +62,12 @@ function App() {
                                 <TeamInfos />
                             </RoleProtection>
                         } />
+                        <Route path="subject" element={
+                            <RoleProtection allowedRoles={["TEACHER"]}>
+                                <ProjectsInfosClient />
+                            </RoleProtection>
+                        } />
+
                         <Route path="clients/projects" element={
                             <RoleProtection allowedRoles={["CLIENT"]}>
                                 <ProjectsInfosClient />
