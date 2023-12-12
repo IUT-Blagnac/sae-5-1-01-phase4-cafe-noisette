@@ -44,6 +44,9 @@ export const getStudents = async () => {
     return await get<User[]>('users/students/filter', true);
 }
 
+export const getTeams = async () => {
+    return await get<Team[]>('teams/filter', true);
+}
 
 export const getStudentsByUsername = async (username: String) => {
     return await get<User[]>('users/students/filter?username=' + username, true);
