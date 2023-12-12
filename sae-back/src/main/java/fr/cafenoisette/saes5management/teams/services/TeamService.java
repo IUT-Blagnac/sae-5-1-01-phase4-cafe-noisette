@@ -200,6 +200,7 @@ public class TeamService {
         }
     }
 
+    @Transactional
     public TeamDTO addPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
@@ -231,6 +232,7 @@ public class TeamService {
         }
     }
 
+    @Transactional
     public TeamDTO addProject(Long teamId, Long projectId, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
