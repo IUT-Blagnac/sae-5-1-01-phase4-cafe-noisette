@@ -1,14 +1,14 @@
 import React, { useState, ChangeEvent } from "react";
-import {Navigate, useNavigate} from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "@mui/material/Link";
-import {Box, Dialog, Typography} from "@mui/material";
-import UserInfos, {skillType} from "./UserInfos";
-import {User, UserRole} from "../models/User";
-import {createAccount} from "../rest/queries";
-import {useAuthUser} from "../contexts/AuthUserContext";
+import { Box, Dialog, Typography } from "@mui/material";
+import UserInfos, { skillType } from "./UserInfos";
+import { User, UserRole } from "../models/User";
+import { createAccount } from "../rest/queries";
+import { useAuthUser } from "../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 
 function CreateAccount() {
@@ -91,7 +91,7 @@ function CreateAccount() {
                 designLevel: skills[7].value,
                 otherLevel: customSkill.value,
                 otherDesc: customSkill.label,
-            }
+            }, teamId: null
         }
 
         createAccount(user)
@@ -121,7 +121,7 @@ function CreateAccount() {
         marginBottom: 3,
     };
 
-    function disableCreateAccount () {
+    function disableCreateAccount() {
         if (!username || !firstName || !lastName || !password || !email || !role) {
             return true
         }
@@ -134,7 +134,7 @@ function CreateAccount() {
     return (
         <>
             {authUser.token ? (
-                <Navigate to={"/"}/>
+                <Navigate to={"/"} />
             ) : (
                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", minHeight: "80vh" }}>
                     <h1>Création de votre compte</h1>

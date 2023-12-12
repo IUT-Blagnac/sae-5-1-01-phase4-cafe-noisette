@@ -83,18 +83,17 @@ public class TeamController {
 
     @PUT
     @RolesAllowed({"ADMIN","STUDENT_INIT"})
-    @Path("/teams/{teamId}/addMember")
+    @Path("/{teamId}/addMember")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addTeamMember(@PathParam("teamId")Long teamId, UserDTO userDTO) {
-        
         try {
             if (teamId == null || userDTO == null) {
-                    return Response.status(Response.Status.BAD_REQUEST).build();
+                return Response.status(Response.Status.BAD_REQUEST).build();
             }
-           TeamDTO team = teamService.addMember(teamId,userDTO,securityContext);
+           TeamDTO team = teamService.addMember(teamId, userDTO, securityContext);
            return Response.ok(team).build();
-           
+
         } catch (SAE5ManagementException sme) {
            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }

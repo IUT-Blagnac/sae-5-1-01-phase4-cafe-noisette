@@ -235,8 +235,8 @@ public class UserService {
     public void createFirstAdminUser(UserDTO admin) {
         try {
             if (userRepository.findByUsername(admin.getUsername()) != null) {
-                LOGGER.error("User already exists");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_ALREADY_EXISTS);
+                LOGGER.warn("Admin user already exists, skipping");
+                return;
             }
 
             UserEntity userEntity = UserMapper.toEntity(admin);

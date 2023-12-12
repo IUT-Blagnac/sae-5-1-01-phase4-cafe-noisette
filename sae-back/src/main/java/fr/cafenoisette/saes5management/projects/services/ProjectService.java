@@ -120,7 +120,11 @@ public class ProjectService {
             if(oldProject == null) {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
             }
-            if(securityContext.isUserInRole("ADMIN")) {
+            if(
+                securityContext.isUserInRole("ADMIN") || 
+                securityContext.isUserInRole("TEACHER") ||
+                oldProject.getClients().stream().anyMatch(c -> c.getUsername().equals(securityContext.getUserPrincipal().getName()))    
+            ) {
                 ProjectEntity updateProject = ProjectMapper.toEntity(changedProject);
 
                 if (changedProject.getClientIds() != null) {
@@ -133,11 +137,12 @@ public class ProjectService {
                             LOGGER.error("user not found");
                             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
                         }
-
+                        
                         userList.add(userEntity);
                     }
-
-                    oldProject.setClients(userList);
+                     if( securityContext.isUserInRole("ADMIN") || securityContext.isUserInRole("TEACHER")) {
+                        oldProject.setClients(userList);
+                     }
                 }
 
                 if (updateProject.getName() != null) {

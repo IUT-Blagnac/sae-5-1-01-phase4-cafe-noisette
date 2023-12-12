@@ -9,11 +9,11 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Project } from "../models/Project";
-import { getProjects, postTeam } from "../rest/queries";
+import { Project } from "../../models/Project";
+import { getProjects, postTeam } from "../../rest/queries";
 import toast from "react-hot-toast";
-import { Team } from "../models/Team";
-import { useAuthUser } from "../contexts/AuthUserContext";
+import { Team } from "../../models/Team";
+import { useAuthUser } from "../../contexts/AuthUserContext";
 
 const CreateTeam = () => {
   const authUser = useAuthUser();
@@ -28,6 +28,9 @@ const CreateTeam = () => {
       console.log("Post Team Response:", response);
       if (response.responseCode === 200) {
         if (response.data) {
+          if (authUser.user) {
+            authUser.user.teamId = response.data.id as number
+          }
           setNameTeam("")
           toast.success("L'équipe a été créée")
         }

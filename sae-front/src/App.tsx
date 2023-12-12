@@ -6,14 +6,18 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import ViewStudent from "./pages/ViewStudent";
-import CreateTeam from "./pages/CreateTeam";
-import ViewStudentTeam from "./pages/ViewStudentTeam";
+import CreateTeam from "./pages/teams/CreateTeam";
+import Subject from "./pages/Subject";
 import Navbar from "./elements/Navbar";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { useTheme } from "./utils/theme";
 import ProjectList from "./pages/projects/ProjectList";
-import { AuthUserProvider, useAuthUser } from "./contexts/AuthUserContext";
+import { AuthUserProvider } from "./contexts/AuthUserContext";
 import { Toaster } from "react-hot-toast";
+import TeamInfos from './pages/teams/TeamInfos';
+import {RoleProtection} from "./components/RoleProtection";
+import ProjectsInfosClient from './pages/projects/ProjectInfosClient';
+
 
 function App() {
     const theme = useTheme()
@@ -27,14 +31,54 @@ function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/about" element={<About />} />
-                        <Route path="/projects" element={<ProjectList />} />
-                        {/*<Route path="/user_infos" element={<UserInfos />} />*/}
-                        <Route path="/projects/create" element={<About />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/login/createAccount" element={<CreateAccount />} />
-                        <Route path="/ViewStudent" element={<ViewStudent />} />
-                        <Route path="/createTeam" element={<CreateTeam />} />
-                        <Route path="/ViewStudentTeam" element={<ViewStudentTeam />} />
+                        <Route path="/projects" element={
+                            <RoleProtection allowedRoles={["TEACHER"]} >
+                                <ProjectList />
+                            </RoleProtection>
+                        } />
+                        {/*<Route path="/projects/create" element={*/}
+                        {/*    <RoleProtection>*/}
+                        {/*        <About />*/}
+                        {/*    </RoleProtection>*/}
+                        {/*} />*/}
+                        <Route path="/login" element={
+                            <Login />
+                        } />
+                        <Route path="/login/createAccount" element={
+                            <CreateAccount />
+                        } />
+                        <Route path="/students" element={
+                            <RoleProtection>
+                                <ViewStudent />
+                            </RoleProtection>
+                        } />
+                        <Route path="/teams/create" element={
+                            <RoleProtection allowedRoles={["STUDENT_INIT"]}>
+                                <CreateTeam />
+                            </RoleProtection>
+                        } />
+                        <Route path="/teams/infos" element={
+                            <RoleProtection allowedRoles={["STUDENT_INIT"]}>
+                                <TeamInfos />
+                            </RoleProtection>
+                        } />
+                        <Route path="subject" element={
+                            <RoleProtection allowedRoles={["TEACHER"]}>
+                                <ProjectsInfosClient />
+                            </RoleProtection>
+                        } />
+
+                        <Route path="clients/projects" element={
+                            <RoleProtection allowedRoles={["CLIENT"]}>
+                                <ProjectsInfosClient />
+                            </RoleProtection>
+                        } />
+                        {/*<Route path="students/team" element={*/}
+                        {/*    <RoleProtection allowedRoles={["STUDENT_INIT"]}>*/}
+                        {/*        <ViewStudentTeam />*/}
+                        {/*    </RoleProtection>*/}
+                        {/*    } />*/}
+
                     </Routes>
                 </Box>
             </AuthUserProvider>

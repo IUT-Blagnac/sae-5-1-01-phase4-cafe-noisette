@@ -1,4 +1,4 @@
-import {PlayerInfo} from "./PlayerInfo";
+import { PlayerInfo } from "./PlayerInfo";
 
 export interface User {
     id?: number;
@@ -9,9 +9,10 @@ export interface User {
     playerInfo?: PlayerInfo;
     password: string | null; // only on creation
     roles: UserRole[];
+    teamId: number | null;
 }
 
-export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT_INIT' | 'STUDENT_ALT' | 'CLIENT'|'';
+export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT_INIT' | 'STUDENT_ALT' | 'CLIENT' | '';
 
 
 // Roles :

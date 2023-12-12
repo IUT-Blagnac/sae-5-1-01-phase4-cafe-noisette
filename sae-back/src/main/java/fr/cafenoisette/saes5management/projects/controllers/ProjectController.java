@@ -74,7 +74,7 @@ public class ProjectController {
     }
 
     @PUT
-    @RolesAllowed({"TEACHER", "ADMIN"})
+    @RolesAllowed({"TEACHER", "ADMIN","CLIENT"})
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
