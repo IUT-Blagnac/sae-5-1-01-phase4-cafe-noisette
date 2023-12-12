@@ -236,7 +236,7 @@ public class UserService {
         try {
             if (userRepository.findByUsername(admin.getUsername()) != null) {
                 LOGGER.error("User already exists");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_ALREADY_EXISTS);
+                return;
             }
 
             UserEntity userEntity = UserMapper.toEntity(admin);
