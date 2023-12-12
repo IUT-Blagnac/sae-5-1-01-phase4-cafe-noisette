@@ -129,10 +129,13 @@ public class TeamService {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
+            LOGGER.info("checking if user exists");
             if (userEntity == null) {
+                LOGGER.error("User not found");
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
+            LOGGER.info("checking if user is the leader");
             if (
                     securityContext.isUserInRole("ADMIN") ||
                         userEntity.getTeam().getId().equals(teamId) &&
@@ -141,6 +144,7 @@ public class TeamService {
                 TeamEntity teamEntity = userEntity.getTeam();
                 UserEntity targetEntity;
 
+                LOGGER.info("checking if target user id or username is not null");
                 if (userDTO.getId() != null) {
                     targetEntity = userRepository.findById(userDTO.getId());
                 } else if (userDTO.getUsername() != null) {
@@ -150,22 +154,25 @@ public class TeamService {
                     throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
                 }
 
+                LOGGER.info("checking if target user entity is not null");
                 if (targetEntity == null) {
                     LOGGER.error("Target user entity not found");
                     throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
                 }
 
+                LOGGER.info("checking if target user entity has already a team");
                 if (targetEntity.getTeam() != null) {
-                    LOGGER.error("User has no team");
-                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_IN_TEAM);
-
+                    LOGGER.error("User has already a team");
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.ALREADY_IN_TEAM);
                 }
 
+                LOGGER.info("checking if target user entity is a student");
                 if (targetEntity.getRoles().contains(UserRole.STUDENT_ALT) || targetEntity.getRoles().contains(UserRole.STUDENT_INIT)) {
+                    LOGGER.info("Adding " + targetEntity.getUsername() + " (" + targetEntity.getId() + ") to team " + teamEntity.getId());
                     teamEntity.getMembers().add(targetEntity);
                     return TeamMapper.toDTO(teamEntity);
                 } else {
-                    LOGGER.error("user is not a student");
+                    LOGGER.error("target user is not a student");
                     throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
                 }
             } else {
