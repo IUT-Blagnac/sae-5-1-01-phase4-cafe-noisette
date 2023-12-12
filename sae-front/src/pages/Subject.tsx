@@ -116,7 +116,36 @@ const Subject: React.FC = () => {
     });
   }, [teams]); // Utilisation de useEffect pour appeler getAllTeams 
 
+ 
+  useEffect(() => {
+    // Appel à getProjects pour récupérer les sujets
+    getProjects().then((response) => {
+      if (response.responseCode === 200 && response.data) {
+        // Utilisation directe du résultat dans setTasks
+        setTasks(response.data.map((project) => ({
+          id: project.id || 0, // Assure que id n'est jamais undefined
+          title: project.name,
+          status: 'undefined',
+        })));
+      } else {
+        console.log(response.data);
+      }
+    });
+  }, []);
+
   const handleDrop = (taskId: number, newStatus: string) => {
+    if (newStatus && taskId === -1) {
+      // If dropping in an empty zone, add the new task at the end
+      setTasks([...tasks, { id: tasks.length + 1, title: `Task ${tasks.length + 1}`, status: newStatus }]);
+    } else if (!newStatus && taskId !== -1) {
+      // If dragging from the list to a section, remove the task from the list
+      setTasks(tasks.filter((task) => task.id !== taskId));
+    } else {
+      // If dragging within sections, update the task status
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === taskId ? { ...task, status: newStatus } : task))
+      );
+    }
   };
 
   return (

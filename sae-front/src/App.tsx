@@ -64,7 +64,7 @@ function App() {
                         } />
                         <Route path="subject" element={
                             <RoleProtection allowedRoles={["TEACHER"]}>
-                                <ProjectsInfosClient />
+                                <Subject />
                             </RoleProtection>
                         } />
 
