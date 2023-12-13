@@ -52,10 +52,9 @@ function TeamInfos() {
             if (response.responseCode === 200) {
                 if (response.data) {
                     setTeam(response.data[0])
-                    if (response.data[0].preferencesId.length === 0) {
+                    if (authUser.user?.id === response.data[0].leaderId && response.data[0].preferencesId.length === 0) {
                         toast.error("Aucune préférence des sujets définie")
                     }
-                    console.log(response.data[0].preferencesId)
                 }
             } else {
                 console.log("Error while getting team: " + response.errorMessage);
@@ -88,8 +87,7 @@ function TeamInfos() {
     const handleViewButtonClick = (student: User) => {
         setSelectedUser(student);
         setInfoBoxOpen(true);
-        // Logique pour gérer le clic sur le bouton "Voir fiche utilisateur"
-        console.log(`Voir fiche utilisateur de ${student.playerInfo!.nickname}`);
+
         getStudentsByUsername(student.username).then((response) => {
             if (response.responseCode === 200) {
                 if (response.data) {
