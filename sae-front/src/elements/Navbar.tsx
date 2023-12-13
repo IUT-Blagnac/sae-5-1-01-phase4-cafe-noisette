@@ -17,7 +17,7 @@ function Navbar() {
     {/* Mise en place des contidions d'affichage de la navbar*/}
     const pages = [ {name: "Accueil", path: "/", isVisible: true},
                     {name: "À propos", path: "/about",  isVisible: true},
-                    {name: "Projects", path: "/projects",  isVisible: authUser.user?.roles.includes('TEACHER')},
+                    {name: "Projets", path: "/projects",  isVisible: authUser.user?.roles.includes('TEACHER')},
                     {name: "Étudiants", path: "/students",  isVisible: authUser.user?.teamId!==null && authUser.user?.roles.includes('STUDENT_INIT')},
                     {name: "Création d'équipe", path: "/teams/create",  isVisible: authUser.user?.teamId===null && authUser.user?.roles.includes('STUDENT_INIT')},
                     {name: "Mon équipe", path: "teams/infos",  isVisible: (authUser.user?.roles.includes('STUDENT_INIT') && authUser.user.teamId!==null ) || (authUser.user?.roles.includes('STUDENT_ALT') && authUser.user.teamId!==null)},
