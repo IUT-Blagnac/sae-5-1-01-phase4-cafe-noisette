@@ -1,6 +1,7 @@
 package fr.cafenoisette.saes5management.users.controllers;
 
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
+import fr.cafenoisette.saes5management.users.dtos.PlayerInfoDTO;
 import fr.cafenoisette.saes5management.users.dtos.subdtos.ClientUserDTO;
 import fr.cafenoisette.saes5management.users.dtos.subdtos.StudentUserDTO;
 import fr.cafenoisette.saes5management.users.enums.UserRole;
@@ -149,6 +150,23 @@ public class UserController {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
             UserDTO user = userService.adminUpdateUser(userDTO);
+            return Response.ok(user).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @RolesAllowed({"ADMIN", "STUDENT_INIT", "STUDENT_ALT"})
+    @Path("/{userId}/addPreferences")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addPreferences(@PathParam("userId")Long userId, PlayerInfoDTO playerInfoDTO) {
+        try {
+            if (playerInfoDTO == null || userId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            UserDTO user = userService.addPreferences(userId, playerInfoDTO, securityContext);
             return Response.ok(user).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
