@@ -22,8 +22,11 @@ public class ProjectEntity {
 
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "client_ids")
+    @ManyToMany
+    @JoinTable(
+            name = "project_contacts",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<UserEntity> clients;
 
 }
