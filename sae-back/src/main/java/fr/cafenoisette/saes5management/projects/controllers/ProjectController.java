@@ -88,4 +88,21 @@ public class ProjectController {
         }
 
     }
+
+
+    @DELETE
+    @RolesAllowed({"TEACHER", "ADMIN","CLIENT"})
+    @Path("/delete/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteProject(@PathParam("projectId")Long projectId) {
+        try {
+            projectService.deleteProject(projectId, securityContext);
+
+            return Response.accepted().build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+
+    }
 }
