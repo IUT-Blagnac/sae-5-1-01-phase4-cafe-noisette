@@ -56,6 +56,10 @@ export const addMemberTeam = async (user: User, teamId: number) => {
     return await put<User, Team>('teams/' + teamId + "/addMember", user, true);
 }
 
+export const addProjectTeam = async (team: Team, teamId: number) => {
+    return await put<Team, Team>('teams/' + teamId + "/addProject", team, true);
+}
+
 export const getTeamsWithTeamId = async (teamId: number) => {
     return await get<Team[]>('teams/filter?id=' + teamId, true);
 }
