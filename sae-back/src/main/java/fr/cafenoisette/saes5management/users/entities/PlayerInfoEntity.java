@@ -40,7 +40,10 @@ public class PlayerInfoEntity {
 
     private int otherLevel;
 
-    @OneToMany
-    @JoinColumn(name = "preferencesId")
+    @ManyToMany
+    @JoinTable(
+            name = "preference_project",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<ProjectEntity> preferences;
 }

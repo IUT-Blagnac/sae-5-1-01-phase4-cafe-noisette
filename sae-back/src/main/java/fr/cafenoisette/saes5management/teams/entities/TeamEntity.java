@@ -37,8 +37,11 @@ public class TeamEntity {
     @JoinColumn(name = "leader_id")
     private UserEntity leader;
 
-    @OneToMany
-    @JoinColumn(name = "project_preferences")
+    @ManyToMany
+    @JoinTable(
+            name = "preference_project",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<ProjectEntity> preferences;
 
 }

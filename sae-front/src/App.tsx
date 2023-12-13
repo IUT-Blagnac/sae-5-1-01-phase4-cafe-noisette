@@ -17,7 +17,7 @@ import { Toaster } from "react-hot-toast";
 import TeamInfos from './pages/teams/TeamInfos';
 import {RoleProtection} from "./components/RoleProtection";
 import ProjectsInfosClient from './pages/projects/ProjectInfosClient';
-import {AdminPage} from "./pages/AdminPage";
+import AdminPage from "./pages/AdminPage";
 
 
 function App() {
