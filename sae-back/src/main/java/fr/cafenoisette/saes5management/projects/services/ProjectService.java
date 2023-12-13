@@ -165,4 +165,29 @@ public class ProjectService {
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
+
+    @Transactional
+    public void deleteProject(Long projectId, SecurityContext securityContext) {
+        try {
+
+            ProjectEntity projectEntity = projectRepository.findById(projectId);
+
+            if(projectEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
+            }
+            if(
+                    securityContext.isUserInRole("ADMIN") ||
+                            securityContext.isUserInRole("TEACHER") ||
+                            projectEntity.getClients().stream().anyMatch(c -> c.getUsername().equals(securityContext.getUserPrincipal().getName()))
+            ) {
+                projectRepository.delete(projectEntity);
+            }
+            else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
+            }
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting project", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
 }
