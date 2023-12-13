@@ -142,7 +142,6 @@ public class TeamController {
     @RolesAllowed({"ADMIN","TEACHER"})
     @Path("/{teamId}/removeProject")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
     public Response removeProject(@PathParam("teamId") Long teamId) {
         try {
             if (teamId == null) {

@@ -120,10 +120,9 @@ export async function del<R>(path: string, needsAuth?: boolean): Promise<ApiResp
             headers: headersTemp,
         });
 
-        const response = await request.json();
 
         return {
-            data: response as R,
+            data: undefined,
             errorMessage: undefined,
             responseCode: request.status
         };
