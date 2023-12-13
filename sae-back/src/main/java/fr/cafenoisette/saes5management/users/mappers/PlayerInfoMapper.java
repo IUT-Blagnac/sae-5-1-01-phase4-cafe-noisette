@@ -1,8 +1,12 @@
 package fr.cafenoisette.saes5management.users.mappers;
 
+import fr.cafenoisette.saes5management.projects.entities.ProjectEntity;
 import fr.cafenoisette.saes5management.users.entities.PlayerInfoEntity;
 import fr.cafenoisette.saes5management.users.dtos.PlayerInfoDTO;
 import io.quarkus.runtime.annotations.RegisterForReflection;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RegisterForReflection
 public class PlayerInfoMapper {
@@ -39,6 +43,13 @@ public class PlayerInfoMapper {
         dto.setDesignLevel(entity.getDesignLevel());
         dto.setOtherDesc(entity.getOtherDesc());
         dto.setOtherLevel(entity.getOtherLevel());
+        if(entity.getPreferences() != null) {
+            List<Long> idList = new ArrayList<>();
+            for(ProjectEntity project : entity.getPreferences()) {
+                idList.add(project.getId());
+            }
+            dto.setPreferencesId(idList);
+        }
         return dto;
     }
 }

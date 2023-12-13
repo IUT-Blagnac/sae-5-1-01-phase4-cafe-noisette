@@ -136,8 +136,8 @@ public class TeamService {
             LOGGER.info("checking if user is the leader");
             if (
                     securityContext.isUserInRole("ADMIN") ||
-                        userEntity.getTeam().getId().equals(teamId) &&
-                                userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
+                            userEntity.getTeam().getId().equals(teamId) &&
+                                    userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
             ) {
                 TeamEntity teamEntity = userEntity.getTeam();
                 UserEntity targetEntity;
@@ -238,24 +238,16 @@ public class TeamService {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
             if (userEntity == null) {
+                LOGGER.error("User not found");
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
-            if (
-                    securityContext.isUserInRole("ADMIN") ||
-                            userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
-            ) {
-                TeamEntity teamEntity = teamRepository.findById(teamId);
+            TeamEntity teamEntity = teamRepository.findById(teamId);
 
-                ProjectEntity projectEntity = projectRepository.findById(projectId);
-                teamEntity.setProject(projectEntity);
+            ProjectEntity projectEntity = projectRepository.findById(projectId);
+            teamEntity.setProject(projectEntity);
 
-                return TeamMapper.toDTO(teamEntity);
-
-            } else {
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
-            }
-
+            return TeamMapper.toDTO(teamEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
