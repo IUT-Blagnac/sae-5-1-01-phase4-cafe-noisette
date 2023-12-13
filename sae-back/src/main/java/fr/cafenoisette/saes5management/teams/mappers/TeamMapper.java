@@ -1,9 +1,12 @@
 package fr.cafenoisette.saes5management.teams.mappers;
 
+import fr.cafenoisette.saes5management.projects.entities.ProjectEntity;
 import fr.cafenoisette.saes5management.teams.entities.TeamEntity;
 import fr.cafenoisette.saes5management.teams.dtos.TeamDTO;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class TeamMapper {
@@ -38,6 +41,14 @@ public class TeamMapper {
 
         if(entity.getProject() != null) {
             dto.setProjectId(entity.getProject().getId());
+        }
+
+        if(entity.getPreferences() != null) {
+            List<Long> idList = new ArrayList<Long>();
+            for(ProjectEntity project : entity.getPreferences()) {
+                idList.add(project.getId());
+            }
+            dto.setPreferencesId(idList);
         }
 
         return dto;

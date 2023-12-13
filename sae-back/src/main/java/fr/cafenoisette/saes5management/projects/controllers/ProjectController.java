@@ -74,7 +74,7 @@ public class ProjectController {
     }
 
     @PUT
-    @RolesAllowed({"TEACHER", "ADMIN"})
+    @RolesAllowed({"TEACHER", "ADMIN","CLIENT"})
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -83,6 +83,23 @@ public class ProjectController {
             ProjectDTO updatedProject = projectService.updateProject(changedProject, securityContext);
 
             return Response.ok(updatedProject).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+
+    }
+
+
+    @DELETE
+    @RolesAllowed({"TEACHER", "ADMIN","CLIENT"})
+    @Path("/delete/{projectId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteProject(@PathParam("projectId")Long projectId) {
+        try {
+            projectService.deleteProject(projectId, securityContext);
+
+            return Response.accepted().build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }

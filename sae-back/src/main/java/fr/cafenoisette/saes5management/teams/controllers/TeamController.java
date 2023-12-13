@@ -11,12 +11,17 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 @Path("/teams")
 public class TeamController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TeamController.class);
 
     @Inject
     TeamService teamService;
@@ -42,7 +47,7 @@ public class TeamController {
     }
 
     @POST
-    @RolesAllowed({"STUDENT_INIT"})
+    @RolesAllowed({"STUDENT_INIT", "ADMIN"})
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -78,22 +83,58 @@ public class TeamController {
 
     @PUT
     @RolesAllowed({"ADMIN","STUDENT_INIT"})
-    @Path("/teams/{teamId}/addMember")
+    @Path("/{teamId}/addMember")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addTeamMember(@PathParam("teamId")Long teamId, UserDTO userDTO) {
-        
         try {
             if (teamId == null || userDTO == null) {
-                    return Response.status(Response.Status.BAD_REQUEST).build();
+                return Response.status(Response.Status.BAD_REQUEST).build();
             }
-           TeamDTO team = teamService.addMember(teamId,userDTO,securityContext);
+           TeamDTO team = teamService.addMember(teamId, userDTO, securityContext);
            return Response.ok(team).build();
-           
+
         } catch (SAE5ManagementException sme) {
            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+
     }
 
+    @PUT
+    @RolesAllowed({"ADMIN","STUDENT_INIT"})
+    @Path("/{teamId}/addPreferences")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addPreferences(@PathParam("teamId")Long teamId, TeamDTO placeholderTeam) {
+        List<Long> projectIds = placeholderTeam.getPreferencesId();
+        try {
+            if (teamId == null || projectIds == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            TeamDTO team = teamService.addPreferences(teamId,projectIds,securityContext);
+            return Response.ok(team).build();
+
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
+    @PUT
+    @RolesAllowed({"ADMIN","TEACHER"})
+    @Path("/{teamId}/addProject")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addProject(@PathParam("teamId") Long teamId, TeamDTO placeholderTeam) {
+        Long projectId = placeholderTeam.getProjectId();
+        try {
+            if (teamId == null || projectId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            TeamDTO team = teamService.addProject(teamId,projectId,securityContext);
+            return Response.ok(team).build();
+
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
     }
 }
-

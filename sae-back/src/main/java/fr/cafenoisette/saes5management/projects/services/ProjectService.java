@@ -120,7 +120,11 @@ public class ProjectService {
             if(oldProject == null) {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
             }
-            if(securityContext.isUserInRole("ADMIN")) {
+            if(
+                securityContext.isUserInRole("ADMIN") || 
+                securityContext.isUserInRole("TEACHER") ||
+                oldProject.getClients().stream().anyMatch(c -> c.getUsername().equals(securityContext.getUserPrincipal().getName()))    
+            ) {
                 ProjectEntity updateProject = ProjectMapper.toEntity(changedProject);
 
                 if (changedProject.getClientIds() != null) {
@@ -133,11 +137,12 @@ public class ProjectService {
                             LOGGER.error("user not found");
                             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
                         }
-
+                        
                         userList.add(userEntity);
                     }
-
-                    oldProject.setClients(userList);
+                     if( securityContext.isUserInRole("ADMIN") || securityContext.isUserInRole("TEACHER")) {
+                        oldProject.setClients(userList);
+                     }
                 }
 
                 if (updateProject.getName() != null) {
@@ -151,6 +156,31 @@ public class ProjectService {
                 projectRepository.persist(oldProject);
                 LOGGER.info("project persisted");
                 return ProjectMapper.toDTO(oldProject);
+            }
+            else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
+            }
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting project", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    @Transactional
+    public void deleteProject(Long projectId, SecurityContext securityContext) {
+        try {
+
+            ProjectEntity projectEntity = projectRepository.findById(projectId);
+
+            if(projectEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PROJECT_NOT_FOUND);
+            }
+            if(
+                    securityContext.isUserInRole("ADMIN") ||
+                            securityContext.isUserInRole("TEACHER") ||
+                            projectEntity.getClients().stream().anyMatch(c -> c.getUsername().equals(securityContext.getUserPrincipal().getName()))
+            ) {
+                projectRepository.delete(projectEntity);
             }
             else {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);

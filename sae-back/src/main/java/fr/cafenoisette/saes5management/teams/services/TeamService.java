@@ -2,6 +2,7 @@ package fr.cafenoisette.saes5management.teams.services;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
@@ -32,14 +33,14 @@ public class TeamService {
 
     @Inject
     TeamRepository teamRepository;
-    
+
     @Inject
     UserRepository userRepository;
 
     @Inject
     ProjectRepository projectRepository;
 
-    
+
     public TeamDTO getTeam(Long id, SecurityContext securityContext) {
         try {
             TeamEntity teamEntity = teamRepository.findById(id);
@@ -89,7 +90,7 @@ public class TeamService {
             TeamDTO teamDTO = TeamMapper.toDTO(teamEntity);
             return teamDTO;
 
-         } catch (PersistenceException e){
+        } catch (PersistenceException e){
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
@@ -99,15 +100,12 @@ public class TeamService {
     public TeamDTO createTeam(TeamDTO teamDTO) {
         try {
             TeamEntity teamEntity = TeamMapper.toEntity(teamDTO);
-            
+
             UserEntity leader = userRepository.findById(teamDTO.getLeaderId());
             teamEntity.setLeader(leader);
 
-            ProjectEntity project = projectRepository.findById(teamDTO.getProjectId());
-            teamEntity.setProject(project);
-
             teamRepository.persist(teamEntity);
-            
+
             Set<UserEntity> teamMembersEntities = new HashSet<>();
             teamDTO.getMembersId().forEach(t -> {
                 UserEntity user = userRepository.findById(t);
@@ -115,7 +113,7 @@ public class TeamService {
                 teamMembersEntities.add(user);
             });
             teamEntity.setMembers(teamMembersEntities);
-           
+
             return TeamMapper.toDTO(teamEntity);
 
         } catch (PersistenceException e) {
@@ -129,44 +127,63 @@ public class TeamService {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
+            LOGGER.info("checking if user exists");
             if (userEntity == null) {
+                LOGGER.error("User not found");
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
+            LOGGER.info("checking if user is the leader");
             if (
-                securityContext.isUserInRole("ADMIN") || 
-                userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
-              ) {
+                    securityContext.isUserInRole("ADMIN") ||
+                            userEntity.getTeam().getId().equals(teamId) &&
+                                    userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
+            ) {
                 TeamEntity teamEntity = userEntity.getTeam();
                 UserEntity targetEntity;
 
+                LOGGER.info("checking if target user id or username is not null");
                 if (userDTO.getId() != null) {
                     targetEntity = userRepository.findById(userDTO.getId());
-                } else if (userDTO.getUsername() != null){
+                } else if (userDTO.getUsername() != null) {
                     targetEntity = userRepository.findByUsername(userDTO.getUsername());
                 } else {
+                    LOGGER.error("UserDTO does not contain id or username");
                     throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
                 }
 
-                if (
-                    targetEntity != null && 
-                    targetEntity.getTeam() != null && 
-                    (targetEntity.getRoles().contains(UserRole.STUDENT_ALT) || targetEntity.getRoles().contains(UserRole.STUDENT_INIT))
-                ){
+                LOGGER.info("checking if target user entity is not null");
+                if (targetEntity == null) {
+                    LOGGER.error("Target user entity not found");
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+                }
+
+                LOGGER.info("checking if target user entity has already a team");
+                if (targetEntity.getTeam() != null) {
+                    LOGGER.error("User has already a team");
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.ALREADY_IN_TEAM);
+                }
+
+                LOGGER.info("checking if target user entity is a student");
+                if (targetEntity.getRoles().contains(UserRole.STUDENT_ALT) || targetEntity.getRoles().contains(UserRole.STUDENT_INIT)) {
+                    LOGGER.info("Adding " + targetEntity.getUsername() + " (" + targetEntity.getId() + ") to team " + teamEntity.getId());
                     teamEntity.getMembers().add(targetEntity);
+                    targetEntity.setTeam(teamEntity);
                     return TeamMapper.toDTO(teamEntity);
                 } else {
-                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);  
+                    LOGGER.error("target user is not a student");
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
                 }
             } else {
-              throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);  
+                LOGGER.error("User is not the leader");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
             }
 
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
-		
+
     }
 
     public ArrayList<TeamDTO> getFilteredTeams(Long id, String name, Long projectId, Long leaderId) {
@@ -177,6 +194,60 @@ public class TeamService {
                 teamDTOs.add(TeamMapper.toDTO(teamEntity));
             }
             return teamDTOs;
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    @Transactional
+    public TeamDTO addPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+
+            if (userEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            if (
+                    securityContext.isUserInRole("ADMIN") ||
+                            userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
+            ) {
+                TeamEntity teamEntity = teamRepository.findById(teamId);
+
+                for(Long id: projectIds) {
+                    ProjectEntity projectEntity = projectRepository.findById(id);
+                    teamEntity.getPreferences().add(projectEntity);
+                }
+
+                return TeamMapper.toDTO(teamEntity);
+
+            } else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
+            }
+
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    @Transactional
+    public TeamDTO addProject(Long teamId, Long projectId, SecurityContext securityContext) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+
+            if (userEntity == null) {
+                LOGGER.error("User not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            TeamEntity teamEntity = teamRepository.findById(teamId);
+
+            ProjectEntity projectEntity = projectRepository.findById(projectId);
+            teamEntity.setProject(projectEntity);
+
+            return TeamMapper.toDTO(teamEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);

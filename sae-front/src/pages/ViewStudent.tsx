@@ -6,32 +6,40 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box } from "@mui/material";
-import { getStudents, getStudentsByUsername, getUserByUsername, putStudent } from "../rest/queries";
+import { Box, Typography } from "@mui/material";
+import { addMemberTeam, getStudents, getStudentsByUsername, getTeamsWithTeamId, getUserByUsername } from "../rest/queries";
 import { User } from "../models/User";
 import { PlayerInfo } from "../models/PlayerInfo";
 import UserInfos, { skillType } from "./UserInfos";
 import UserInfosView from "./UserInfosView";
 import { useAuthUser } from "../contexts/AuthUserContext";
 import toast from "react-hot-toast";
+import { Team } from "../models/Team";
 
 function ViewStudent() {
+  const authUser = useAuthUser();
   const [students, setStudents] = React.useState([] as User[])
   const [skills, setSkills] = React.useState([] as skillType[])
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = React.useState({} as User);
   const [infoBoxOpen, setInfoBoxOpen] = useState(false);
-  const authUser = useAuthUser();
+  const [team, setTeam] = React.useState({ } as Team)
+
 
   useEffect(() => {
-    requestStudents();
-  }, []);
+    if (authUser.user !== undefined) {
+        requestStudents();
+    }
+}, [authUser.user]);
 
   function requestStudents() {
     getStudents().then((response) => {
       if (response.responseCode === 200) {
         if (response.data) {
           setStudents(response.data);
+          if(authUser.user?.teamId !== null){
+            requestTeam(response.data.filter((student) => student.teamId === null));
+          }
         }
       } else {
         console.log("Error while getting students: " + response.errorMessage);
@@ -39,6 +47,29 @@ function ViewStudent() {
     }
     )
   }
+
+  function requestTeam(studentsWithoutTeam: User[]) {
+    const teamId = authUser.user?.teamId as number;
+    getTeamsWithTeamId(teamId).then((response) => {
+        if (response.responseCode === 200) {
+            if (response.data) {
+                setTeam(response.data[0]);
+                if(response.data[0].leaderId === authUser.user?.id){
+                  if(studentsWithoutTeam.length === 0){
+                    toast.success("Il n'y a pas d'étudiant sans équipe")
+                  } else if (studentsWithoutTeam.length === 1) {
+                    toast.error("Il y a 1 étudiant sans équipe")
+                  } else {
+                    toast.error("Il y a "+ studentsWithoutTeam.length + " étudiants sans équipe")
+                  }
+                }
+            }
+        } else {
+            console.log("Error while getting team: " + response.errorMessage);
+        }
+    }
+    )
+}
 
   const handleViewButtonClick = (student: User) => {
     setSelectedUser(student);
@@ -80,34 +111,48 @@ function ViewStudent() {
   const handleInviteConfirmation = () => {
     //invite
     if (selectedUser.teamId === null) {
-      selectedUser.teamId = authUser.user?.teamId as number;
-      putStudent(selectedUser).then((response) => {
-        if (response.responseCode === 200) {
-          if (response.data) {
-            toast.success("L'étudiant a bien été invité !")
-          }
-        } else {
-          toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
+
+        selectedUser.teamId = authUser.user?.teamId as number;
+
+        addMemberTeam(selectedUser, team.id as number).then((response) => {
+            if (response.responseCode === 200) {
+                if (response.data) {
+                    toast.success("L'étudiant a bien été invité !")
+                }
+            } else {
+                toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
+            }
         }
-      }
-      ).catch((error) => {
-        toast("Une erreur est survenue lors de la mise à jour de l'étudiant")
-      })
+        ).catch((error) => {
+            toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant")
+        })
     } else {
-      toast.error("L'étudiant est déjà dans une équipe.")
+        toast.error("L'étudiant est déjà dans une équipe.")
     }
 
     setInviteDialogOpen(false);
-  };
+};
 
   const handleInfoBoxClose = () => {
     setInfoBoxOpen(false);
   };
 
+  const compareStudents = (studentA: User, studentB: User) => {
+    // Placer en premier les étudiants avec teamId === null
+    if (studentA.teamId === null && studentB.teamId !== null) {
+      return -1;
+    } else if (studentA.teamId !== null && studentB.teamId === null) {
+      return 1;
+    } else {
+      // Pour les autres cas, ne pas changer l'ordre
+      return 0;
+    }
+  };
+
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Accueil</h1>
-      {students.filter((student) => student.teamId === null).map((student, index) => (
+      {students.sort(compareStudents).map((student, index) => (
         <Box
           key={index}
           sx={{
@@ -129,21 +174,24 @@ function ViewStudent() {
             {student.playerInfo?.nickname}
           </div>
           <div>
+          {student.teamId === null && authUser.user?.id === team.leaderId && (
+                            <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => handleInviteButtonClick(student)}
+                            style={{ marginRight: "10px" }}
+                          >
+                            Inviter utilisateur
+                          </Button>
+                        )}
             <Button
               variant="contained"
               color="primary"
               onClick={() => handleViewButtonClick(student)}
-              style={{ marginRight: "10px" }}
             >
               Voir fiche utilisateur
             </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handleInviteButtonClick(student)}
-            >
-              Inviter utilisateur
-            </Button>
+            
           </div>
         </Box>
       ))}
@@ -158,7 +206,7 @@ function ViewStudent() {
         <DialogTitle id="info-box-title">Information</DialogTitle>
         <DialogContent>
           <DialogContentText id="info-box-description">
-            Vous visualisez la fiche de l'utilisateur : {selectedUser.username}.
+            Vous visualisez la fiche de l'utilisateur : {selectedUser.playerInfo?.nickname}.
           </DialogContentText>
         </DialogContent>
         <Box

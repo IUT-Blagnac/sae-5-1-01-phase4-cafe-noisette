@@ -5,6 +5,9 @@ import fr.cafenoisette.saes5management.authentication.utils.PBKDF2Encoder;
 import fr.cafenoisette.saes5management.authentication.utils.PermissionChecker;
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementExceptionTypes;
+import fr.cafenoisette.saes5management.projects.entities.ProjectEntity;
+import fr.cafenoisette.saes5management.projects.repositories.ProjectRepository;
+import fr.cafenoisette.saes5management.users.dtos.PlayerInfoDTO;
 import fr.cafenoisette.saes5management.users.dtos.subdtos.ClientUserDTO;
 import fr.cafenoisette.saes5management.users.dtos.subdtos.StudentUserDTO;
 import fr.cafenoisette.saes5management.users.entities.PlayerInfoEntity;
@@ -41,6 +44,9 @@ public class UserService {
 
     @Inject
     PlayerInfoRepository playerInfoRepository;
+
+    @Inject
+    ProjectRepository projectRepository;
 
     public UserDTO getUserById(Long id, SecurityContext securityContext) {
         try {
@@ -235,8 +241,8 @@ public class UserService {
     public void createFirstAdminUser(UserDTO admin) {
         try {
             if (userRepository.findByUsername(admin.getUsername()) != null) {
-                LOGGER.error("User already exists");
-                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_ALREADY_EXISTS);
+                LOGGER.warn("Admin user already exists, skipping");
+                return;
             }
 
             UserEntity userEntity = UserMapper.toEntity(admin);
@@ -249,5 +255,42 @@ public class UserService {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
+    }
+
+    @Transactional
+    public UserDTO addPreferences(Long userId, PlayerInfoDTO playerInfoDTO, SecurityContext securityContext) {
+        try {
+            LOGGER.error("test 1");
+            UserEntity userEntity = userRepository.findById(userId);
+            if (userEntity == null) {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+            LOGGER.error("test 2");
+            if (
+                securityContext.isUserInRole("ADMIN") ||
+                        securityContext.getUserPrincipal().getName().equals(userEntity.getUsername())
+            ) {
+                LOGGER.error("test 3");
+                LOGGER.error(playerInfoDTO.getPreferencesId().toString());
+                List<ProjectEntity> preferenceList = new ArrayList<>();
+                for(Long id: playerInfoDTO.getPreferencesId()) {
+                    ProjectEntity projectEntity = projectRepository.findById(id);
+                    preferenceList.add(projectEntity);
+                }
+                LOGGER.error("test 4");
+                LOGGER.error(preferenceList.toString());
+                userEntity.getPlayerInfo().setPreferences(preferenceList);
+                LOGGER.error("test 5");
+            }
+            else {
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
+            }
+            LOGGER.error("test fin");
+            return UserMapper.toDTO(userEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+
     }
 }
