@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useAuthUser } from '../contexts/AuthUserContext';
-import { getAllTeams, getProjects } from '../rest/queries';
+import { addMemberTeam, addProjectTeam, getAllTeams, getProjects } from '../rest/queries';
 import { Team } from '../models/Team';
 import { Project } from '../models/Project';
 import { useTheme } from '../utils/theme';
+import toast from 'react-hot-toast';
 
 interface SubjectProps {}
 
@@ -88,7 +89,26 @@ const Subject: React.FC<SubjectProps> = () => {
   };
   
   const handleSave = () => {
+    console.log(teams)
+    console.log(tasks)
     // Logique pour sauvegarder les modifications
+    {tasks.filter((task) => task.teamIds).map((task) => 
+      {task.teamIds?.map((teamId) => {
+        const team = teams.find((team) => team.id === teamId) as Team
+        console.log(team)
+        addProjectTeam(team, teamId).then((response) => {
+          if (response.responseCode === 200) {
+              if (response.data) {
+                  toast.success("Les modifications ont été sauvegardées")
+              }
+          } else {
+              console.log("Error while add project in team: " + response.errorMessage);
+          }
+      }
+  )
+      }
+      )}
+      )}
   
     setShowResetButton(false);
     setShowSaveButton(false);
