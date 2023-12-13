@@ -111,7 +111,7 @@ public class TeamController {
             if (teamId == null || projectIds == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            TeamDTO team = teamService.addPreferences(teamId,projectIds,securityContext);
+            TeamDTO team = teamService.setPreferences(teamId,projectIds,securityContext);
             return Response.ok(team).build();
 
         } catch (SAE5ManagementException sme) {

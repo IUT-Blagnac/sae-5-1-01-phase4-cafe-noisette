@@ -201,7 +201,7 @@ public class TeamService {
     }
 
     @Transactional
-    public TeamDTO addPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
+    public TeamDTO setPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
@@ -214,6 +214,7 @@ public class TeamService {
                             userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
             ) {
                 TeamEntity teamEntity = teamRepository.findById(teamId);
+                teamEntity.setPreferences(new ArrayList<>());
 
                 for(Long id: projectIds) {
                     ProjectEntity projectEntity = projectRepository.findById(id);
@@ -254,6 +255,7 @@ public class TeamService {
         }
     }
 
+    @Transactional
     public void removeProject(Long teamId, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
