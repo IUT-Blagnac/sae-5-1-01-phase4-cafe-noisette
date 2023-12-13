@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,10 +6,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box, Typography } from "@mui/material";
-import { addMemberTeam, getStudents, getStudentsByUsername, getTeamsWithTeamId } from "../../rest/queries";
+import { addPreferencesTeam, getStudents, getStudentsByUsername, getTeamsWithTeamId } from "../../rest/queries";
 import { User } from "../../models/User";
-import { PlayerInfo } from "../../models/PlayerInfo";
-import UserInfos, { skillType } from "../UserInfos";
+import { skillType } from "../UserInfos";
 import UserInfosView from "../UserInfosView";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import { Team } from "../../models/Team";
@@ -55,12 +53,37 @@ function TeamInfos() {
             if (response.responseCode === 200) {
                 if (response.data) {
                     setTeam(response.data[0])
+                    if (response.data[0].preferencesId.length === 0) {
+                        toast.error("Aucune préférence des sujets définie")
+                    }
+                    console.log(response.data[0].preferencesId)
                 }
             } else {
                 console.log("Error while getting team: " + response.errorMessage);
             }
         }
         )
+    }
+
+    const handleUpdatePreferencesButtonClick = () => {
+        const projectIds = projects.map((project) => project.id as number);
+        if (JSON.stringify(projectIds) === JSON.stringify(team.preferencesId)) {
+            toast.success("Aucun changement détecté")
+            return
+        }
+        team.preferencesId = projectIds
+        addPreferencesTeam(team, team.id as number).then((response) => {
+            if (response.responseCode === 200) {
+                if (response.data) {
+                    toast.success("Mise à jour des préférences effectuée")
+                }
+            } else {
+                console.log("Une erreur est survenue lors de la mise à jour des préférences (erreur " + response.responseCode + ")")
+            }
+        }
+        ).catch((error) => {
+            console.log("Une erreur est survenue lors de la mise à jour de l'étudiant")
+        })
     }
 
     const handleViewButtonClick = (student: User) => {
@@ -168,30 +191,26 @@ function TeamInfos() {
 
             {team.leaderId === authUser.user?.id && (
                 <Box
-                sx={{marginTop: 5, marginBottom: 3, paddingTop: 3, paddingBottom: 3, width: '50%', marginLeft: '25%', border: "1px solid #ccc", borderRadius: '10px'}}>
-                    <Typography sx={{textTransform: 'uppercase', fontSize:'28px'}}>Selection des préférences des sujets</Typography>
+                    sx={{ marginTop: 5, marginBottom: 3, paddingTop: 3, paddingBottom: 3, width: '50%', marginLeft: '25%', border: "1px solid #ccc", borderRadius: '10px' }}>
+                    <Typography sx={{ textTransform: 'uppercase', fontSize: '28px' }}>Selection des préférences des sujets</Typography>
 
-                <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                marginTop="20px"
-                marginBottom="20px"
-              >
-                <ProjectPreferencesSelect projects={projects} setProjects={setProjects} />
-              </Box>
-              <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                                console.log(team.preferencesId)
-                                team.preferencesId = [1]
-                                console.log(team.preferencesId)
-                            }}
-                            style={{ marginRight: "10px", width: '50%'}}
-                        >
-                            Mettre à jour
-                        </Button>
+                    <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        marginTop="20px"
+                        marginBottom="20px"
+                    >
+                        <ProjectPreferencesSelect projects={projects} setProjects={setProjects} />
+                    </Box>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleUpdatePreferencesButtonClick()}
+                        style={{ marginRight: "10px", width: '50%' }}
+                    >
+                        <Typography>Mettre à jour</Typography>
+                    </Button>
                 </Box>
             )}
 
@@ -230,7 +249,7 @@ function TeamInfos() {
                     </Button>
                 </DialogActions>
             </Dialog>
-           
+
         </div>
     );
 }
