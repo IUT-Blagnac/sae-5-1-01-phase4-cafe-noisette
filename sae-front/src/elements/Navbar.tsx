@@ -21,7 +21,6 @@ function Navbar() {
                     {name: "Voir les étudiants", path: "/students",  isVisible: authUser.user?.teamId!==null && authUser.user?.roles.includes('STUDENT_INIT')},
                     {name: "Création d'une équipe", path: "/teams/create",  isVisible: authUser.user?.teamId===null && authUser.user?.roles.includes('STUDENT_INIT')},
                     {name: "Informations de l'équipe", path: "teams/infos",  isVisible: (authUser.user?.roles.includes('STUDENT_INIT') && authUser.user.teamId!==null ) || (authUser.user?.roles.includes('STUDENT_ALT') && authUser.user.teamId!==null)},
-                    {name: "Créer un projet", path: "/projects/create",  isVisible: authUser.user?.roles.includes('TEACHER')},
                     { name: "Informations sur mes projets", path: "/clients/projects", isVisible: authUser.user?.roles.includes('CLIENT') },
                   ]
 
