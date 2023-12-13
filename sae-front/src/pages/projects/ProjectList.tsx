@@ -10,12 +10,12 @@ import {useAuthUser} from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 
 function ProjectList () {
-    const [newProject, setNewProject] = React.useState({name:'', description:'',clientIds:[]} as Project)
     const authUser = useAuthUser();
     const editRights = authUser.user?.roles.includes('TEACHER') || authUser.user?.roles.includes('ADMIN')
     const [clients, setClients] = React.useState([] as User[])
-    const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
     const [projects, setProjects] = React.useState([] as Project[])
+    const [newProject, setNewProject] = React.useState({name:'', description:'',clientIds:[]} as Project)
+    const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
 
     useEffect(() => {
         requestProjects();

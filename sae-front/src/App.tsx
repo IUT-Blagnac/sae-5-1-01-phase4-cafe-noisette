@@ -12,7 +12,7 @@ import Navbar from "./elements/Navbar";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { useTheme } from "./utils/theme";
 import ProjectList from "./pages/projects/ProjectList";
-import { AuthUserProvider } from "./contexts/AuthUserContext";
+import {AuthUserProvider} from "./contexts/AuthUserContext";
 import { Toaster } from "react-hot-toast";
 import TeamInfos from './pages/teams/TeamInfos';
 import {RoleProtection} from "./components/RoleProtection";
