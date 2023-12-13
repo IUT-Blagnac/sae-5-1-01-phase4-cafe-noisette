@@ -137,4 +137,24 @@ public class TeamController {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }
     }
+
+
+    @DELETE
+    @RolesAllowed({"ADMIN","TEACHER"})
+    @Path("/{teamId}/removeProject")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeProject(@PathParam("teamId") Long teamId, TeamDTO placeholderTeam) {
+        Long projectId = placeholderTeam.getProjectId();
+        try {
+            if (teamId == null || projectId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            TeamDTO team = teamService.removeProject(teamId, securityContext);
+            return Response.ok(team).build();
+
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
 }

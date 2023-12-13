@@ -253,4 +253,23 @@ public class TeamService {
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
+
+    public TeamDTO removeProject(Long teamId, SecurityContext securityContext) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+
+            if (userEntity == null) {
+                LOGGER.error("User not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            TeamEntity teamEntity = teamRepository.findById(teamId);
+            teamEntity.setProject(null);
+
+            return TeamMapper.toDTO(teamEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
 }
