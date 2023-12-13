@@ -1,5 +1,5 @@
 import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, Select, SelectChangeEvent, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import ProjectElement from "./ProjectElement";
 import { Project } from "../../models/Project";
 import TextField from "@mui/material/TextField";
@@ -18,8 +18,13 @@ function ProjectsInfosClient() {
     const [students, setStudents] = React.useState([] as User[])
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
     const [notationBoxOpen, setNotationBoxOpen] = useState(false);
+    const [note, setNote] = useState(-1);
+    const [titleNote, setTitleNote] = useState('');
+    const [descriptionNote, setDescriptionNote] = useState('');
 
     const [selectedUser, setSelectedUser] = React.useState({} as User);
+    const [selectedTeam, setSelectedTeam] = React.useState({} as Team);
+
 
 
 
@@ -78,12 +83,51 @@ function ProjectsInfosClient() {
       };
 
       const handleNotationButtonClick = (team: Team) => {
+        setNote(-1)
+        setTitleNote('')
+        setDescriptionNote('')
+        setSelectedTeam(team)
         setNotationBoxOpen(true);
     }
 
     const handleNotationBoxClose = () => {
         setNotationBoxOpen(false);
       };
+
+    const handleSaveNote = () => {
+        if(titleNote === ''){
+            toast.error('La note doit avoir un titre')
+            return
+        }
+        if(descriptionNote === ''){
+            toast.error('La note doit avoir une description')
+            return
+        }
+        if(note === -1){
+            toast.error('Aucune note attribuée, un nombre doit être choisi')
+            return
+        }
+        toast.success('La note a été ajouté')
+        handleNotationBoxClose();
+    };
+
+    const handleNoteClick = (selectedNote: number) => {
+        setNote(selectedNote);
+      };
+
+      const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        switch (name) {
+            case "title":
+                setTitleNote(value);
+                break;
+            case "description":
+                setDescriptionNote(value);
+                break;
+            default:
+                break;
+        }
+    };
 
     return (
         <Box>
@@ -146,29 +190,64 @@ function ProjectsInfosClient() {
                 ))}
 
 <Dialog
-                open={notationBoxOpen}
-                onClose={handleNotationBoxClose}
-                aria-labelledby="info-box-title"
-                aria-describedby="info-box-description"
-            >
-                <DialogTitle id="info-box-title" color="primary" sx={{textTransform: 'uppercase'}}>SAISIE DES NOTES</DialogTitle>
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{ marginRight: "55px", marginLeft: "55px", textTransform: 'uppercase'}}
-                >
-                    en cours..
+        open={notationBoxOpen}
+        onClose={handleNotationBoxClose}
+        aria-labelledby="info-box-title"
+        aria-describedby="info-box-description"
+      >
+        <DialogTitle id="info-box-title" color="primary" sx={{ textTransform: 'uppercase', textAlign: 'center' }}>
+          SAISIE DES NOTES POUR L'EQUIPE : {selectedTeam.name}
+        </DialogTitle>
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={{ marginRight: '55px', marginLeft: '55px', textTransform: 'uppercase' }}
+        >
+            <TextField
+            name="title"
+            label="Titre"
+            variant="outlined"
+            value={titleNote}
+            onChange={handleChange}
+            fullWidth
+            sx={{ marginBottom: '20px', marginTop: '20px'}}
+            />
+            <TextField
+            name="description"
+            label="Description"
+            variant="outlined"
+            value={descriptionNote}
+            onChange={handleChange}
+            fullWidth
+            sx={{ marginBottom: '20px', marginTop: '20px'}}
+            />
+            <Typography>NOTE</Typography>
+        <Box sx={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
+        {Array.from({ length: 41 }, (_, index) => index * 0.5).map((number) => (
+      <Button
+        key={number}
+        variant="contained"
+        onClick={() => handleNoteClick(number)}
+        color={note === number ? 'primary' : 'inherit'}
+        sx={{ margin: '5px'}}
+      >
+        {number}
+      </Button>
+    ))}
+        </Box>
 
-
-                </Box>
-                <DialogActions>
-                    <Button onClick={handleNotationBoxClose} color="primary">
-                        OK
-                    </Button>
-                </DialogActions>
-            </Dialog>
+        </Box>
+        <DialogActions>
+          <Button onClick={handleNotationBoxClose} color="primary">
+            Annuler
+          </Button>
+          <Button onClick={handleSaveNote} color="primary">
+            NOUVELLE NOTE
+          </Button>
+        </DialogActions>
+      </Dialog>
 
             <Dialog
                 open={infoBoxOpen}
@@ -176,7 +255,7 @@ function ProjectsInfosClient() {
                 aria-labelledby="info-box-title"
                 aria-describedby="info-box-description"
             >
-                <DialogTitle id="info-box-title" color="primary" sx={{textTransform: 'uppercase'}}>Informations</DialogTitle>
+                <DialogTitle id="info-box-title" color="primary" sx={{textTransform: 'uppercase', textAlign: 'center'}}>Informations</DialogTitle>
                 <Box
                     display="flex"
                     flexDirection="column"
