@@ -254,7 +254,7 @@ public class TeamService {
         }
     }
 
-    public TeamDTO removeProject(Long teamId, SecurityContext securityContext) {
+    public void removeProject(Long teamId, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
@@ -265,8 +265,6 @@ public class TeamService {
 
             TeamEntity teamEntity = teamRepository.findById(teamId);
             teamEntity.setProject(null);
-
-            return TeamMapper.toDTO(teamEntity);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);

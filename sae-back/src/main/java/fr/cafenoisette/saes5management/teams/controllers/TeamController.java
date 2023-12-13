@@ -138,7 +138,6 @@ public class TeamController {
         }
     }
 
-
     @DELETE
     @RolesAllowed({"ADMIN","TEACHER"})
     @Path("/{teamId}/removeProject")
@@ -150,9 +149,8 @@ public class TeamController {
             if (teamId == null || projectId == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            TeamDTO team = teamService.removeProject(teamId, securityContext);
-            return Response.ok(team).build();
-
+            teamService.removeProject(teamId, securityContext);
+            return Response.ok().build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }
