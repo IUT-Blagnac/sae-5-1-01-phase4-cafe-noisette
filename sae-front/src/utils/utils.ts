@@ -10,3 +10,10 @@ export const reorder = <T>(
 
     return result;
 };
+
+export const reorderListByIds = <T>(list: T[], idList: number[], idKey: keyof T): T[] => {
+    const idMap = new Map<number, T>();
+    list.forEach(item => idMap.set(item[idKey] as number, item));
+    const reorderedList = idList.map(id => idMap.get(id));
+    return reorderedList.filter(item => item !== undefined) as T[];
+}

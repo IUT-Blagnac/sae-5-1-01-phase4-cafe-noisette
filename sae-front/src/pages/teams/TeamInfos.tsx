@@ -18,11 +18,11 @@ import { ProjectPreferencesSelect } from "../../components/ProjectPreferencesSel
 import { Project } from "../../models/Project";
 
 function TeamInfos() {
-    const [students, setStudents] = React.useState([] as User[])
-    const [projects, setProjects] = React.useState([] as Project[])
-    const [team, setTeam] = React.useState({} as Team)
-    const [skills, setSkills] = React.useState([] as skillType[])
-    const [selectedUser, setSelectedUser] = React.useState({} as User);
+    const [students, setStudents] = React.useState<User[]>([])
+    const [projects, setProjects] = React.useState<Project[]>([])
+    const [team, setTeam] = React.useState<Team>({} as Team)
+    const [skills, setSkills] = React.useState<skillType[]>([])
+    const [selectedUser, setSelectedUser] = React.useState<User>({} as User);
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
     const authUser = useAuthUser();
     const navigate = useNavigate();
@@ -43,8 +43,7 @@ function TeamInfos() {
             } else {
                 console.log("Error while getting students: " + response.errorMessage);
             }
-        }
-        )
+        })
     }
 
     function requestTeam() {
@@ -201,7 +200,7 @@ function TeamInfos() {
                         marginTop="20px"
                         marginBottom="20px"
                     >
-                        <ProjectPreferencesSelect projects={projects} setProjects={setProjects} />
+                        <ProjectPreferencesSelect projects={projects} setProjects={setProjects} preferenceIds={team.preferencesId} />
                     </Box>
                     <Button
                         variant="contained"
