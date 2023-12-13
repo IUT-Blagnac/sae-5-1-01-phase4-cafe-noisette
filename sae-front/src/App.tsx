@@ -17,6 +17,7 @@ import { Toaster } from "react-hot-toast";
 import TeamInfos from './pages/teams/TeamInfos';
 import {RoleProtection} from "./components/RoleProtection";
 import ProjectsInfosClient from './pages/projects/ProjectInfosClient';
+import AdminPage from "./pages/AdminPage";
 
 
 function App() {
@@ -71,6 +72,11 @@ function App() {
                         <Route path="clients/projects" element={
                             <RoleProtection allowedRoles={["CLIENT"]}>
                                 <ProjectsInfosClient />
+                            </RoleProtection>
+                        } />
+                        <Route path="/admin" element={
+                            <RoleProtection allowedRoles={["ADMIN"]}>
+                                <AdminPage />
                             </RoleProtection>
                         } />
                         {/*<Route path="students/team" element={*/}

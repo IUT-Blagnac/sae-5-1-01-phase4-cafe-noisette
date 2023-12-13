@@ -8,4 +8,5 @@ export interface Team {
     projectId: number;
     membersId: number[];
     leaderId: number;
+    preferencesId: number[];
 }

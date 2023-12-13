@@ -16,10 +16,13 @@ import { useAuthUser } from "../../contexts/AuthUserContext";
 import { Team } from "../../models/Team";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { ProjectPreferencesSelect } from "../../components/ProjectPreferencesSelect";
+import { Project } from "../../models/Project";
 
 function TeamInfos() {
     const [students, setStudents] = React.useState([] as User[])
-    const [team, setTeam] = React.useState({ name: '', github: '', projectId: 0, membersId: [], leaderId: 0 } as Team)
+    const [projects, setProjects] = React.useState([] as Project[])
+    const [team, setTeam] = React.useState({} as Team)
     const [skills, setSkills] = React.useState([] as skillType[])
     const [selectedUser, setSelectedUser] = React.useState({} as User);
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
@@ -162,6 +165,37 @@ function TeamInfos() {
                     Inviter des membres
                 </Button>
             )}
+
+            {team.leaderId === authUser.user?.id && (
+                <Box
+                sx={{marginTop: 5, marginBottom: 3, paddingTop: 3, paddingBottom: 3, width: '50%', marginLeft: '25%', border: "1px solid #ccc", borderRadius: '10px'}}>
+                    <Typography sx={{textTransform: 'uppercase', fontSize:'28px'}}>Selection des préférences des sujets</Typography>
+
+                <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                marginTop="20px"
+                marginBottom="20px"
+              >
+                <ProjectPreferencesSelect projects={projects} setProjects={setProjects} />
+              </Box>
+              <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                console.log(team.preferencesId)
+                                team.preferencesId = [1]
+                                console.log(team.preferencesId)
+                            }}
+                            style={{ marginRight: "10px", width: '50%'}}
+                        >
+                            Mettre à jour
+                        </Button>
+                </Box>
+            )}
+
+
 
             {/* Boîtes d'informations */}
             <Dialog
