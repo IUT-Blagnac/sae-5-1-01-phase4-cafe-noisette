@@ -102,7 +102,7 @@ public class TeamController {
 
     @PUT
     @RolesAllowed({"ADMIN","STUDENT_INIT"})
-    @Path("/{teamId}/addPreferences/")
+    @Path("/{teamId}/addPreferences")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addPreferences(@PathParam("teamId")Long teamId, TeamDTO placeholderTeam) {
@@ -120,11 +120,11 @@ public class TeamController {
     }
 
     @PUT
-    @RolesAllowed({"ADMIN","STUDENT_INIT"})
-    @Path("/{teamId}/addProject/")
+    @RolesAllowed({"ADMIN","TEACHER"})
+    @Path("/{teamId}/addProject")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addProject(@PathParam("teamId")Long teamId, TeamDTO placeholderTeam) {
+    public Response addProject(@PathParam("teamId") Long teamId, TeamDTO placeholderTeam) {
         Long projectId = placeholderTeam.getProjectId();
         try {
             if (teamId == null || projectId == null) {

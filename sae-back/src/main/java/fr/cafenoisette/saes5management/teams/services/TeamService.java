@@ -238,6 +238,7 @@ public class TeamService {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
             if (userEntity == null) {
+                LOGGER.error("User not found");
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
 
