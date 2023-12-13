@@ -21,7 +21,7 @@ const CreateTeam = () => {
 
   const handleConfirmClick = () => {
 
-    const newTeam = { name: nameTeam, github: '', projectId: 0, membersId: [authUser.user?.id], leaderId: authUser.user?.id } as Team;
+    const newTeam = { name: nameTeam, github: '', projectId: 0, membersId: [authUser.user?.id], leaderId: authUser.user?.id, preferencesId: []} as Team;
 
     postTeam(newTeam).then((response) => {
 
