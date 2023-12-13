@@ -12,6 +12,7 @@ function Navbar() {
     const open = Boolean(anchorEl);
     const { isDarkMode, toggle } = useDarkMode()
     const navigate = useNavigate()
+    const pages = [{name: "Accueil", path: "/"}, {name: "À propos", path: "/about"}, {name: "Projects", path: "/projects"}]
     const authUser = useAuthUser();
     // eslint-disable-next-line no-lone-blocks
     {/* Mise en place des contidions d'affichage de la navbar*/}
