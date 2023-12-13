@@ -55,10 +55,12 @@ function ViewStudent() {
             if (response.data) {
                 setTeam(response.data[0]);
                 if(response.data[0].leaderId === authUser.user?.id){
-                  if(studentsWithoutTeam.length !== 0){
-                    toast.error("Il y a "+ studentsWithoutTeam.length + " étudiants sans équipe")
-                  } else {
+                  if(studentsWithoutTeam.length === 0){
                     toast.success("Il n'y a pas d'étudiant sans équipe")
+                  } else if (studentsWithoutTeam.length === 1) {
+                    toast.error("Il y a 1 étudiant sans équipe")
+                  } else {
+                    toast.error("Il y a "+ studentsWithoutTeam.length + " étudiants sans équipe")
                   }
                 }
             }
@@ -135,10 +137,22 @@ function ViewStudent() {
     setInfoBoxOpen(false);
   };
 
+  const compareStudents = (studentA: User, studentB: User) => {
+    // Placer en premier les étudiants avec teamId === null
+    if (studentA.teamId === null && studentB.teamId !== null) {
+      return -1;
+    } else if (studentA.teamId !== null && studentB.teamId === null) {
+      return 1;
+    } else {
+      // Pour les autres cas, ne pas changer l'ordre
+      return 0;
+    }
+  };
+
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Accueil</h1>
-      {students.map((student, index) => (
+      {students.sort(compareStudents).map((student, index) => (
         <Box
           key={index}
           sx={{
