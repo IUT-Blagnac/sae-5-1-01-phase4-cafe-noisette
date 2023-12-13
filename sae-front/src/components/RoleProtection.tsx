@@ -20,9 +20,6 @@ export const RoleProtection = (props: { allowedRoles?: UserRole[]; children: Rea
                 setIsUserInRole(true)
             }
         }
-        else {
-            navigate('/login')
-        }
     }, [allowedRoles, user.user]);
 
     return (

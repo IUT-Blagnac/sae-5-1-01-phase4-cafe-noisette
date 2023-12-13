@@ -6,13 +6,6 @@ function Home() {
   const authUser = useAuthUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-      if (!authUser.user) {
-          navigate('/login')
-      }
-  })
-
-
   return (
     <div>
       <h1>Accueil</h1>

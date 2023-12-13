@@ -29,39 +29,26 @@ interface ProjectElementProps {
     handleUpdateProject: (project: Project) => void
 }
 
-function ClientElement (props: {project: Project, clients: User[]}){
-    const {project, clients} = props
-    return(
-        <>
-        {project.clientIds?.forEach((clientId) => {
-                    clients.forEach((client) => {
-                        if (client.id === clientId) {
-                            return <Typography variant={"body1"}>{client.lastname} {client.firstname} - {client.email} </Typography>
-                        }
-                        else {
-                            return <Typography variant={"body1"}>Aucun client</Typography>
-                        }
-                    })
-                }
-            )}
-        </>
-    )
-}
-
 function ProjectElement (props: ProjectElementProps) {
     const {project, admin, handleRemoveProject, clients, handleUpdateProject} = props
     const [open, setOpen] = React.useState(false);
     const [updateProject, setUpdateProject] = React.useState({name:'', description:'', clientIds:[]} as Project)
     const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
+    const [projectClients, setProjectClients] = React.useState(projectCli)
     const theme = useTheme();
 
     function handleClose () {
         setOpen(false)
     }
 
+    function projectCli(){
+            return project.clientIds?.map((id) => clients.find((client) => client.id === id))
+    }
+
     function handleUpdate () {
         setOpen(true)
         setUpdateProject(project)
+        setProjectClients(projectCli())
     }
 
     function selectClients (event: SelectChangeEvent<unknown>) {
@@ -79,7 +66,7 @@ function ProjectElement (props: ProjectElementProps) {
                 </Box>
                 <Typography variant={"body1"} sx={{height:'60%', backgroundColor:theme.palette.background.default, borderRadius:1,padding:1}}>{project.description}</Typography>
 
-                <ClientElement project={project} clients={clients}/>
+
                 {admin &&
                     <Box sx={{minWidth:'5em', display:''}}>
                         <IconButton onClick={handleUpdate}>
