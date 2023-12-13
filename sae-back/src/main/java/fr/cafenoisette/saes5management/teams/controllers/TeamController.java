@@ -111,7 +111,7 @@ public class TeamController {
             if (teamId == null || projectIds == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            TeamDTO team = teamService.addPreferences(teamId,projectIds,securityContext);
+            TeamDTO team = teamService.setPreferences(teamId,projectIds,securityContext);
             return Response.ok(team).build();
 
         } catch (SAE5ManagementException sme) {
@@ -133,6 +133,24 @@ public class TeamController {
             TeamDTO team = teamService.addProject(teamId,projectId,securityContext);
             return Response.ok(team).build();
 
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
+    @DELETE
+    @RolesAllowed({"ADMIN","TEACHER"})
+    @Path("/{teamId}/removeProject")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response removeProject(@PathParam("teamId") Long teamId, TeamDTO placeholderTeam) {
+        Long projectId = placeholderTeam.getProjectId();
+        try {
+            if (teamId == null || projectId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            teamService.removeProject(teamId, securityContext);
+            return Response.ok().build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }

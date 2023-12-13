@@ -1,7 +1,8 @@
 import { User } from "../models/User";
-import { get, post, put } from "./restUtils";
+import { del, get, post, put } from "./restUtils";
 import { Project } from "../models/Project";
 import { Team } from "../models/Team";
+import { Delete } from "@mui/icons-material";
 
 export const createAccount = async (account: User) => {
     return await post<User, User>('users', account);
@@ -64,6 +65,11 @@ export const addPreferencesTeam = async (team: Team, teamId: number) => {
     return await put<Team, Team>('teams/' + teamId + "/addPreferences", team, true);
 }
 
+export const deleteProjectTeam = async (team: Team, teamId: number) => {
+    return await del<Team>('teams/' + teamId + "/removeProject");
+}
+
+
 export const getTeamsWithTeamId = async (teamId: number) => {
     return await get<Team[]>('teams/filter?id=' + teamId, true);
 }
@@ -74,4 +80,8 @@ export const postTeam = async (team: Team) => {
 
 export const getAllTeams = async () => {
     return await get<Team[]>('/teams/filter', true);
+}
+
+export const getUsers = async () => {
+    return await get<User[]>('/', true);
 }

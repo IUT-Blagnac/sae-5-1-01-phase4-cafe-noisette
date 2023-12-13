@@ -201,7 +201,7 @@ public class TeamService {
     }
 
     @Transactional
-    public TeamDTO addPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
+    public TeamDTO setPreferences(Long teamId, List<Long> projectIds, SecurityContext securityContext) {
         try {
             UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
 
@@ -214,6 +214,7 @@ public class TeamService {
                             userEntity.getTeam().getId().equals(teamId) && userEntity.getTeam().getLeader().getId().equals(userEntity.getId())
             ) {
                 TeamEntity teamEntity = teamRepository.findById(teamId);
+                teamEntity.setPreferences(new ArrayList<>());
 
                 for(Long id: projectIds) {
                     ProjectEntity projectEntity = projectRepository.findById(id);
@@ -248,6 +249,24 @@ public class TeamService {
             teamEntity.setProject(projectEntity);
 
             return TeamMapper.toDTO(teamEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
+
+    @Transactional
+    public void removeProject(Long teamId, SecurityContext securityContext) {
+        try {
+            UserEntity userEntity = userRepository.findByUsername(securityContext.getUserPrincipal().getName());
+
+            if (userEntity == null) {
+                LOGGER.error("User not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            TeamEntity teamEntity = teamRepository.findById(teamId);
+            teamEntity.setProject(null);
         } catch (PersistenceException e) {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
