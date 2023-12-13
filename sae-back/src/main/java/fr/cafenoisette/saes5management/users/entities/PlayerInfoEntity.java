@@ -1,11 +1,12 @@
 package fr.cafenoisette.saes5management.users.entities;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import fr.cafenoisette.saes5management.projects.entities.ProjectEntity;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,5 +40,7 @@ public class PlayerInfoEntity {
 
     private int otherLevel;
 
- 
+    @OneToMany
+    @JoinColumn(name = "preferencesId")
+    private List<ProjectEntity> preferences;
 }

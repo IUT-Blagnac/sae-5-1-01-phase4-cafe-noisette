@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -59,7 +62,9 @@ public class PlayerInfoDTO {
     @JsonProperty("otherLevel")
     @Size(max= 5)
     private int otherLevel;
-    
-    
+
+    @JsonProperty("preferencesId")
+    @Size(max= 5)
+    private List<Long> preferencesId;
     
 }
