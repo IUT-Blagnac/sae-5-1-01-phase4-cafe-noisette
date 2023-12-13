@@ -143,10 +143,9 @@ public class TeamController {
     @Path("/{teamId}/removeProject")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response removeProject(@PathParam("teamId") Long teamId, TeamDTO placeholderTeam) {
-        Long projectId = placeholderTeam.getProjectId();
+    public Response removeProject(@PathParam("teamId") Long teamId) {
         try {
-            if (teamId == null || projectId == null) {
+            if (teamId == null) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
             teamService.removeProject(teamId, securityContext);
