@@ -31,7 +31,7 @@ function CreateFormPage() {
                     authUser.updateToken(response.data.token);
                     authUser.refreshUser();
                 }
-                navigate("/projects");
+                navigate("/");
             } else {
                 console.log("Error while logging in: " + response.errorMessage);
                 toast.error('Le nom d\'utilisateur ou le mot de passe est incorrect');
