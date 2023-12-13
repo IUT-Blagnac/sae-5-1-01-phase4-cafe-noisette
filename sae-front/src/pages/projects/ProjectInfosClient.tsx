@@ -17,7 +17,9 @@ function ProjectsInfosClient() {
     const [teams, setTeams] = React.useState([] as Team[])
     const [students, setStudents] = React.useState([] as User[])
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
-    const [notationBoxOpen, setNotationBoxOpen] = useState(false);
+    const [newNoteBoxOpen, setNewNoteBoxOpen] = useState(false);
+    const [viewNotesBoxOpen, setViewNotesBoxOpen] = useState(false);
+
     const [note, setNote] = useState(-1);
     const [titleNote, setTitleNote] = useState('');
     const [descriptionNote, setDescriptionNote] = useState('');
@@ -80,42 +82,51 @@ function ProjectsInfosClient() {
 
     const handleInfoBoxClose = () => {
         setInfoBoxOpen(false);
-      };
+    };
 
-      const handleNotationButtonClick = (team: Team) => {
+    const handleViewNotesButtonClick = (team: Team) => {
+        setSelectedTeam(team)
+        setViewNotesBoxOpen(true);
+
+    }
+
+    const handleNewNoteButtonClick = (team: Team) => {
         setNote(-1)
         setTitleNote('')
         setDescriptionNote('')
         setSelectedTeam(team)
-        setNotationBoxOpen(true);
+        setNewNoteBoxOpen(true);
     }
 
-    const handleNotationBoxClose = () => {
-        setNotationBoxOpen(false);
-      };
+    const handleNewNoteBoxClose = () => {
+        setNewNoteBoxOpen(false);
+    };
+    const handleViewNotesBoxClose = () => {
+        setViewNotesBoxOpen(false);
+    };
 
     const handleSaveNote = () => {
-        if(titleNote === ''){
+        if (titleNote === '') {
             toast.error('La note doit avoir un titre')
             return
         }
-        if(descriptionNote === ''){
+        if (descriptionNote === '') {
             toast.error('La note doit avoir une description')
             return
         }
-        if(note === -1){
+        if (note === -1) {
             toast.error('Aucune note attribuée, un nombre doit être choisi')
             return
         }
         toast.success('La note a été ajouté')
-        handleNotationBoxClose();
+        handleNewNoteBoxClose();
     };
 
     const handleNoteClick = (selectedNote: number) => {
         setNote(selectedNote);
-      };
+    };
 
-      const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         switch (name) {
             case "title":
@@ -131,15 +142,13 @@ function ProjectsInfosClient() {
 
     return (
         <Box>
-            <Typography variant={"h4"} sx={{ m: 2, display: 'flex' }}>Projects</Typography>
-            {projects.length === 0 && <Typography variant={"h5"} sx={{ m: 2 }}>No projects</Typography>}
+            {projects.length === 0 && <Typography variant={"h4"} color='primary' sx={{ m: 2, textAlign: 'center', textTransform: 'uppercase', width: '100%' }}>Aucun projet</Typography>}
             <Box sx={{ display: 'flex', maxWidth: '100vw', flexFlow: 'wrap' }}>
                 {projects.length > 0 && projects.map((project, projectIndex) => (
                     <Box key={projectIndex} sx={{
                         border: '1px solid #000',
-                        marginBottom: '20px',
                         width: '90%',
-                        margin: '0 auto',
+                        margin: '0 auto 20px',
                         borderRadius: '10px',
                         textAlign: 'left',
                         display: 'flex',
@@ -177,9 +186,12 @@ function ProjectsInfosClient() {
 
 
                                     </Card>
-                                    <Card sx={{ marginBottom: '5px', width: '80%', marginLeft: '10%'}}>
-                                            <Button color='primary' sx={{ width: '100%', backgroundColor: 'primary' }} onClick={() => handleNotationButtonClick(team)}> NOTER L'EQUIPE {team.name}</Button>
-                                        </Card>
+                                    <Card sx={{ marginBottom: '5px', width: '80%', marginLeft: '10%' }}>
+                                        <Button color='inherit' sx={{ width: '100%' }} onClick={() => handleViewNotesButtonClick(team)}> VOIR LES NOTES</Button>
+                                    </Card>
+                                    <Card sx={{ marginBottom: '5px', width: '80%', marginLeft: '10%' }}>
+                                        <Button color='primary' sx={{ width: '100%' }} onClick={() => handleNewNoteButtonClick(team)}> NOUVELLE NOTE</Button>
+                                    </Card>
                                 </Box>
                             ))}
                             {teams.filter((team) => team.projectId === project.id).length === 0 && (
@@ -189,92 +201,114 @@ function ProjectsInfosClient() {
                     </Box>
                 ))}
 
-<Dialog
-        open={notationBoxOpen}
-        onClose={handleNotationBoxClose}
-        aria-labelledby="info-box-title"
-        aria-describedby="info-box-description"
-      >
-        <DialogTitle id="info-box-title" color="primary" sx={{ textTransform: 'uppercase', textAlign: 'center' }}>
-          SAISIE DES NOTES POUR L'EQUIPE : {selectedTeam.name}
-        </DialogTitle>
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          sx={{ marginRight: '55px', marginLeft: '55px', textTransform: 'uppercase' }}
-        >
-            <TextField
-            name="title"
-            label="Titre"
-            variant="outlined"
-            value={titleNote}
-            onChange={handleChange}
-            fullWidth
-            sx={{ marginBottom: '20px', marginTop: '20px'}}
-            />
-            <TextField
-            name="description"
-            label="Description"
-            variant="outlined"
-            value={descriptionNote}
-            onChange={handleChange}
-            fullWidth
-            sx={{ marginBottom: '20px', marginTop: '20px'}}
-            />
-            <Typography>NOTE</Typography>
-        <Box sx={{display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center'}}>
-        {Array.from({ length: 41 }, (_, index) => index * 0.5).map((number) => (
-      <Button
-        key={number}
-        variant="contained"
-        onClick={() => handleNoteClick(number)}
-        color={note === number ? 'primary' : 'inherit'}
-        sx={{ margin: '5px'}}
-      >
-        {number}
-      </Button>
-    ))}
-        </Box>
-
-        </Box>
-        <DialogActions>
-          <Button onClick={handleNotationBoxClose} color="primary">
-            Annuler
-          </Button>
-          <Button onClick={handleSaveNote} color="primary">
-            NOUVELLE NOTE
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-            <Dialog
-                open={infoBoxOpen}
-                onClose={handleInfoBoxClose}
-                aria-labelledby="info-box-title"
-                aria-describedby="info-box-description"
-            >
-                <DialogTitle id="info-box-title" color="primary" sx={{textTransform: 'uppercase', textAlign: 'center'}}>Informations</DialogTitle>
-                <Box
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    sx={{ marginRight: "55px", marginLeft: "55px", textTransform: 'uppercase'}}
+                <Dialog
+                    open={newNoteBoxOpen}
+                    onClose={handleNewNoteBoxClose}
+                    aria-labelledby="info-box-title"
+                    aria-describedby="info-box-description"
                 >
-                    <p>NOM : {selectedUser.lastname}</p>
-                    <p>PRENOM : {selectedUser.firstname}</p>
-                    <p>EMAIL : {selectedUser.email}</p>
+                    <DialogTitle id="info-box-title" color="primary" sx={{ textTransform: 'uppercase', textAlign: 'center' }}>
+                        NOUVELLE NOTE POUR L'EQUIPE : {selectedTeam.name}
+                    </DialogTitle>
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{ marginRight: '55px', marginLeft: '55px', textTransform: 'uppercase' }}
+                    >
+                        <TextField
+                            name="title"
+                            label="Titre"
+                            variant="outlined"
+                            value={titleNote}
+                            onChange={handleChange}
+                            fullWidth
+                            sx={{ marginBottom: '20px', marginTop: '20px' }}
+                        />
+                        <TextField
+                            name="description"
+                            label="Description"
+                            variant="outlined"
+                            value={descriptionNote}
+                            onChange={handleChange}
+                            fullWidth
+                            sx={{ marginBottom: '20px', marginTop: '20px' }}
+                        />
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
+                            {Array.from({ length: 41 }, (_, index) => index * 0.5).map((number) => (
+                                <Button
+                                    key={number}
+                                    variant="contained"
+                                    onClick={() => handleNoteClick(number)}
+                                    color={note === number ? 'primary' : 'inherit'}
+                                    sx={{ margin: '5px' }}
+                                >
+                                    {number}
+                                </Button>
+                            ))}
+                        </Box>
+
+                    </Box>
+                    <DialogActions>
+                        <Button onClick={handleNewNoteBoxClose} color="primary">
+                            Annuler
+                        </Button>
+                        <Button onClick={handleSaveNote} color="primary">
+                            NOUVELLE NOTE
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={viewNotesBoxOpen}
+                    onClose={handleViewNotesBoxClose}
+                    aria-labelledby="info-box-title"
+                    aria-describedby="info-box-description"
+                >
+                    <DialogTitle id="info-box-title" color="primary" sx={{ textTransform: 'uppercase', textAlign: 'center' }}>NOTES DE L'EQUIPE : {selectedTeam.name}</DialogTitle>
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{ marginRight: "55px", marginLeft: "55px", textTransform: 'uppercase' }}
+                    >
+
+                    </Box>
+                    <DialogActions>
+                        <Button onClick={handleViewNotesBoxClose} color="primary">
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+                <Dialog
+                    open={infoBoxOpen}
+                    onClose={handleInfoBoxClose}
+                    aria-labelledby="info-box-title"
+                    aria-describedby="info-box-description"
+                >
+                    <DialogTitle id="info-box-title" color="primary" sx={{ textTransform: 'uppercase', textAlign: 'center' }}>Informations</DialogTitle>
+                    <Box
+                        display="flex"
+                        flexDirection="column"
+                        alignItems="center"
+                        justifyContent="center"
+                        sx={{ marginRight: "55px", marginLeft: "55px", textTransform: 'uppercase' }}
+                    >
+                        <p>NOM : {selectedUser.lastname}</p>
+                        <p>PRENOM : {selectedUser.firstname}</p>
+                        <p>EMAIL : {selectedUser.email}</p>
 
 
-                </Box>
-                <DialogActions>
-                    <Button onClick={handleInfoBoxClose} color="primary">
-                        OK
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    </Box>
+                    <DialogActions>
+                        <Button onClick={handleInfoBoxClose} color="primary">
+                            OK
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Box>
         </Box >
     )
