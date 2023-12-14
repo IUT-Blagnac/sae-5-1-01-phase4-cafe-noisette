@@ -201,6 +201,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public UserDTO adminUpdateUser(UserDTO userDTO) {
         try {
             UserEntity userEntity = userRepository.findById(userDTO.getId());
