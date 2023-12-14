@@ -1,7 +1,7 @@
 package fr.cafenoisette.saes5management.grades.entities;
 
 import fr.cafenoisette.saes5management.grades.enums.GradeType;
-import fr.cafenoisette.saes5management.users.entities.UserEntity;
+import fr.cafenoisette.saes5management.teams.entities.TeamEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +29,6 @@ public class GradeEntity {
     private GradeType type;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity student;
+    @JoinColumn(name = "team_id")
+    private TeamEntity team;
 }

@@ -6,8 +6,7 @@ import lombok.Getter;
 public enum GradeType {
 
     TEACHER("teacher"),
-    CLIENT("client"),
-    STUDENT("student");
+    CLIENT("client");
 
     private final String type;
 

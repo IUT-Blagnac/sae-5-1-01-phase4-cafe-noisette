@@ -33,6 +33,6 @@ public class GradeDTO {
     @JsonProperty("type")
     private GradeType type;
 
-    @JsonProperty("studentId")
-    private Long studentId;
+    @JsonProperty("teamId")
+    private Long teamId;
 }
