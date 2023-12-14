@@ -18,76 +18,95 @@ import TeamInfos from './pages/teams/TeamInfos';
 import {RoleProtection} from "./components/RoleProtection";
 import ProjectsInfosClient from './pages/projects/ProjectInfosClient';
 import AdminPage from "./pages/AdminPage";
+import {ConfirmProvider} from "material-ui-confirm";
 
 
 function App() {
     const theme = useTheme()
     return (
         <ThemeProvider theme={theme} >
-            <Toaster />
-            <AuthUserProvider>
-                <CssBaseline />
-                <Box sx={{ marginTop: '80px' }}>
-                    <Navbar />
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/projects" element={
-                            <RoleProtection allowedRoles={["TEACHER"]} >
-                                <ProjectList />
-                            </RoleProtection>
-                        } />
-                        {/*<Route path="/projects/create" element={*/}
-                        {/*    <RoleProtection>*/}
-                        {/*        <About />*/}
-                        {/*    </RoleProtection>*/}
-                        {/*} />*/}
-                        <Route path="/login" element={
-                            <Login />
-                        } />
-                        <Route path="/login/createAccount" element={
-                            <CreateAccount />
-                        } />
-                        <Route path="/students" element={
-                            <RoleProtection>
-                                <ViewStudent />
-                            </RoleProtection>
-                        } />
-                        <Route path="/teams/create" element={
-                            <RoleProtection allowedRoles={["STUDENT_INIT"]}>
-                                <CreateTeam />
-                            </RoleProtection>
-                        } />
-                        <Route path="/teams/infos" element={
-                            <RoleProtection allowedRoles={["STUDENT_INIT"]}>
-                                <TeamInfos />
-                            </RoleProtection>
-                        } />
-                        <Route path="subject" element={
-                            <RoleProtection allowedRoles={["TEACHER"]}>
-                                <Subject />
-                            </RoleProtection>
-                        } />
+            <ConfirmProvider defaultOptions={{
+                confirmationButtonProps: {
+                    variant: "contained",
+                    color: "success",
+                    sx: {
+                        color: "white",
+                    }
+                },
+                cancellationButtonProps: {
+                    variant: "contained",
+                    color: "error"
+                },
+                dialogProps: {
+                    maxWidth: "sm",
+                    fullWidth: false
+                },
+            }}>
+                <Toaster />
+                <AuthUserProvider>
+                    <CssBaseline />
+                    <Box sx={{ marginTop: '80px' }}>
+                        <Navbar />
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/projects" element={
+                                <RoleProtection allowedRoles={["TEACHER"]} >
+                                    <ProjectList />
+                                </RoleProtection>
+                            } />
+                            {/*<Route path="/projects/create" element={*/}
+                            {/*    <RoleProtection>*/}
+                            {/*        <About />*/}
+                            {/*    </RoleProtection>*/}
+                            {/*} />*/}
+                            <Route path="/login" element={
+                                <Login />
+                            } />
+                            <Route path="/login/createAccount" element={
+                                <CreateAccount />
+                            } />
+                            <Route path="/students" element={
+                                <RoleProtection>
+                                    <ViewStudent />
+                                </RoleProtection>
+                            } />
+                            <Route path="/teams/create" element={
+                                <RoleProtection allowedRoles={["STUDENT_INIT"]}>
+                                    <CreateTeam />
+                                </RoleProtection>
+                            } />
+                            <Route path="/teams/infos" element={
+                                <RoleProtection allowedRoles={["STUDENT_INIT"]}>
+                                    <TeamInfos />
+                                </RoleProtection>
+                            } />
+                            <Route path="subject" element={
+                                <RoleProtection allowedRoles={["TEACHER"]}>
+                                    <Subject />
+                                </RoleProtection>
+                            } />
 
-                        <Route path="clients/projects" element={
-                            <RoleProtection allowedRoles={["CLIENT"]}>
-                                <ProjectsInfosClient />
-                            </RoleProtection>
-                        } />
-                        <Route path="/admin" element={
-                            <RoleProtection allowedRoles={["ADMIN"]}>
-                                <AdminPage />
-                            </RoleProtection>
-                        } />
-                        {/*<Route path="students/team" element={*/}
-                        {/*    <RoleProtection allowedRoles={["STUDENT_INIT"]}>*/}
-                        {/*        <ViewStudentTeam />*/}
-                        {/*    </RoleProtection>*/}
-                        {/*    } />*/}
+                            <Route path="clients/projects" element={
+                                <RoleProtection allowedRoles={["CLIENT"]}>
+                                    <ProjectsInfosClient />
+                                </RoleProtection>
+                            } />
+                            <Route path="/admin" element={
+                                <RoleProtection allowedRoles={["ADMIN"]}>
+                                    <AdminPage />
+                                </RoleProtection>
+                            } />
+                            {/*<Route path="students/team" element={*/}
+                            {/*    <RoleProtection allowedRoles={["STUDENT_INIT"]}>*/}
+                            {/*        <ViewStudentTeam />*/}
+                            {/*    </RoleProtection>*/}
+                            {/*    } />*/}
 
-                    </Routes>
-                </Box>
-            </AuthUserProvider>
+                        </Routes>
+                    </Box>
+                </AuthUserProvider>
+            </ConfirmProvider>
         </ThemeProvider>
 
     );
