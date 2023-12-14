@@ -1,15 +1,15 @@
 import {useAuthUser} from "../contexts/AuthUserContext";
-import {useNavigate} from "react-router-dom";
-import {useEffect} from "react";
+import React from "react";
+import {Box, Typography} from "@mui/material";
 
 function Home() {
   const authUser = useAuthUser();
-  const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>Accueil</h1>
-    </div>
+    <Box sx={{m:2}}>
+      <Typography variant={'h4'}>Accueil</Typography>
+      <Typography variant={'h6'}>Bienvenu·e {authUser.user?.firstname} {authUser.user?.lastname}</Typography>
+    </Box>
   );
 }
 

@@ -59,14 +59,14 @@ function ProjectElement (props: ProjectElementProps) {
     return (
         <Box>
             <Card sx={{maxWidth:'400px',minWidth:'400px', height:'400px', m:2,p:2,display:'flex', flexDirection:'column',justifyContent:'space-between'}}>
-
-                <Box sx={{display:'flex',justifyContent:'space-between'}}>
+                <Box aria-label={"Title"} sx={{height:'10%'}}>
                     <Typography variant={"h4"}>{project.name}</Typography>
-
                 </Box>
-                <Typography variant={"body1"} sx={{height:'60%', backgroundColor:theme.palette.background.default, borderRadius:1,padding:1}}>{project.description}</Typography>
-
-
+                <Box aria-label={"Description"} sx={{height:'60%', backgroundColor:theme.palette.background.default, borderRadius:1,padding:1}}>
+                    <Typography variant={"body1"} >{project.description}</Typography>
+                </Box>
+                    {projectClients && projectClients.length > 0 && <Typography variant={"body1"}>{projectClients.map((client) => client?.firstname + ' ' + client?.lastname + ' ' + client?.email)}</Typography>}
+                {projectClients && projectClients.length === 0 && <Typography variant={"body1"}>Pas de client</Typography>}
                 {admin &&
                     <Box sx={{minWidth:'5em', display:''}}>
                         <IconButton onClick={handleUpdate}>

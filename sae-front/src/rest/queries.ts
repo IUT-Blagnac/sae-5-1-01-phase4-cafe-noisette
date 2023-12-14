@@ -2,7 +2,6 @@ import { User } from "../models/User";
 import { del, get, post, put } from "./restUtils";
 import { Project } from "../models/Project";
 import { Team } from "../models/Team";
-import { Delete } from "@mui/icons-material";
 
 export const createAccount = async (account: User) => {
     return await post<User, User>('users', account);
@@ -39,6 +38,11 @@ export const postProject = async (project: Project) => {
 
 export const putProject = async (project: Project) => {
     return await put<Project, Project>('projects', project, true);
+}
+
+export const deleteProject = async (id: number) => {
+    return await del<Project>('projects/' + id, true);
+
 }
 
 export const getStudents = async () => {

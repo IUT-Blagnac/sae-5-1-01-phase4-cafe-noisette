@@ -1,11 +1,21 @@
-import {Box, Button, Card, FormControl, InputLabel, Select, SelectChangeEvent, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    Select,
+    SelectChangeEvent,
+    Typography
+} from "@mui/material";
 import React, {useEffect} from "react";
 import ProjectElement from "./ProjectElement";
 import {Project} from "../../models/Project";
 import TextField from "@mui/material/TextField";
 import {User} from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
-import {getClients, getProjects, postProject, putProject} from "../../rest/queries";
+import {deleteProject, getClients, getProjects, postProject, putProject} from "../../rest/queries";
 import {useAuthUser} from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 
@@ -16,6 +26,7 @@ function ProjectList () {
     const [projects, setProjects] = React.useState([] as Project[])
     const [newProject, setNewProject] = React.useState({name:'', description:'',clientIds:[]} as Project)
     const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
+    const [requesting, setRequesting] = React.useState(true)
 
     useEffect(() => {
         requestProjects();
@@ -27,6 +38,7 @@ function ProjectList () {
                 if (response.responseCode === 200) {
                     if (response.data) {
                         setProjects(response.data);
+                        setRequesting(false)
                     }
                 } else {
                     console.log("Error while getting projects: " + response.errorMessage);
@@ -85,8 +97,23 @@ function ProjectList () {
     }
 
     function handleRemoveProject (project: Project) {
-        setProjects(projects.filter((p) => p.id !== project.id))
 
+        if (project.id) {
+            deleteProject(project.id).then((response) => {
+                if (response.responseCode === 200) {
+                    if (response.data) {
+                        toast.success('Projet supprimé avec succès')
+                        setProjects(projects.filter((p) => p.id !== project.id))
+                    }
+                } else {
+                    console.log("Error while getting projects: " + response.errorMessage)
+                    toast.error('Une erreur est survenue lors de la suppression du projet (erreur ' + response.responseCode + ')')
+                }
+            }).catch((error) => {
+                toast('Une erreur est survenue lors de la suppression du projet')
+            }
+            )
+        }
     }
 
     function handleUpdateProject (updatedProject: Project) {
@@ -111,6 +138,9 @@ function ProjectList () {
         console.log(newProject)
     }
 
+    if (requesting) {
+        return (<Box sx={{display:'flex',justifyContent:'center'}}><CircularProgress /></Box>)
+    }
     return (
         <Box>
             <Typography variant={"h4"} sx={{m:2,display:'flex'}}>Projects</Typography>
