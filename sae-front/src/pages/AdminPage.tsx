@@ -25,7 +25,7 @@ import TextField from "@mui/material/TextField";
 import {useConfirm} from "material-ui-confirm";
 import toast from "react-hot-toast";
 
-const roleList = ['ADMIN', 'TEACHER', 'STUDENT_INIT', 'STUDENT_ALT', 'CLIENT', ''];
+const roleList = ['ADMIN', 'TEACHER', 'STUDENT_INIT', 'STUDENT_ALT', 'CLIENT', 'GUEST', ''];
 
 function CustomEditComponent(props: { id: any; value: any; field: any; }) {
     const { id, value, field } = props;

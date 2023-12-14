@@ -9,6 +9,7 @@ public enum UserRole {
     TEACHER("teacher"),
     STUDENT_INIT("student_init"),
     STUDENT_ALT("student_alt"),
+    GUEST("guest"),
     CLIENT("client");
 
     private final String role;
