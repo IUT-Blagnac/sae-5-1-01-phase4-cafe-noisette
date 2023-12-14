@@ -157,6 +157,22 @@ public class UserController {
         }
     }
 
+    @DELETE
+    @RolesAllowed("ADMIN")
+    @Path("/admin/delete/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response adminDeleteUser(@PathParam("userId") Long userId) {
+        try {
+            if (userId == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            UserDTO user = userService.adminDeleteUser(userId);
+            return Response.ok(user).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
     @PUT
     @RolesAllowed({"ADMIN", "STUDENT_INIT", "STUDENT_ALT"})
     @Path("/{userId}/addPreferences")

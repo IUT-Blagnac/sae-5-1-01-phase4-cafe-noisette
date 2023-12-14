@@ -313,4 +313,23 @@ public class UserService {
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
     }
+
+    @Transactional
+    public UserDTO adminDeleteUser(Long userId) {
+        try {
+            UserEntity userEntity = userRepository.findById(userId);
+
+            if (userEntity == null) {
+                LOGGER.error("User not found");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
+            }
+
+            userRepository.delete(userEntity);
+            LOGGER.info("User " + userEntity.getUsername() + " deleted");
+            return UserMapper.toDTO(userEntity);
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting user", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
 }
