@@ -83,9 +83,17 @@ export const postTeam = async (team: Team) => {
 }
 
 export const getAllTeams = async () => {
-    return await get<Team[]>('/teams/filter', true);
+    return await get<Team[]>('teams/filter', true);
 }
 
 export const getUsers = async () => {
-    return await get<User[]>('/', true);
+    return await get<User[]>('users', true);
+}
+
+export const adminUpdateUser = async (user: User) => {
+    return await put<User, User>('users/admin/update', user, true);
+}
+
+export const adminDeleteUser = async (user: User) => {
+    return await del<User>('users/admin/delete/' + user.id, true);
 }
