@@ -14,7 +14,7 @@ Ici vous trouverez toute la documentation nécessaire pour utiliser l'applicatio
 
 La documentation utilisateur ici présente suppose que vous avez déjà installé l'application et que vous avez accès à l'interface web.
 
-Pour cela, veuillez vous référer à la documentation d'installation, disponible [ici](../technical-docs/installation.md).
+Pour cela, veuillez vous référer à la documentation d'installation, disponible [ici](../technical-docs/homeTechnicalDoc.md).
 
 ## Utilisation de l'application
 
