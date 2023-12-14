@@ -162,11 +162,14 @@ public class UserService {
             }
 
             UserEntity userEntity = UserMapper.toEntity(userDTO);
-            PlayerInfoEntity playerInfoEntity = PlayerInfoMapper.toEntity(userDTO.getPlayerInfo());
 
-            playerInfoRepository.persist(playerInfoEntity);
+            if (userEntity.getRoles().contains(UserRole.STUDENT_ALT) || userEntity.getRoles().contains(UserRole.STUDENT_INIT)) {
+                PlayerInfoEntity playerInfoEntity = PlayerInfoMapper.toEntity(userDTO.getPlayerInfo());
 
-            userEntity.setPlayerInfo(playerInfoEntity);
+                playerInfoRepository.persist(playerInfoEntity);
+
+                userEntity.setPlayerInfo(playerInfoEntity);
+            }
 
             userRepository.persist(userEntity);
             LOGGER.info("User " + userEntity.getUsername() + " created");
