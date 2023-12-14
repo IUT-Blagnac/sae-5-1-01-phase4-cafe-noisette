@@ -293,4 +293,20 @@ public class UserService {
         }
 
     }
+
+    public List<UserDTO> getUsers() {
+        try {
+            List<UserEntity> users = userRepository.listAll();
+            List<UserDTO> userDTOList = new ArrayList<>();
+
+            for (UserEntity userEntity : users) {
+                userDTOList.add(UserMapper.toDTO(userEntity));
+            }
+
+            return userDTOList;
+        } catch (PersistenceException e) {
+            LOGGER.error("Error while getting users", e);
+            throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
+        }
+    }
 }

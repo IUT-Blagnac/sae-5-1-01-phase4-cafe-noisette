@@ -63,9 +63,10 @@ public class UserController {
             } else if (role != null) {
                 List<UserDTO> userTab = userService.getUsersByRole(role);
                 return Response.ok(userTab).build();
+            } else {
+                List<UserDTO> userTab = userService.getUsers();
+                return Response.ok(userTab).build();
             }
-            return Response.status(Response.Status.BAD_REQUEST).build();
-
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }
