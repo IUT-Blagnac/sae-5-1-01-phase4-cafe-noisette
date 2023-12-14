@@ -27,8 +27,6 @@ import jakarta.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,32 +161,7 @@ public class UserService {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_ALREADY_EXISTS);
             }
 
-            UserEntity userEntity = UserMapper.toEntityWithoutRoles(userDTO);
-
-            Set<UserRole> roles = userDTO.getRoles();
-            if (roles != null && !roles.isEmpty()) {
-                AtomicBoolean isGuest = new AtomicBoolean(false);
-                roles.removeIf(role -> {
-                    if (role.equals(UserRole.ADMIN)) return true;
-                    if (role.equals(UserRole.TEACHER)) {
-                        isGuest.set(true);
-                        return true;
-                    }
-                    if (role.equals(UserRole.CLIENT)) {
-                        isGuest.set(true);
-                        return true;
-                    }
-                    return false;
-                });
-                if (isGuest.get()) {
-                    roles.add(UserRole.GUEST);
-                }
-
-                userEntity.setRoles(roles);
-            } else {
-                userEntity.setRoles(new HashSet<>());
-                userEntity.getRoles().add(UserRole.GUEST);
-            }
+            UserEntity userEntity = UserMapper.toEntity(userDTO);
 
             if (userEntity.getRoles().contains(UserRole.STUDENT_ALT) || userEntity.getRoles().contains(UserRole.STUDENT_INIT)) {
                 PlayerInfoEntity playerInfoEntity = PlayerInfoMapper.toEntity(userDTO.getPlayerInfo());
@@ -276,7 +249,7 @@ public class UserService {
                 return;
             }
 
-            UserEntity userEntity = UserMapper.toEntityWithoutRoles(admin);
+            UserEntity userEntity = UserMapper.toEntity(admin);
             userEntity.setRoles(new HashSet<>());
             userEntity.getRoles().add(UserRole.ADMIN);
 
