@@ -25,7 +25,7 @@ public class GradeMapper {
         dto.setGrade(entity.getGrade());
         dto.setCoefficient(entity.getCoefficient());
         dto.setType(entity.getType());
-        dto.setStudentId(entity.getStudent().getId());
+        dto.setTeamId(entity.getTeam().getId());
 
         return dto;
     }

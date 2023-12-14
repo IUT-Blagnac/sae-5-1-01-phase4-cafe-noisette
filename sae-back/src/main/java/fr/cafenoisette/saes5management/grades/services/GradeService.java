@@ -6,8 +6,9 @@ import fr.cafenoisette.saes5management.grades.dtos.GradeDTO;
 import fr.cafenoisette.saes5management.grades.entities.GradeEntity;
 import fr.cafenoisette.saes5management.grades.mappers.GradeMapper;
 import fr.cafenoisette.saes5management.grades.repositories.GradeRepository;
+import fr.cafenoisette.saes5management.teams.entities.TeamEntity;
+import fr.cafenoisette.saes5management.teams.repositories.TeamRepository;
 import fr.cafenoisette.saes5management.users.entities.UserEntity;
-import fr.cafenoisette.saes5management.users.enums.UserRole;
 import fr.cafenoisette.saes5management.users.repositories.UserRepository;
 import jakarta.ws.rs.core.SecurityContext;
 import org.slf4j.Logger;
@@ -31,6 +32,9 @@ public class GradeService {
 
     @Inject
     UserRepository userRepository;
+
+    @Inject
+    TeamRepository teamRepository;
 
 
     public GradeDTO getGrade(Long id, SecurityContext securityContext) {
@@ -61,20 +65,16 @@ public class GradeService {
                     requestUser.getRoles().contains(CLIENT)||
                     requestUser.getRoles().contains(ADMIN)) {
 
-                UserEntity userEntity = null;
-                if(gradeDTO.getStudentId() != null) {
-                    userEntity = userRepository.findById(gradeDTO.getStudentId());
+                TeamEntity teamEntity = null;
+                if(gradeDTO.getTeamId() != null) {
+                    teamEntity = teamRepository.findById(gradeDTO.getTeamId());
                 }
 
-                if(userEntity == null) {
-                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
-                }
-                if(!userEntity.getRoles().contains(UserRole.STUDENT_INIT) &&
-                        !userEntity.getRoles().contains(UserRole.STUDENT_ALT)) {
-                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
+                if(teamEntity == null) {
+                    throw new SAE5ManagementException(SAE5ManagementExceptionTypes.TEAM_NOT_FOUND);
                 }
 
-                gradeEntity.setStudent(userEntity);
+                gradeEntity.setTeam(teamEntity);
                 gradeRepository.persist(gradeEntity);
             } else {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
@@ -122,15 +122,10 @@ public class GradeService {
                     gradeEntity.setType(gradeDTO.getType());
                 }
 
-                if(gradeDTO.getStudentId() != null) {
-                    UserEntity userEntity = userRepository.findById(gradeDTO.getStudentId());
+                if(gradeDTO.getTeamId() != null) {
+                    TeamEntity teamEntity = teamRepository.findById(gradeDTO.getTeamId());
 
-                    if(!userEntity.getRoles().contains(UserRole.STUDENT_INIT) &&
-                            !userEntity.getRoles().contains(UserRole.STUDENT_ALT)) {
-                        throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
-                    }
-
-                    gradeEntity.setStudent(userEntity);
+                    gradeEntity.setTeam(teamEntity);
                 }
 
                 gradeRepository.persist(gradeEntity);
