@@ -30,6 +30,7 @@ function Navbar() {
 
     function handleDisconnect() {
         authUser.disconnect()
+        setAnchorEl(null)
         toast.success('Déconnexion réussie');
         navigate('/')
     }
@@ -68,6 +69,7 @@ function Navbar() {
                             <Button color="inherit" onClick={(event) => setAnchorEl(event.currentTarget)}>{authUser.user?.username}</Button>
                             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                                 {/*<MenuItem onClick={() => {navigate('/profile'); handleClose()}}>Profile</MenuItem>*/}
+                                {authUser.user?.roles.includes('ADMIN') && <MenuItem onClick={() => {navigate('/admin'); handleClose()}}>Page admin</MenuItem>}
                                 <MenuItem onClick={() => handleDisconnect()}>Déconnexion</MenuItem>
                             </Menu>
                         </Box>
