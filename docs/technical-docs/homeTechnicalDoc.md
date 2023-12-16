@@ -19,6 +19,7 @@
       - [Description](#description-3)
     - [Module "Authentication"](#module-authentication)
       - [Description](#description-4)
+- [Documentation technique Frontend](#documentation-technique-frontend)
 
 ## Introduction
 
