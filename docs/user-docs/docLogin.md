@@ -3,6 +3,7 @@
 ## Table des matières
 
 - [Description](#description)
+- [Accéder à la page de connexion](#accéder-à-la-page-de-connexion)
 - [Fonctionnalités](#fonctionnalités)
   - [Connexion](#connexion)
     - [Capture(s) d'écran](#captures-décran)
@@ -14,6 +15,10 @@ Cette page permet de se connecter à l'application.
 | URL    | Rôle(s) requis | Condition(s) d'accès |
 |--------|----------------|----------------------|
 | /login | Aucun          | Aucune               |
+
+## Accéder à la page de connexion
+
+Pour accéder à la page de connexion, il faut cliquer sur le bouton "LOGIN" dans la barre de navigation, en haut à droite de la page.
 
 ## Fonctionnalités
 

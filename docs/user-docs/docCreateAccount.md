@@ -3,6 +3,7 @@
 ## Table des matières
 
 - [Description](#description)
+- [Accéder à la page d'inscription](#accéder-à-la-page-dinscription)
 - [Fonctionnalités](#fonctionnalités)
   - [Création de compte](#création-de-compte)
     - [Capture(s) d'écran](#captures-décran)
@@ -16,6 +17,10 @@ Cette page permet de créer un compte pour pouvoir se connecter à l'application
 | URL                  | Rôle(s) requis | Condition(s) d'accès |
 |----------------------|----------------|----------------------|
 | /login/createAccount | Aucun          | Aucune               |
+
+## Accéder à la page d'inscription
+
+Pour accéder à la page d'inscription, il faut cliquer sur le bouton "Créer un compte" dans la page de connexion. (Voir [accéder à la page de connexion](./docLogin.md#accéder-à-la-page-de-connexion))
 
 ## Fonctionnalités
 
