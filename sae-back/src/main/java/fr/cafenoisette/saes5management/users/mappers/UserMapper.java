@@ -79,10 +79,6 @@ public class UserMapper {
         clientUserDTO.setEmail(userEntity.getLastname());
         clientUserDTO.setRoles(userEntity.getRoles());
 
-        if (userEntity.getPlayerInfo() != null) {
-            clientUserDTO.setPlayerInfo(PlayerInfoMapper.toDTO(userEntity.getPlayerInfo()));
-        }
-
         return clientUserDTO;
     }
 
