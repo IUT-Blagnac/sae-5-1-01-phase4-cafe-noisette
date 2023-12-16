@@ -1,5 +1,25 @@
 # Documentation technique
 
+## Table des matières
+
+- [Introduction](#introduction)
+- [Diagramme de classe](#diagramme-de-classe)
+  - [Diagramme de classe définitif](#diagramme-de-classe-définitif)
+  - [Diagramme de classe initial (= incomplet)](#diagramme-de-classe-initial--incomplet)
+- [Documentation technique Backend](#documentation-technique-backend)
+  - [Installation](#installation)
+  - [Documentation par "backends"](#documentation-par-backends)
+    - [Module "Users"](#module-users)
+      - [Description](#description)
+    - [Module "Projects"](#module-projects)
+      - [Description](#description-1)
+    - [Module "Teams"](#module-teams)
+      - [Description](#description-2)
+    - [Module "Grades"](#module-grades)
+      - [Description](#description-3)
+    - [Module "Authentication"](#module-authentication)
+      - [Description](#description-4)
+
 ## Diagramme de classe
 
 ### Diagramme de classe définitif
