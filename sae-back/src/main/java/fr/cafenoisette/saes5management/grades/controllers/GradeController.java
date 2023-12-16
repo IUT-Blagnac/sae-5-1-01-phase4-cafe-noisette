@@ -2,6 +2,7 @@ package fr.cafenoisette.saes5management.grades.controllers;
 
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
 import fr.cafenoisette.saes5management.grades.dtos.GradeDTO;
+import fr.cafenoisette.saes5management.grades.enums.GradeType;
 import fr.cafenoisette.saes5management.grades.services.GradeService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,6 +13,8 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 
 @ApplicationScoped
@@ -38,6 +41,27 @@ public class GradeController {
             GradeDTO gradeDTO = gradeService.getGrade(Long.parseLong(id), securityContext);
 
             return Response.ok(gradeDTO).build();
+        } catch (SAE5ManagementException sme) {
+            return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
+        }
+    }
+
+    @GET
+    @RolesAllowed("**")
+    @Path("/filter")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGrades(
+            @QueryParam("id") Long id,
+            @QueryParam("title") String title,
+            @QueryParam("description") String description,
+            @QueryParam("grade") Long grade,
+            @QueryParam("coefficient") Long coeff,
+            @QueryParam("type") GradeType type,
+            @QueryParam("teamId") Long teamId
+    ) {
+        try {
+            ArrayList<GradeDTO> gradeDTOS = gradeService.getFilteredGrades(id, title, description, grade, coeff, type, teamId);
+            return Response.ok(gradeDTOS).build();
         } catch (SAE5ManagementException sme) {
             return Response.status(sme.getStatus()).entity(sme.getMessage()).build();
         }

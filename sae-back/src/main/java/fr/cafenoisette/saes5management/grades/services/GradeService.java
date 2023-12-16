@@ -4,6 +4,7 @@ import fr.cafenoisette.saes5management.exceptions.SAE5ManagementException;
 import fr.cafenoisette.saes5management.exceptions.SAE5ManagementExceptionTypes;
 import fr.cafenoisette.saes5management.grades.dtos.GradeDTO;
 import fr.cafenoisette.saes5management.grades.entities.GradeEntity;
+import fr.cafenoisette.saes5management.grades.enums.GradeType;
 import fr.cafenoisette.saes5management.grades.mappers.GradeMapper;
 import fr.cafenoisette.saes5management.grades.repositories.GradeRepository;
 import fr.cafenoisette.saes5management.teams.entities.TeamEntity;
@@ -18,6 +19,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
+
+import java.util.ArrayList;
 
 import static fr.cafenoisette.saes5management.users.enums.UserRole.*;
 
@@ -163,5 +166,15 @@ public class GradeService {
             LOGGER.error("Error while getting user", e);
             throw new SAE5ManagementException(SAE5ManagementExceptionTypes.PERSISTENCE_ERROR, e);
         }
+    }
+
+    public ArrayList<GradeDTO> getFilteredGrades(Long id, String title, String description, Long grade, Long coeff, GradeType type, Long teamId) {
+        ArrayList<GradeEntity> gradeEntities = gradeRepository.getFilteredGrades(id, title, description, grade, coeff, type, teamId);
+        ArrayList<GradeDTO> gradeDTOS = new ArrayList<>();
+        for(GradeEntity gradeEntity : gradeEntities) {
+            gradeDTOS.add(GradeMapper.toDTO(gradeEntity));
+        }
+
+        return  gradeDTOS;
     }
 }
