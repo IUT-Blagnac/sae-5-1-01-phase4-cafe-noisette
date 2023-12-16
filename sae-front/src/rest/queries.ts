@@ -2,6 +2,7 @@ import { User } from "../models/User";
 import { del, get, post, put } from "./restUtils";
 import { Project } from "../models/Project";
 import { Team } from "../models/Team";
+import { Grade } from "../models/Grade";
 
 export const createAccount = async (account: User) => {
     return await post<User, User>('users', account);
@@ -96,4 +97,8 @@ export const adminUpdateUser = async (user: User) => {
 
 export const adminDeleteUser = async (user: User) => {
     return await del<User>('users/admin/delete/' + user.id, true);
+}
+
+export const createGrade = async (grade: Grade) => {
+    return await post<Grade, Grade>('grades', grade, true);
 }

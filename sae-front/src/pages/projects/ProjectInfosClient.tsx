@@ -5,7 +5,7 @@ import { Project } from "../../models/Project";
 import TextField from "@mui/material/TextField";
 import { User } from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
-import { getClients, getProjects, getStudents, getTeams, postProject, putProject } from "../../rest/queries";
+import { createGrade, getClients, getProjects, getStudents, getTeams, postProject, putProject } from "../../rest/queries";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 import { Team } from "../../models/Team";
@@ -118,7 +118,17 @@ function ProjectsInfosClient() {
             toast.error('Aucune note attribuée, un nombre doit être choisi')
             return
         }
-        toast.success('La note a été ajouté')
+        const grade = { title: titleNote, description: descriptionNote, grade: note, coefficient: 1, type: 'CLIENT', teamId: selectedTeam.id as number };
+        createGrade(grade).then((response) => {
+            if (response.responseCode === 200) {
+                if (response.data) {
+                    toast.success('La note a été ajouté')
+                }
+            } else {
+                console.log("Une erreur est survenue lors de la création d'une note (erreur " + response.responseCode + ")")
+            }
+        })
+
         handleNewNoteBoxClose();
     };
 
@@ -299,7 +309,6 @@ function ProjectsInfosClient() {
                     >
                         <p>NOM : {selectedUser.lastname}</p>
                         <p>PRENOM : {selectedUser.firstname}</p>
-                        <p>EMAIL : {selectedUser.email}</p>
 
 
                     </Box>
