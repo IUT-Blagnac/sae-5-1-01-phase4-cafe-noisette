@@ -44,6 +44,12 @@ Ce module permet de gérer les projets de l'application. La documentation techni
 
 Ce module permet de gérer les équipes de l'application. La documentation technique dédiée est disponible [ici](docBackendTeams.md).
 
+#### Module "Grades"
+
+##### Description
+
+Ce module permet de gérer les évaluations par les enseignants et les clients de chaque team. La documentation technique dédiée est disponible [ici](docBackendGrades.md).
+
 #### Module "Authentication"
 
 ##### Description
