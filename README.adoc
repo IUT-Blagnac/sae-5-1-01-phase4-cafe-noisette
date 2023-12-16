@@ -54,11 +54,17 @@ Ce projet est réalisé par::
 
 === Documentation technique backend
 
-La documentation technique du backend est disponible xref:sae-back/README.md[ici].
+La documentation technique du backend est disponible xref:docs/technical-docs/homeTechnicalDoc.md[ici].
+
+La documentation d'installation du backend est disponible xref:sae-back/README.md[ici].
 
 === Documentation technique frontend
 
-La documentation technique du frontend est disponible xref:sae-front/README.md[ici].
+La documentation d'installation du frontend est disponible xref:sae-front/README.md[ici].
+
+=== Documentation utilisateur
+
+La documentation utilisateur est disponible xref:docs/user-docs/homeUserDoc.md[ici].
 
 == Contexte général
 

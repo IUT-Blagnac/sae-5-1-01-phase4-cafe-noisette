@@ -21,7 +21,6 @@ Voici le diagramme de classe définitif de l'application :
 
 La documentation technique d'installation du backend est disponible [ici](../../sae-back/README.md).
 
-
 ### Documentation par "backends"
 
 Quarkus est un framework qui permet de créer des backends en Java. Sa force est notamment l'utilisation de backends microservices. Cependant, dans le cadre de ce projet et étant donné le peu de charge attendue, le principe de microservices ne serait pas adapté. Pour autant, nous avons tout de même découpé le backend en plusieurs "backends" (modules) afin de faciliter la maintenance et la compréhension du code.

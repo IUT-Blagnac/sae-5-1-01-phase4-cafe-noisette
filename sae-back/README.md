@@ -8,6 +8,7 @@
 - [Build de l'application](#build-de-lapplication)
 - [Déploiement de l'application](#déploiement-de-lapplication)
   - [Paramétrage](#paramétrage)
+- [Documentation technique](#documentation-technique)
 
 ## Introduction
 
@@ -98,3 +99,7 @@ Le fichier .env contient les variables d'environnement suivantes :
 <b>⚠️ Lors du premier lancement, il faut mettre cette variable à `drop-and-create` pour initialiser la base de données. Ensuite, il faut la mettre à `update` pour éviter de perdre les données à chaque redémarrage.</b>
 
 [.env-example](src/main/docker-compose/.env-exemple) est un exemple de fichier .env.
+
+## Documentation technique
+
+La documentation technique du backend est disponible [ici](../docs/technical-docs/homeTechnicalDoc.md)
