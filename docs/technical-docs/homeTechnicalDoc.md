@@ -20,6 +20,10 @@
     - [Module "Authentication"](#module-authentication)
       - [Description](#description-4)
 
+## Introduction
+
+Ce répertoire contient la documentation technique du backend de l'application.
+
 ## Diagramme de classe
 
 ### Diagramme de classe définitif
