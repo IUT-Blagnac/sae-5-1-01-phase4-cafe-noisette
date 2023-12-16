@@ -36,9 +36,6 @@ public class ClientUserDTO {
     @JsonProperty("email")
     private String email;
 
-    @JsonProperty("playerInfo")
-    private PlayerInfoDTO playerInfo;
-
     @JsonProperty("roles")
     private Set<UserRole> roles;
     
