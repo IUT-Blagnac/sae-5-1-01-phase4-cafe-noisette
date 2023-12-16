@@ -71,7 +71,7 @@ export const addPreferencesTeam = async (team: Team, teamId: number) => {
 }
 
 export const deleteProjectTeam = async (team: Team, teamId: number) => {
-    return await del<Team>('teams/' + teamId + "/removeProject");
+    return await del<Team>('teams/' + teamId + "/removeProject", true);
 }
 
 
