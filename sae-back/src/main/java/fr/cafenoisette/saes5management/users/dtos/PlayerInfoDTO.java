@@ -64,7 +64,6 @@ public class PlayerInfoDTO {
     private int otherLevel;
 
     @JsonProperty("preferencesId")
-    @Size(max= 5)
     private List<Long> preferencesId;
     
 }
