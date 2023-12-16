@@ -92,7 +92,7 @@ public class ProjectController {
 
     @DELETE
     @RolesAllowed({"TEACHER", "ADMIN","CLIENT"})
-    @Path("/delete/{projectId}")
+    @Path("/{projectId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteProject(@PathParam("projectId")Long projectId) {
