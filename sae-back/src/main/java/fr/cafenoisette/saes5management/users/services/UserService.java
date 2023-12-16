@@ -291,27 +291,22 @@ public class UserService {
     @Transactional
     public UserDTO addPreferences(Long userId, PlayerInfoDTO playerInfoDTO, SecurityContext securityContext) {
         try {
-            LOGGER.error("test 1");
             UserEntity userEntity = userRepository.findById(userId);
             if (userEntity == null) {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_FOUND);
             }
-            LOGGER.error("test 2");
             if (
                 securityContext.isUserInRole("ADMIN") ||
                         securityContext.getUserPrincipal().getName().equals(userEntity.getUsername())
             ) {
-                LOGGER.error("test 3");
                 LOGGER.error(playerInfoDTO.getPreferencesId().toString());
                 List<ProjectEntity> preferenceList = new ArrayList<>();
                 for(Long id: playerInfoDTO.getPreferencesId()) {
                     ProjectEntity projectEntity = projectRepository.findById(id);
                     preferenceList.add(projectEntity);
                 }
-                LOGGER.error("test 4");
                 LOGGER.error(preferenceList.toString());
                 userEntity.getPlayerInfo().setPreferences(preferenceList);
-                LOGGER.error("test 5");
             }
             else {
                 throw new SAE5ManagementException(SAE5ManagementExceptionTypes.USER_NOT_AUTHORIZED);
