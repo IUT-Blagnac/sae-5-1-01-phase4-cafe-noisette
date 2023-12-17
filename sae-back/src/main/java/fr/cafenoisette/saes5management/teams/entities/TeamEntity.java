@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class TeamEntity {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private ProjectEntity project;
 
     @OneToMany
@@ -42,6 +45,7 @@ public class TeamEntity {
             name = "preference_project",
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private List<ProjectEntity> preferences;
 
 }
