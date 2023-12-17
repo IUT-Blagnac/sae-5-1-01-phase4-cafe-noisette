@@ -24,6 +24,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import {useConfirm} from "material-ui-confirm";
 import toast from "react-hot-toast";
+import DialogContentText from "@mui/material/DialogContentText";
 
 const roleList = ['ADMIN', 'TEACHER', 'STUDENT_INIT', 'STUDENT_ALT', 'CLIENT', 'GUEST', ''];
 
@@ -135,8 +136,8 @@ export default function AdminPage() {
         confirm({
             title: 'Êtes-vous sûr de vouloir modifier cet utilisateur ?',
             description: 'Toutes les modifications seront sauvegardées',
-            confirmationText: 'Oui',
-            cancellationText: 'Non',
+            confirmationText: 'Valider',
+            cancellationText: 'Annuler',
         }).then(() => {
             const editedRow = rows.find((row) => row.id === id);
             if (editedRow) {
@@ -155,13 +156,26 @@ export default function AdminPage() {
     };
 
     const handleDeleteClick = (id: GridRowId) => () => {
+        const user = users?.find((user) => user.id === id);
         confirm({
             title: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
-            description: 'Toutes les modifications seront sauvegardées',
-            confirmationText: 'Oui',
-            cancellationText: 'Non',
+            content: (
+                <DialogContentText component="div">
+                    Cette action est irréversible. Pour confirmer, veuillez écrire "<b>SUPPRIMER {user?.username}</b>" dans le champ ci-dessous :
+                </DialogContentText>
+            ),
+            confirmationText: 'Supprimer',
+            cancellationText: 'Annuler',
+            confirmationKeyword: 'SUPPRIMER ' + user?.username,
+            confirmationKeywordTextFieldProps: {
+                variant: "outlined",
+                margin: "dense",
+                autoFocus: true,
+                fullWidth: true,
+                placeholder: "SUPPRIMER " + user?.username,
+                sx: {mt: 2}
+            }
         }).then(() => {
-            const user = users?.find((user) => user.id === id);
             if (user) {
                 adminDeleteUser(user).then((response) => {
                     if (response.responseCode === 200) {
