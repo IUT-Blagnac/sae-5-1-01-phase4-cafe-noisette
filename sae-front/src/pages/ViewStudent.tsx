@@ -169,7 +169,7 @@ function ViewStudent() {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <h1>Accueil</h1>
+      <h1>Les Étudiants</h1>
       {students.sort(compareStudents).map((student, index) => (
         <Box
           key={index}
