@@ -20,7 +20,7 @@ public class ProjectEntity {
 
     private String name;
 
-    @Column(length = 1000)
+    @Column(length = 1024, columnDefinition = "TEXT")
     private String description;
 
     @ManyToMany
