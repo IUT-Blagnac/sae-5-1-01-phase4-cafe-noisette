@@ -57,24 +57,20 @@ function ViewStudent() {
         if (response.data) {
           setTeam(response.data[0]);
           if (response.data[0].leaderId === authUser.user?.id) {
-            if (studentsWithoutTeam.length === 0) {
-              setTypeAlert("success")
-              setTextAlert("Il n'y a pas d'étudiant sans équipe")
-              setTimeout(() => {
-                setTextAlert("");
-              }, 2000);
-            } else if (studentsWithoutTeam.length === 1) {
-              setTypeAlert("error")
-              setTextAlert("Il y a 1 étudiant sans équipe")
-              setTimeout(() => {
-                setTextAlert("");
-              }, 2000);
-            } else {
-              setTypeAlert("error")
-              setTextAlert("Il y a " + studentsWithoutTeam.length + " étudiants sans équipe")
-              setTimeout(() => {
-                setTextAlert("");
-              }, 2000);
+            if (studentsWithoutTeam.length !== 0) {
+              if (studentsWithoutTeam.length === 1) {
+                setTypeAlert("info")
+                setTextAlert("Il y a 1 étudiant sans équipe")
+                setTimeout(() => {
+                  setTextAlert("");
+                }, 2000);
+              } else {
+                setTypeAlert("info")
+                setTextAlert("Il y a " + studentsWithoutTeam.length + " étudiants sans équipe")
+                setTimeout(() => {
+                  setTextAlert("");
+                }, 2000);
+              }
             }
           }
         }
