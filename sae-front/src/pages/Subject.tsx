@@ -7,8 +7,9 @@ import { Team } from '../models/Team';
 import { Project } from '../models/Project';
 import { useTheme } from '../utils/theme';
 import toast from 'react-hot-toast';
+import { Box } from '@mui/material';
 
-interface SubjectProps {}
+interface SubjectProps { }
 
 export interface ExtendedTeam extends Omit<Team, 'projectId'> {
   id?: number;
@@ -23,30 +24,63 @@ const Subject: React.FC<SubjectProps> = () => {
   const theme = useTheme();
 
   useEffect(() => {
+    requestTeams();
+  }, []);
+
+
+  const requestTeams = () => {
     getAllTeams().then((response) => {
       if (response.responseCode === 200 && response.data) {
         setTeams(response.data);
+        requestProjects(response.data);
       } else {
         console.log(response.data);
       }
     });
-  }, []);
+  }
 
-  useEffect(() => {
+  const requestProjects = (listTeams: ExtendedTeam[]) => {
     getProjects().then((response) => {
       if (response.responseCode === 200 && response.data) {
         setTasks(
-          response.data.map((project) => ({
-            id: project.id || 0,
-            title: project.name,
-            status: 'undefined',
-          }))
+          response.data.map((project) => {
+            const teamIds = listTeams
+              .filter((team) => team.projectId === project.id)
+              .map((team) => team.id as number);
+
+            return {
+              id: project.id || 0,
+              title: project.name,
+              status: 'undefined',
+              ...(teamIds.length > 0 && { teamIds }),
+            };
+          })
         );
       } else {
         console.log(response.data);
       }
     });
-  }, []);
+  };
+
+
+  const updateTasksWithTeamIds = () => {
+    const teamsWithProject = teams.filter((team) => team.projectId !== null && team.projectId !== undefined);
+    console.log(teamsWithProject)
+
+    const updatedTasks = tasks.map((task) => {
+      console.log(task)
+      teamsWithProject.forEach((team) => {
+        if (team.projectId === task.id) {
+          const teamIds = task.teamIds || [];
+          task.teamIds = [...teamIds, team.id as number];
+        }
+      });
+      return task;
+    });
+
+    setTasks(updatedTasks);
+    console.log("updated task", updatedTasks)
+  };
 
   const handleDrop = (teamId: number, projectId: number) => {
     const team = teams.find((team) => team.id === teamId);
@@ -85,10 +119,10 @@ const Subject: React.FC<SubjectProps> = () => {
           }
         })
       );
-  
+
       // Fetch updated teams
       const updatedTeamsResponse = await getAllTeams();
-  
+
       if (updatedTeamsResponse.responseCode === 200 && updatedTeamsResponse.data) {
         // Set projectId to undefined for all teams
         const resetTeams = updatedTeamsResponse.data.map((team) => ({
@@ -99,18 +133,18 @@ const Subject: React.FC<SubjectProps> = () => {
       } else {
         console.log(updatedTeamsResponse.data);
       }
-  
+
       // Reset teamIds for all tasks
       const resetTasks = tasks.map((task) => ({ ...task, teamIds: [] }));
       setTasks(resetTasks);
-  
+
       toast.success('Les modifications ont été réinitialisées');
     } catch (error) {
       console.error('Error while resetting:', error);
       toast.error('Une erreur est survenue lors de la réinitialisation des modifications');
     }
   };
-  
+
 
   const handleSave = async () => {
     try {
@@ -132,12 +166,6 @@ const Subject: React.FC<SubjectProps> = () => {
 
       const updatedTeams = await getAllTeams();
       setTeams(updatedTeams.data || []);
-
-      const resetTasks = tasks.map((task) => ({
-        ...task,
-        teamIds: [],
-      }));
-      setTasks(resetTasks);
 
       toast.success('Les modifications ont été sauvegardées');
     } catch (error) {
@@ -206,7 +234,6 @@ const Subject: React.FC<SubjectProps> = () => {
   const teamListStyle: React.CSSProperties = {
     width: '20%',
     padding: '10px',
-    marginLeft: '10%',
     textAlign: 'center',
     border: '3px solid black',
     marginTop: '1.4%'
@@ -256,36 +283,27 @@ const Subject: React.FC<SubjectProps> = () => {
     <DndProvider backend={HTML5Backend}>
       <h1><center>Glisser les équipes dans le projet de votre choix</center></h1>
       <div style={subjectContainerStyle}>
-        <div style={{ width: '400px', padding: '10px', border: '3px solid purple', marginTop: '1.4%' }}>
-          <h2><center>les équipes</center></h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
-            <thead>
-              <tr>
-                <th style={tableHeaderStyle}>Équipes avec Projet</th>
-                <th style={tableHeaderStyle}>Équipes sans Projet</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: Math.max(teamsWithProject.length, teamsWithoutProject.length) }).map((_, index) => (
-                <tr key={index}>
-                  <td style={tableCellStyle}>{teamsWithProject[index]?.name}</td>
-                  <td style={tableCellStyle}>{teamsWithoutProject[index]?.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
         <div style={teamListStyle}>
           <h2>Teams</h2>
-          {teams.map((team) => (
+          {teams.filter((team) => {
+            return team.projectId === null || team.projectId === undefined;
+          }).map((team) => (
             <TeamItem key={team.id} team={team} />
           ))}
+          {teams.filter((team) => {
+            const teamIsAssociated = tasks.some((task) => task.teamIds && task.teamIds.includes(team.id as number));
+
+            return !teamIsAssociated;
+          }).length === 0 && (
+              <Box>Toutes les teams sont affectées à un projet</Box>
+            )}
         </div>
         <div style={projectListStyle}>
           <h2>Projects</h2>
-          {tasks.map((task) => (
-            <ProjectItem key={task.id} task={task} />
-          ))}
+          {tasks.map((task) => {
+            return <ProjectItem key={task.id} task={task} />
+          }
+          )}
         </div>
       </div>
       <div style={buttonContainerStyle}>
