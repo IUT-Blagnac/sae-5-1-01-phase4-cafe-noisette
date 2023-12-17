@@ -4,11 +4,9 @@
 
 - [Description](#description)
 - [DTOs](#dtos)
-  - [DTO 1](#dto-1)
-  - [DTO 2](#dto-2)
+  - [TeamDTO](#teamdto)
 - [Entités](#entités)
-  - [Entité 1](#entité-1)
-  - [Entité 2](#entité-2)
+  - [TeamEntity](#teamentity)
 - [Méthodes du controller](#méthodes-du-controller)
 
 ## Description
