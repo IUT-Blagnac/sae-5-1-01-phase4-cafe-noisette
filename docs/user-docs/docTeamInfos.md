@@ -47,3 +47,5 @@ Si l'utilisateur est le leader de l'équipe, il peut choisir choisir les projets
 Cette préférence se fait sous forme de liste. Pour classer les projets, il suffit de maintenir le click sur un projet et de le glisser dans la liste, en sachant que le porjet en haut de la liste correspond au projet le plus aimé, tandis que le projet en bas de la liste correspond au projet le moins aimé par l'équipe.
 
 ![Selectionne les préférences du projet](images/teamInfosSelectPref.png)
+
+Le leader peut ensuite cliquer sur "mettre à jour" pour mettre à jour les préférences des projets
