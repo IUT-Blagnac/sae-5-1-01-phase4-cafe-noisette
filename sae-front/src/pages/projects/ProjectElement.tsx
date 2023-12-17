@@ -53,16 +53,18 @@ function ProjectElement (props: ProjectElementProps) {
     return (
         <Box>
             <Card sx={{maxWidth:'400px',minWidth:'400px', height:'400px', m:2,p:2,display:'flex', flexDirection:'column',justifyContent:'space-between'}}>
-                <Box aria-label={"Title"} sx={{height:'10%'}}>
-                    <Typography variant={"h4"}>{project.name + ' ' + project.id}</Typography>
+                <Box aria-label={"Title"} sx={{height:'15%', pb:1}}>
+                    <Typography variant={"h4"}>{project.name}</Typography>
                 </Box>
                 <Box aria-label={"Description"} sx={{height:'60%', backgroundColor:theme.palette.background.default, borderRadius:1,padding:1}}>
                     <Typography variant={"body1"} >{project.description}</Typography>
                 </Box>
-                {getProjectClients(project,clients).map((client) => (
-                    <Typography key={client.id} variant={"body1"}>{client.firstname} {client.lastname} - {client.email}</Typography>
-                ))}
-                {project.clientIds.length === 0 && <Typography variant={"body1"}>Pas de client</Typography>}
+                <Box aria-label={"Clients"} sx={{height:'25%', pt:1}}>
+                    {getProjectClients(project,clients).map((client) => (
+                        <Typography key={client.id} variant={"body1"}>{client.firstname} {client.lastname} - {client.email}</Typography>
+                    ))}
+                    {project.clientIds.length === 0 && <Typography variant={"body1"}>Pas de client</Typography>}
+                </Box>
                 {admin &&
                     <Box sx={{minWidth:'5em', display:''}}>
                         <IconButton onClick={handleOpenUpdate}>

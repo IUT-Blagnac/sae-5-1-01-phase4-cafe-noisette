@@ -148,7 +148,7 @@ function ProjectList() {
     }
     return (
         <Box>
-            <Typography variant={"h4"} sx={{ m: 2, display: 'flex' }}>Projects</Typography>
+            <Typography variant={"h4"} sx={{ m: 2, display: 'flex' }}>Projets</Typography>
             {projects.length === 0 && <Typography variant={"h5"} sx={{ m: 2 }}>No projects</Typography>}
             <Box sx={{ display: 'flex', maxWidth: '100vw', flexFlow: 'wrap' }}>
                 {projects.length > 0 && projects.map((project) => (
@@ -165,7 +165,7 @@ function ProjectList() {
                         label={'Description'}
                         style={{ textAlign: 'left' }}
                         multiline
-                        rows={2}
+                        rows={6}
                     />
                     <FormControl fullWidth sx={{ mt: 2 }} size={'small'}>
                         <InputLabel>Client</InputLabel>
@@ -175,7 +175,7 @@ function ProjectList() {
                             ))}
                         </Select>
                     </FormControl>
-                    <Button variant={'outlined'} sx={{ mt: 2 }} onClick={handleAddProject}>Ajouter un nouveau projet</Button>
+                    <Button variant={'contained'} sx={{ mt: 2 }} fullWidth onClick={handleAddProject}>Ajouter un nouveau projet</Button>
                 </Card>
                 }
             </Box>
