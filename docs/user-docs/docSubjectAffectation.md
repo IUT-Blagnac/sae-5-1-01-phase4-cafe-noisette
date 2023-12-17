@@ -24,7 +24,7 @@ Cette page permet de se connecter à l'application.
 
 ## Accéder à la page d'affectation des sujets 
 
-<Ajout à la main>
+On accède à la page en appuyant sur le bouton "Affectation des équipes aux projet" qui se situe en bas de la page "/projects"
 
 ## Fonctionnalités
 
