@@ -5,17 +5,17 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Typography } from "@mui/material";
+import { AlertColor, Box, Typography } from "@mui/material";
 import { addPreferencesTeam, getStudents, getStudentsByUsername, getTeamsWithTeamId } from "../../rest/queries";
 import { User } from "../../models/User";
 import { skillType } from "../UserInfos";
 import UserInfosView from "../UserInfosView";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import { Team } from "../../models/Team";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { ProjectPreferencesSelect } from "../../components/ProjectPreferencesSelect";
 import { Project } from "../../models/Project";
+import { CustomAlert } from "../../components/CustomAlert";
 
 function TeamInfos() {
     const [students, setStudents] = React.useState<User[]>([])
@@ -26,6 +26,8 @@ function TeamInfos() {
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
     const authUser = useAuthUser();
     const navigate = useNavigate();
+    const [textAlert, setTextAlert] = useState("");
+    const [typeAlert, setTypeAlert] = React.useState("" as AlertColor)
 
     useEffect(() => {
         if (authUser.user !== undefined) {
@@ -53,7 +55,11 @@ function TeamInfos() {
                 if (response.data) {
                     setTeam(response.data[0])
                     if (authUser.user?.id === response.data[0].leaderId && response.data[0].preferencesId.length === 0) {
-                        toast.error("Aucune préférence des sujets définie")
+                        setTypeAlert("info")
+                        setTextAlert('Aucune préférence des sujets définie')
+                        setTimeout(() => {
+                            setTextAlert("");
+                        }, 2000);
                     }
                 }
             } else {
@@ -66,14 +72,22 @@ function TeamInfos() {
     const handleUpdatePreferencesButtonClick = () => {
         const projectIds = projects.map((project) => project.id as number);
         if (JSON.stringify(projectIds) === JSON.stringify(team.preferencesId)) {
-            toast.success("Aucun changement détecté")
+            setTypeAlert("success")
+            setTextAlert('Aucun changement détecté')
+            setTimeout(() => {
+                setTextAlert("");
+            }, 2000);
             return
         }
         team.preferencesId = projectIds
         addPreferencesTeam(team, team.id as number).then((response) => {
             if (response.responseCode === 200) {
                 if (response.data) {
-                    toast.success("Mise à jour des préférences effectuée")
+                    setTypeAlert("success")
+                    setTextAlert('Mise à jour des préférences effectuée')
+                    setTimeout(() => {
+                        setTextAlert("");
+                    }, 2000);
                 }
             } else {
                 console.log("Une erreur est survenue lors de la mise à jour des préférences (erreur " + response.responseCode + ")")
@@ -210,6 +224,7 @@ function TeamInfos() {
                     </Button>
                 </Box>
             )}
+            <CustomAlert text={textAlert} typeAlert={typeAlert} />
 
 
 

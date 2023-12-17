@@ -6,15 +6,15 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, Typography } from "@mui/material";
+import { AlertColor, Box, Typography } from "@mui/material";
 import { addMemberTeam, getStudents, getStudentsByUsername, getTeamsWithTeamId, getUserByUsername } from "../rest/queries";
 import { User } from "../models/User";
 import { PlayerInfo } from "../models/PlayerInfo";
 import UserInfos, { skillType } from "./UserInfos";
 import UserInfosView from "./UserInfosView";
 import { useAuthUser } from "../contexts/AuthUserContext";
-import toast from "react-hot-toast";
 import { Team } from "../models/Team";
+import { CustomAlert } from "../components/CustomAlert";
 
 function ViewStudent() {
   const authUser = useAuthUser();
@@ -23,21 +23,23 @@ function ViewStudent() {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = React.useState({} as User);
   const [infoBoxOpen, setInfoBoxOpen] = useState(false);
-  const [team, setTeam] = React.useState({ } as Team)
+  const [team, setTeam] = React.useState({} as Team)
+  const [textAlert, setTextAlert] = useState("");
+  const [typeAlert, setTypeAlert] = React.useState("" as AlertColor)
 
 
   useEffect(() => {
     if (authUser.user !== undefined) {
-        requestStudents();
+      requestStudents();
     }
-}, [authUser.user]);
+  }, [authUser.user]);
 
   function requestStudents() {
     getStudents().then((response) => {
       if (response.responseCode === 200) {
         if (response.data) {
           setStudents(response.data);
-          if(authUser.user?.teamId !== null){
+          if (authUser.user?.teamId !== null) {
             requestTeam(response.data.filter((student) => student.teamId === null));
           }
         }
@@ -51,25 +53,37 @@ function ViewStudent() {
   function requestTeam(studentsWithoutTeam: User[]) {
     const teamId = authUser.user?.teamId as number;
     getTeamsWithTeamId(teamId).then((response) => {
-        if (response.responseCode === 200) {
-            if (response.data) {
-                setTeam(response.data[0]);
-                if(response.data[0].leaderId === authUser.user?.id){
-                  if(studentsWithoutTeam.length === 0){
-                    toast.success("Il n'y a pas d'étudiant sans équipe")
-                  } else if (studentsWithoutTeam.length === 1) {
-                    toast.error("Il y a 1 étudiant sans équipe")
-                  } else {
-                    toast.error("Il y a "+ studentsWithoutTeam.length + " étudiants sans équipe")
-                  }
-                }
+      if (response.responseCode === 200) {
+        if (response.data) {
+          setTeam(response.data[0]);
+          if (response.data[0].leaderId === authUser.user?.id) {
+            if (studentsWithoutTeam.length === 0) {
+              setTypeAlert("success")
+              setTextAlert("Il n'y a pas d'étudiant sans équipe")
+              setTimeout(() => {
+                setTextAlert("");
+              }, 2000);
+            } else if (studentsWithoutTeam.length === 1) {
+              setTypeAlert("error")
+              setTextAlert("Il y a 1 étudiant sans équipe")
+              setTimeout(() => {
+                setTextAlert("");
+              }, 2000);
+            } else {
+              setTypeAlert("error")
+              setTextAlert("Il y a " + studentsWithoutTeam.length + " étudiants sans équipe")
+              setTimeout(() => {
+                setTextAlert("");
+              }, 2000);
             }
-        } else {
-            console.log("Error while getting team: " + response.errorMessage);
+          }
         }
+      } else {
+        console.log("Error while getting team: " + response.errorMessage);
+      }
     }
     )
-}
+  }
 
   const handleViewButtonClick = (student: User) => {
     setSelectedUser(student);
@@ -112,26 +126,34 @@ function ViewStudent() {
     //invite
     if (selectedUser.teamId === null) {
 
-        selectedUser.teamId = authUser.user?.teamId as number;
+      selectedUser.teamId = authUser.user?.teamId as number;
 
-        addMemberTeam(selectedUser, team.id as number).then((response) => {
-            if (response.responseCode === 200) {
-                if (response.data) {
-                    toast.success("L'étudiant a bien été invité !")
-                }
-            } else {
-                toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
-            }
+      addMemberTeam(selectedUser, team.id as number).then((response) => {
+        if (response.responseCode === 200) {
+          if (response.data) {
+            setTypeAlert("success")
+            setTextAlert("L'étudiant a bien été invité !")
+            setTimeout(() => {
+              setTextAlert("");
+            }, 2000);
+          }
+        } else {
+          console.log("Une erreur est survenue lors de la mise à jour de l'étudiant (erreur " + response.responseCode + ")")
         }
-        ).catch((error) => {
-            toast.error("Une erreur est survenue lors de la mise à jour de l'étudiant")
-        })
+      }
+      ).catch((error) => {
+        console.log("Une erreur est survenue lors de la mise à jour de l'étudiant")
+      })
     } else {
-        toast.error("L'étudiant est déjà dans une équipe.")
+      setTypeAlert("error")
+      setTextAlert("L'étudiant est déjà dans une équipe.")
+      setTimeout(() => {
+        setTextAlert("");
+      }, 2000);
     }
 
     setInviteDialogOpen(false);
-};
+  };
 
   const handleInfoBoxClose = () => {
     setInfoBoxOpen(false);
@@ -174,16 +196,16 @@ function ViewStudent() {
             {student.playerInfo?.nickname}
           </div>
           <div>
-          {student.teamId === null && authUser.user?.id === team.leaderId && (
-                            <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleInviteButtonClick(student)}
-                            style={{ marginRight: "10px" }}
-                          >
-                            Inviter utilisateur
-                          </Button>
-                        )}
+            {student.teamId === null && authUser.user?.id === team.leaderId && (
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleInviteButtonClick(student)}
+                style={{ marginRight: "10px" }}
+              >
+                Inviter utilisateur
+              </Button>
+            )}
             <Button
               variant="contained"
               color="primary"
@@ -191,10 +213,12 @@ function ViewStudent() {
             >
               Voir fiche utilisateur
             </Button>
-            
+
           </div>
         </Box>
       ))}
+
+      <CustomAlert text={textAlert} typeAlert={typeAlert} />
 
       {/* Boîte d'information */}
       <Dialog

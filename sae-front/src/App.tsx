@@ -12,13 +12,13 @@ import Navbar from "./elements/Navbar";
 import { Box, CssBaseline, ThemeProvider } from "@mui/material";
 import { useTheme } from "./utils/theme";
 import ProjectList from "./pages/projects/ProjectList";
-import {AuthUserProvider} from "./contexts/AuthUserContext";
+import { AuthUserProvider } from "./contexts/AuthUserContext";
 import { Toaster } from "react-hot-toast";
 import TeamInfos from './pages/teams/TeamInfos';
-import {RoleProtection} from "./components/RoleProtection";
+import { RoleProtection } from "./components/RoleProtection";
 import ProjectsInfosClient from './pages/projects/ProjectInfosClient';
 import AdminPage from "./pages/AdminPage";
-import {ConfirmProvider} from "material-ui-confirm";
+import { ConfirmProvider } from "material-ui-confirm";
 
 
 function App() {
@@ -77,7 +77,7 @@ function App() {
                                 </RoleProtection>
                             } />
                             <Route path="/teams/infos" element={
-                                <RoleProtection allowedRoles={["STUDENT_INIT"]}>
+                                <RoleProtection allowedRoles={["STUDENT_INIT", "STUDENT_ALT"]}>
                                     <TeamInfos />
                                 </RoleProtection>
                             } />

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -8,6 +9,7 @@ import {
   Select,
   TextField,
   Typography,
+  AlertColor
 } from "@mui/material";
 import { Project } from "../../models/Project";
 import { getProjects, postTeam } from "../../rest/queries";
@@ -15,23 +17,35 @@ import toast from "react-hot-toast";
 import { Team } from "../../models/Team";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import { useNavigate } from "react-router-dom";
+import { CustomAlert } from "../../components/CustomAlert";
 
 const CreateTeam = () => {
   const authUser = useAuthUser();
   const [nameTeam, setNameTeam] = useState("");
   const [github, setGithub] = useState("");
   const navigate = useNavigate();
+  const [textAlert, setTextAlert] = useState("");
+  const [typeAlert, setTypeAlert] = React.useState("" as AlertColor)
+
 
 
   const handleConfirmClick = () => {
 
     if (nameTeam === "") {
-      toast.error('Merci de renseigner un nom de team')
+      setTypeAlert("error")
+      setTextAlert('Merci de renseigner un nom de team')
+      setTimeout(() => {
+        setTextAlert("");
+      }, 2000);
       return;
     }
 
     if (github === "") {
-      toast.error('Merci de renseigner un lien github')
+      setTypeAlert("error")
+      setTextAlert('Merci de renseigner un lien github')
+      setTimeout(() => {
+        setTextAlert("");
+      }, 2000);
       return;
     }
 
@@ -45,8 +59,6 @@ const CreateTeam = () => {
           if (authUser.user) {
             authUser.user.teamId = response.data.id as number
           }
-          setNameTeam("")
-          toast.success("L'équipe a été créée")
           navigate("/teams/infos");
         }
       } else {
@@ -92,11 +104,14 @@ const CreateTeam = () => {
           variant="outlined"
           fullWidth
         />
+
       </FormControl>
 
       <Button variant="contained" color="primary" onClick={handleConfirmClick}>
         Confirmer
       </Button>
+
+      <CustomAlert text={textAlert} typeAlert={typeAlert} />
 
     </Box>
   );
