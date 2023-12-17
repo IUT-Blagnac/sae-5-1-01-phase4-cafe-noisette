@@ -8,8 +8,10 @@ import { Project } from '../models/Project';
 import { useTheme } from '../utils/theme';
 import toast from 'react-hot-toast';
 import { Box } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import RotateLeftIcon from '@mui/icons-material/RotateLeft'; // Ajout de l'import RotateLeftIcon
 
-interface SubjectProps { }
+interface SubjectProps {}
 
 export interface ExtendedTeam extends Omit<Team, 'projectId'> {
   id?: number;
@@ -27,7 +29,6 @@ const Subject: React.FC<SubjectProps> = () => {
     requestTeams();
   }, []);
 
-
   const requestTeams = () => {
     getAllTeams().then((response) => {
       if (response.responseCode === 200 && response.data) {
@@ -37,7 +38,7 @@ const Subject: React.FC<SubjectProps> = () => {
         console.log(response.data);
       }
     });
-  }
+  };
 
   const requestProjects = (listTeams: ExtendedTeam[]) => {
     getProjects().then((response) => {
@@ -62,13 +63,12 @@ const Subject: React.FC<SubjectProps> = () => {
     });
   };
 
-
   const updateTasksWithTeamIds = () => {
     const teamsWithProject = teams.filter((team) => team.projectId !== null && team.projectId !== undefined);
-    console.log(teamsWithProject)
+    console.log(teamsWithProject);
 
     const updatedTasks = tasks.map((task) => {
-      console.log(task)
+      console.log(task);
       teamsWithProject.forEach((team) => {
         if (team.projectId === task.id) {
           const teamIds = task.teamIds || [];
@@ -79,14 +79,14 @@ const Subject: React.FC<SubjectProps> = () => {
     });
 
     setTasks(updatedTasks);
-    console.log("updated task", updatedTasks)
+    console.log('updated task', updatedTasks);
   };
 
   const handleDrop = (teamId: number, projectId: number) => {
     const team = teams.find((team) => team.id === teamId);
 
     if (team && team.projectId !== null && team.projectId !== undefined) {
-      toast.error('Cette équipe est déjà affectée à un projet');
+      toast.error("Cette équipe est déjà affectée à un projet");
       return;
     }
 
@@ -138,17 +138,16 @@ const Subject: React.FC<SubjectProps> = () => {
       const resetTasks = tasks.map((task) => ({ ...task, teamIds: [] }));
       setTasks(resetTasks);
 
-      toast.success('Les modifications ont été réinitialisées');
+      toast.success("Les modifications ont été réinitialisées");
     } catch (error) {
-      console.error('Error while resetting:', error);
-      toast.error('Une erreur est survenue lors de la réinitialisation des modifications');
+      console.error("Error while resetting:", error);
+      toast.error("Une erreur est survenue lors de la réinitialisation des modifications");
     }
   };
 
-
   const handleSave = async () => {
     try {
-      console.log('Saving changes...');
+      console.log("Saving changes...");
 
       await Promise.all(
         tasks
@@ -156,35 +155,35 @@ const Subject: React.FC<SubjectProps> = () => {
           .flatMap((task) =>
             task.teamIds?.map((teamId) => {
               const team = teams.find((team) => team.id === teamId) as Team;
-              console.log('Saving project for team:', team);
+              console.log("Saving project for team:", team);
               return addProjectTeam(team, teamId);
             }) || []
           )
       );
 
-      console.log('Changes saved successfully');
+      console.log("Changes saved successfully");
 
       const updatedTeams = await getAllTeams();
       setTeams(updatedTeams.data || []);
 
-      toast.success('Les modifications ont été sauvegardées');
+      toast.success("Les modifications ont été sauvegardées");
     } catch (error) {
-      console.error('Error while saving changes:', error);
-      toast.error('Une erreur est survenue lors de la sauvegarde des modifications');
+      console.error("Error while saving changes:", error);
+      toast.error("Une erreur est survenue lors de la sauvegarde des modifications");
     }
   };
 
   const TeamItem: React.FC<{ team: ExtendedTeam }> = ({ team }) => {
     const [, drag] = useDrag({
-      type: 'TEAM',
+      type: "TEAM",
       item: { id: team.id || 0 },
     });
 
     const teamItemStyle: React.CSSProperties = {
       backgroundColor: theme.palette.secondary.main,
-      border: '1px solid black',
-      marginBottom: '5px',
-      padding: '8px',
+      border: "1px solid black",
+      marginBottom: "5px",
+      padding: "8px",
     };
 
     return <div ref={drag} style={teamItemStyle}>{team.name}</div>;
@@ -192,16 +191,16 @@ const Subject: React.FC<SubjectProps> = () => {
 
   const ProjectItem: React.FC<{ task: { id: number; title: string; status: string; teamIds?: number[] } }> = ({ task }) => {
     const [, drop] = useDrop({
-      accept: 'TEAM',
+      accept: "TEAM",
       drop: (item: { type: string; id: number }) => handleDrop(item.id, task.id),
     });
 
     const projectItemStyle: React.CSSProperties = {
       backgroundColor: theme.palette.secondary.main,
-      border: '1px solid black',
-      marginBottom: '5px',
-      padding: '8px',
-      color: 'inherit',
+      border: "1px solid black",
+      marginBottom: "5px",
+      padding: "8px",
+      color: "inherit",
     };
 
     return (
@@ -224,99 +223,103 @@ const Subject: React.FC<SubjectProps> = () => {
   };
 
   const subjectContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    marginBottom: '20px',
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "20px",
   };
 
   const teamListStyle: React.CSSProperties = {
-    width: '20%',
-    padding: '10px',
-    textAlign: 'center',
-    border: '3px solid black',
-    marginTop: '1.4%'
+    width: "30%",
+    padding: "10px",
+    textAlign: "center",
+    border: "3px solid black",
+    marginTop: "1.4%",
+    marginLeft: "5%",
   };
 
   const projectListStyle: React.CSSProperties = {
-    width: '20%',
-    padding: '10px',
-    marginLeft: '10%',
-    textAlign: 'center',
-    border: '3px solid purple',
-    marginTop: '1.4%'
+    width: "30%",
+    padding: "10px",
+    textAlign: "center",
+    border: "3px solid purple",
+    marginTop: "1.4%",
   };
 
   const buttonContainerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    padding: '20px', // Ajout de marge intérieure pour éloigner les boutons du bord
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-end",
+    width: "20%",
+    padding: "20px",
+    marginRight: "2%",
   };
 
   const buttonStyle: React.CSSProperties = {
-    color: 'inherit',
-    border: `1px solid ${theme.palette.primary.main}`, // Bordure avec la couleur du thème
-    padding: '8px',
-    cursor: 'pointer',
-    marginTop: '10px',
-    textAlign: 'center',
-    width: '48%',
+    color: "inherit",
+    border: `1px solid ${theme.palette.primary.main}`,
+    padding: "8px",
+    cursor: "pointer",
+    marginTop: "10px",
+    marginLeft: "10px",
+    textAlign: "center",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",  
+    justifyContent: "center",  
+    gap: "8px"
+    
   };
 
   const teamsWithProject = teams.filter((team) => team.projectId !== null && team.projectId !== undefined);
   const teamsWithoutProject = teams.filter((team) => team.projectId === null || team.projectId === undefined);
 
   const tableHeaderStyle: React.CSSProperties = {
-    border: '1px solid #dddddd',
-    padding: '8px',
-    textAlign: 'center',
+    border: "1px solid #dddddd",
+    padding: "8px",
+    textAlign: "center",
   };
 
   const tableCellStyle: React.CSSProperties = {
-    border: '1px solid #dddddd',
-    padding: '8px',
+    border: "1px solid #dddddd",
+    padding: "8px",
   };
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <h1><center>Glisser les équipes dans le projet de votre choix</center></h1>
+      <h1>
+        <center>Glisser les équipes dans le projet de votre choix</center>
+      </h1>
       <div style={subjectContainerStyle}>
         <div style={teamListStyle}>
           <h2>Teams</h2>
-          {teams.filter((team) => {
-            return team.projectId === null || team.projectId === undefined;
-          }).map((team) => (
+          {teams.filter((team) => team.projectId === null || team.projectId === undefined).map((team) => (
             <TeamItem key={team.id} team={team} />
           ))}
           {teams.filter((team) => {
             const teamIsAssociated = tasks.some((task) => task.teamIds && task.teamIds.includes(team.id as number));
-
             return !teamIsAssociated;
           }).length === 0 && (
-              <Box>Toutes les teams sont affectées à un projet</Box>
-            )}
+            <Box>Toutes les teams sont affectées à un projet</Box>
+          )}
         </div>
         <div style={projectListStyle}>
           <h2>Projects</h2>
           {tasks.map((task) => {
-            return <ProjectItem key={task.id} task={task} />
-          }
+            return <ProjectItem key={task.id} task={task} />;
+          })}
+        </div>
+        <div style={buttonContainerStyle}>
+          {showResetButton && (
+            <div onClick={handleReset} style={buttonStyle}>
+              <RotateLeftIcon />  Reset Teams
+            </div>
+          )}
+          {showSaveButton && (
+            <div onClick={handleSave} style={buttonStyle}>
+              <SaveIcon />  Save Changes
+            </div>
           )}
         </div>
-      </div>
-      <div style={buttonContainerStyle}>
-        {showResetButton && (
-          <div onClick={handleReset} style={buttonStyle}>
-            Reset Teams
-          </div>
-        )}
-        {showSaveButton && (
-          <div onClick={handleSave} style={buttonStyle}>
-            Save Changes
-          </div>
-        )}
       </div>
     </DndProvider>
   );
