@@ -1,4 +1,4 @@
-import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, InputLabel, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { AlertColor, Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, InputLabel, Select, SelectChangeEvent, Typography } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import ProjectElement from "./ProjectElement";
 import { Project } from "../../models/Project";
@@ -7,9 +7,9 @@ import { User } from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
 import { createGrade, deleteGrade, getClients, getGrades, getProjects, getStudents, getTeams, postProject, putProject } from "../../rest/queries";
 import { useAuthUser } from "../../contexts/AuthUserContext";
-import toast from "react-hot-toast";
 import { Team } from "../../models/Team";
 import { Grade } from "../../models/Grade";
+import { CustomAlert } from "../../components/CustomAlert";
 
 function ProjectsInfosClient() {
     const authUser = useAuthUser();
@@ -22,12 +22,16 @@ function ProjectsInfosClient() {
     const [newNoteBoxOpen, setNewNoteBoxOpen] = useState(false);
     const [viewNotesBoxOpen, setViewNotesBoxOpen] = useState(false);
 
+
     const [note, setNote] = useState(-1);
     const [titleNote, setTitleNote] = useState('');
     const [descriptionNote, setDescriptionNote] = useState('');
 
     const [selectedUser, setSelectedUser] = React.useState({} as User);
     const [selectedTeam, setSelectedTeam] = React.useState({} as Team);
+
+    const [textAlert, setTextAlert] = useState("");
+    const [typeAlert, setTypeAlert] = React.useState("" as AlertColor)
 
 
 
@@ -48,7 +52,11 @@ function ProjectsInfosClient() {
                 if (projectsClient.length > 0) {
                     setProjects(projectsClient);
                 } else {
-                    toast.error('Aucun projet attribué')
+                    setTypeAlert("info")
+                    setTextAlert('Aucun projet attribué')
+                    setTimeout(() => {
+                        setTextAlert("");
+                    }, 2000);
                 }
             } else {
                 console.log("Error while getting projects: " + response.errorMessage);
@@ -83,7 +91,6 @@ function ProjectsInfosClient() {
         getGrades().then((response) => {
             if (response.responseCode === 200 && response.data) {
                 setGrades(response.data);
-                console.log(response.data)
             } else {
                 console.log("Error while getting students: " + response.errorMessage);
             }
@@ -123,22 +130,38 @@ function ProjectsInfosClient() {
 
     const handleSaveNote = () => {
         if (titleNote === '') {
-            toast.error('La note doit avoir un titre')
+            setTypeAlert("error")
+            setTextAlert('La note doit avoir un titre')
+            setTimeout(() => {
+                setTextAlert("");
+            }, 2000);
             return
         }
         if (descriptionNote === '') {
-            toast.error('La note doit avoir une description')
+            setTypeAlert("error")
+            setTextAlert('La note doit avoir une description')
+            setTimeout(() => {
+                setTextAlert("");
+            }, 2000);
             return
         }
         if (note === -1) {
-            toast.error('Aucune note attribuée, un nombre doit être choisi')
+            setTypeAlert("error")
+            setTextAlert('Aucune note attribuée, un nombre doit être choisi')
+            setTimeout(() => {
+                setTextAlert("");
+            }, 2000);
             return
         }
         const grade = { title: titleNote, description: descriptionNote, grade: note, coefficient: 1, type: 'CLIENT', teamId: selectedTeam.id as number };
         createGrade(grade).then((response) => {
             if (response.responseCode === 200) {
                 if (response.data) {
-                    toast.success('La note a été ajouté')
+                    setTypeAlert("success")
+                    setTextAlert('La note a été ajouté')
+                    setTimeout(() => {
+                        setTextAlert("");
+                    }, 2000);
                     setGrades([...grades, response.data]);
                 }
             } else {
@@ -170,7 +193,6 @@ function ProjectsInfosClient() {
     const handleSupprimerClick = (grade: Grade) => {
         deleteGrade(grade).then((response) => {
             if (response.responseCode === 200) {
-                toast.success('La note a été supprimée');
                 setGrades((prevGrades) => prevGrades.filter((g) => g.id !== grade.id));
             } else {
                 console.log("Une erreur est survenue lors de la suppression d'une note (erreur " + response.responseCode + ")")
@@ -288,6 +310,8 @@ function ProjectsInfosClient() {
                         </Box>
 
                     </Box>
+                    <CustomAlert text={textAlert} typeAlert={typeAlert} />
+
                     <DialogActions>
                         <Button onClick={handleNewNoteBoxClose} color="primary">
                             Annuler
