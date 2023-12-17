@@ -101,6 +101,11 @@ public class TeamService {
         try {
             TeamEntity teamEntity = TeamMapper.toEntity(teamDTO);
 
+            if (teamEntity.getName() == null || teamEntity.getName().isEmpty()) {
+                LOGGER.error("Team name is null or empty");
+                throw new SAE5ManagementException(SAE5ManagementExceptionTypes.BAD_REQUEST);
+            }
+
             UserEntity leader = userRepository.findById(teamDTO.getLeaderId());
             teamEntity.setLeader(leader);
 

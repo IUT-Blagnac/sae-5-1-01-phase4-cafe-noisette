@@ -60,8 +60,8 @@ function ProjectList () {
                 }
             }
         ).catch((error) => {
-            toast.error('Une erreur est survenue lors de la récupération des clients')
-        }
+                toast.error('Une erreur est survenue lors de la récupération des clients')
+            }
         )
     }
 
@@ -100,33 +100,32 @@ function ProjectList () {
 
         if (project.id) {
             deleteProject(project.id).then((response) => {
-                if (response.responseCode === 200) {
-                    if (response.data) {
-                        toast.success('Projet supprimé avec succès')
-                        setProjects(projects.filter((p) => p.id !== project.id))
-                    }
+                if (response.responseCode === 202) {
+                    toast.success('Projet  supprimé avec succès')
+                    setProjects(projects.filter((p) => p.id !== project.id))
                 } else {
                     console.log("Error while getting projects: " + response.errorMessage)
                     toast.error('Une erreur est survenue lors de la suppression du projet (erreur ' + response.responseCode + ')')
                 }
             }).catch((error) => {
-                toast('Une erreur est survenue lors de la suppression du projet')
-            }
+                    toast('Une erreur est survenue lors de la suppression du projet')
+                }
             )
         }
     }
 
     function handleUpdateProject (updatedProject: Project) {
         putProject(updatedProject).then((response) => {
-            if (response.responseCode === 200) {
-                if (response.data) {
-                    setProjects(projects.map((project) => project.id === updatedProject.id ? updatedProject : project))
+                if (response.responseCode === 200) {
+                    if (response.data) {
+                        setProjects(projects.map((project) => project.id === updatedProject.id ? updatedProject : project))
+                        toast.success('Projet mis à jour avec succès')
+                    }
+                } else {
+                    console.log("Error while getting projects: " + response.errorMessage)
+                    toast.error('Une erreur est survenue lors de la mise à jour du projet (erreur '+response.responseCode+')')
                 }
-            } else {
-                console.log("Error while getting projects: " + response.errorMessage)
-                toast.error('Une erreur est survenue lors de la mise à jour du projet (erreur '+response.responseCode+')')
             }
-        }
         ).catch((error) => {
             toast('Une erreur est survenue lors de la mise à jour du projet')
         })
@@ -135,7 +134,6 @@ function ProjectList () {
     function selectClients(event: SelectChangeEvent<unknown>) {
         setSelectedClientsIds(event.target.value as number[])
         setNewProject({...newProject, clientIds:event.target.value as number[]})
-        console.log(newProject)
     }
 
     if (requesting) {

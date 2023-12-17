@@ -10,7 +10,7 @@ import {
     SelectChangeEvent,
     Typography
 } from "@mui/material";
-import {Project} from "../../models/Project";
+import {getProjectClients, Project} from "../../models/Project";
 import {Delete, Edit} from "@mui/icons-material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -34,42 +34,38 @@ function ProjectElement (props: ProjectElementProps) {
     const [open, setOpen] = React.useState(false);
     const [updateProject, setUpdateProject] = React.useState({name:'', description:'', clientIds:[]} as Project)
     const [selectedClientsIds, setSelectedClientsIds] = React.useState([] as number[])
-    const [projectClients, setProjectClients] = React.useState(projectCli)
     const theme = useTheme();
 
-    function handleClose () {
-        setOpen(false)
-    }
-
-    function projectCli(){
-            return project.clientIds?.map((id) => clients.find((client) => client.id === id))
-    }
-
-    function handleUpdate () {
+    function handleOpenUpdate () {
         setOpen(true)
         setUpdateProject(project)
-        setProjectClients(projectCli())
+    }
+
+    function handleCloseUpdate () {
+        setOpen(false)
     }
 
     function selectClients (event: SelectChangeEvent<unknown>) {
         setSelectedClientsIds(event.target.value as number[])
-        setUpdateProject({...updateProject, clientIds:selectedClientsIds})
+        setUpdateProject({...updateProject, clientIds:event.target.value as number[]})
     }
 
     return (
         <Box>
             <Card sx={{maxWidth:'400px',minWidth:'400px', height:'400px', m:2,p:2,display:'flex', flexDirection:'column',justifyContent:'space-between'}}>
                 <Box aria-label={"Title"} sx={{height:'10%'}}>
-                    <Typography variant={"h4"}>{project.name}</Typography>
+                    <Typography variant={"h4"}>{project.name + ' ' + project.id}</Typography>
                 </Box>
                 <Box aria-label={"Description"} sx={{height:'60%', backgroundColor:theme.palette.background.default, borderRadius:1,padding:1}}>
                     <Typography variant={"body1"} >{project.description}</Typography>
                 </Box>
-                    {projectClients && projectClients.length > 0 && <Typography variant={"body1"}>{projectClients.map((client) => client?.firstname + ' ' + client?.lastname + ' ' + client?.email)}</Typography>}
-                {projectClients && projectClients.length === 0 && <Typography variant={"body1"}>Pas de client</Typography>}
+                {getProjectClients(project,clients).map((client) => (
+                    <Typography key={client.id} variant={"body1"}>{client.firstname} {client.lastname} - {client.email}</Typography>
+                ))}
+                {project.clientIds.length === 0 && <Typography variant={"body1"}>Pas de client</Typography>}
                 {admin &&
                     <Box sx={{minWidth:'5em', display:''}}>
-                        <IconButton onClick={handleUpdate}>
+                        <IconButton onClick={handleOpenUpdate}>
                             <Edit/>
                         </IconButton>
                         <IconButton onClick={() => handleRemoveProject(project)}>
@@ -81,7 +77,7 @@ function ProjectElement (props: ProjectElementProps) {
 
             <Dialog
                 open={open}
-                onClose={handleClose}
+                onClose={handleCloseUpdate}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
@@ -100,6 +96,7 @@ function ProjectElement (props: ProjectElementProps) {
                             style={{textAlign: 'left'}}
                             multiline
                             rows={6}
+                            inputProps={{ maxLength: 500 }}
                         />
                         <FormControl fullWidth sx={{mt:2}} size={'small'} >
                             <InputLabel>Client</InputLabel>
@@ -112,10 +109,10 @@ function ProjectElement (props: ProjectElementProps) {
                     </Card>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Annuler</Button>
+                    <Button onClick={handleCloseUpdate}>Annuler</Button>
                     <Button onClick={() => {
                         handleUpdateProject(updateProject)
-                        handleClose()
+                        handleCloseUpdate()
                     }} autoFocus>
                         Modifier
                     </Button>

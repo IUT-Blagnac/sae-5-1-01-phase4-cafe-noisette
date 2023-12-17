@@ -7,6 +7,6 @@ export interface Project {
     clientIds: number[];
 }
 
-export function getUsersFromIds(users: User[], ids: number[]): User[] {
-    return users.filter(user => ids.includes(user.id!));
+export function getProjectClients(project: Project, users: User[]) : User[] {
+    return users.filter(user => project.clientIds.includes(user.id!));
 }
