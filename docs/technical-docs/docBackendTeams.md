@@ -44,10 +44,10 @@ Entité représentant une team
 - _@Id @GeneratedValue_ **Long id** : identifiant de la team
 - **String name** : nom de la team
 - **String github** : nom du lien github du project
-- _@ManyToOne **projectEntity project** : informations sur le project sélectionné par l'équipe
-- _@OneToMany **Set<UserEntity> members** : liste des informations sur les membres de l'équipe
-- _@OneToOne **UserEntity leader** : informations sur l'utilisateur désigné comme leader de la team
-- -@ManyToOne **List<ProjectEntity> preferences** : liste ordonnée par préférence des informations sur les différents projets
+- _@ManyToOne_ **projectEntity project** : informations sur le project sélectionné par l'équipe
+- _@OneToMany_ **Set<UserEntity> members** : liste des informations sur les membres de l'équipe
+- _@OneToOne_ **UserEntity leader** : informations sur l'utilisateur désigné comme leader de la team
+- -@ManyToOne_ **List<ProjectEntity> preferences** : liste ordonnée par préférence des informations sur les différents projets
 
 
 ## Méthodes du controller
