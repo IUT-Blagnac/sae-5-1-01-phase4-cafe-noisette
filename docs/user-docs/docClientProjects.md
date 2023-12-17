@@ -1,4 +1,4 @@
-# Page d'administration
+# Page de consultation des projets d'un client
 
 ## Table des matières
 
