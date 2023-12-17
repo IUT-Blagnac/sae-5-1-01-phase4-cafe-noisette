@@ -31,6 +31,7 @@ public class ProjectEntity {
             name = "project_contacts",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserEntity> clients;
 
     @ManyToMany
@@ -40,5 +41,7 @@ public class ProjectEntity {
             inverseJoinColumns = @JoinColumn(name = "team_id"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<TeamEntity> teamEntitiesUsingAsPreference;
+
+
 
 }
