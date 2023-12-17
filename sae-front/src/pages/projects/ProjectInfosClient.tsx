@@ -1,14 +1,15 @@
-import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControl, InputLabel, Select, SelectChangeEvent, Typography } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import ProjectElement from "./ProjectElement";
 import { Project } from "../../models/Project";
 import TextField from "@mui/material/TextField";
 import { User } from "../../models/User";
 import MenuItem from "@mui/material/MenuItem";
-import { createGrade, getClients, getProjects, getStudents, getTeams, postProject, putProject } from "../../rest/queries";
+import { createGrade, deleteGrade, getClients, getGrades, getProjects, getStudents, getTeams, postProject, putProject } from "../../rest/queries";
 import { useAuthUser } from "../../contexts/AuthUserContext";
 import toast from "react-hot-toast";
 import { Team } from "../../models/Team";
+import { Grade } from "../../models/Grade";
 
 function ProjectsInfosClient() {
     const authUser = useAuthUser();
@@ -16,6 +17,7 @@ function ProjectsInfosClient() {
     const [projects, setProjects] = React.useState([] as Project[])
     const [teams, setTeams] = React.useState([] as Team[])
     const [students, setStudents] = React.useState([] as User[])
+    const [grades, setGrades] = React.useState([] as Grade[])
     const [infoBoxOpen, setInfoBoxOpen] = useState(false);
     const [newNoteBoxOpen, setNewNoteBoxOpen] = useState(false);
     const [viewNotesBoxOpen, setViewNotesBoxOpen] = useState(false);
@@ -35,6 +37,7 @@ function ProjectsInfosClient() {
             requestProject();
             requestTeams();
             requestStudents();
+            requestGrades();
         }
     }, [authUser.user]);
 
@@ -75,6 +78,19 @@ function ProjectsInfosClient() {
         }
         )
     }
+
+    function requestGrades() {
+        getGrades().then((response) => {
+            if (response.responseCode === 200 && response.data) {
+                setGrades(response.data);
+                console.log(response.data)
+            } else {
+                console.log("Error while getting students: " + response.errorMessage);
+            }
+        }
+        )
+    }
+
     const handleViewButtonClick = (student: User) => {
         setSelectedUser(student);
         setInfoBoxOpen(true);
@@ -123,6 +139,7 @@ function ProjectsInfosClient() {
             if (response.responseCode === 200) {
                 if (response.data) {
                     toast.success('La note a été ajouté')
+                    setGrades([...grades, response.data]);
                 }
             } else {
                 console.log("Une erreur est survenue lors de la création d'une note (erreur " + response.responseCode + ")")
@@ -149,6 +166,17 @@ function ProjectsInfosClient() {
                 break;
         }
     };
+
+    const handleSupprimerClick = (grade: Grade) => {
+        deleteGrade(grade).then((response) => {
+            if (response.responseCode === 200) {
+                toast.success('La note a été supprimée');
+                setGrades((prevGrades) => prevGrades.filter((g) => g.id !== grade.id));
+            } else {
+                console.log("Une erreur est survenue lors de la suppression d'une note (erreur " + response.responseCode + ")")
+            }
+        })
+    }
 
     return (
         <Box>
@@ -225,7 +253,7 @@ function ProjectsInfosClient() {
                         flexDirection="column"
                         alignItems="center"
                         justifyContent="center"
-                        sx={{ marginRight: '55px', marginLeft: '55px', textTransform: 'uppercase' }}
+                        sx={{ marginRight: '55px', marginLeft: '55px', textTransform: 'uppercase', marginBottom: "10px" }}
                     >
                         <TextField
                             name="title"
@@ -279,11 +307,25 @@ function ProjectsInfosClient() {
                     <DialogTitle id="info-box-title" color="primary" sx={{ textTransform: 'uppercase', textAlign: 'center' }}>NOTES DE L'EQUIPE : {selectedTeam.name}</DialogTitle>
                     <Box
                         display="flex"
-                        flexDirection="column"
-                        alignItems="center"
                         justifyContent="center"
-                        sx={{ marginRight: "55px", marginLeft: "55px", textTransform: 'uppercase' }}
+                        flexWrap="wrap"
+                        sx={{ marginRight: "55px", marginLeft: "55px" }}
                     >
+                        {grades
+                            .filter((grade) => grade.teamId === selectedTeam.id)
+                            .map((grade) => (
+                                <Box key={grade.id} sx={{ border: '1px solid #000', padding: '10px', margin: '10px', width: '200px', borderRadius: '8px', textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
+                                    <Box sx={{ textTransform: 'uppercase', textDecoration: 'underline', marginBottom: '10px' }}>{grade.title}</Box>
+                                    <Box sx={{ marginBottom: '10px', flex: 1 }}>{grade.description}</Box>
+                                    <Divider />
+                                    <p>NOTE: {grade.grade}</p>
+                                    <Button variant="outlined" onClick={() => handleSupprimerClick(grade)}>Supprimer</Button>
+                                </Box>
+                            ))}
+
+                        {grades.filter((grade) => grade.teamId === selectedTeam.id).length === 0 && (
+                            <Box>Aucune note</Box>
+                        )}
 
                     </Box>
                     <DialogActions>

@@ -102,3 +102,11 @@ export const adminDeleteUser = async (user: User) => {
 export const createGrade = async (grade: Grade) => {
     return await post<Grade, Grade>('grades', grade, true);
 }
+
+export const deleteGrade = async (grade: Grade) => {
+    return await del<Grade>('grades/' + grade.id + '/delete', true);
+}
+
+export const getGrades = async () => {
+    return await get<Grade[]>('grades/filter', true);
+}
