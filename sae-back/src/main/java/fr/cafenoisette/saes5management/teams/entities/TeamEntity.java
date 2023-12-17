@@ -29,7 +29,6 @@ public class TeamEntity {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     private ProjectEntity project;
 
     @OneToMany
@@ -45,7 +44,7 @@ public class TeamEntity {
             name = "preference_project",
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ProjectEntity> preferences;
 
 }
