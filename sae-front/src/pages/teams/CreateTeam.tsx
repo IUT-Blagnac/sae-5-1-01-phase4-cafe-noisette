@@ -14,14 +14,28 @@ import { getProjects, postTeam } from "../../rest/queries";
 import toast from "react-hot-toast";
 import { Team } from "../../models/Team";
 import { useAuthUser } from "../../contexts/AuthUserContext";
+import { useNavigate } from "react-router-dom";
 
 const CreateTeam = () => {
   const authUser = useAuthUser();
   const [nameTeam, setNameTeam] = useState("");
+  const [github, setGithub] = useState("");
+  const navigate = useNavigate();
+
 
   const handleConfirmClick = () => {
 
-    const newTeam = { name: nameTeam, github: '', projectId: 0, membersId: [authUser.user?.id], leaderId: authUser.user?.id, preferencesId: []} as Team;
+    if (nameTeam === "") {
+      toast.error('Merci de renseigner un nom de team')
+      return;
+    }
+
+    if (github === "") {
+      toast.error('Merci de renseigner un lien github')
+      return;
+    }
+
+    const newTeam = { name: nameTeam, github: github, projectId: 0, membersId: [authUser.user?.id], leaderId: authUser.user?.id, preferencesId: [] } as Team;
 
     postTeam(newTeam).then((response) => {
 
@@ -33,6 +47,7 @@ const CreateTeam = () => {
           }
           setNameTeam("")
           toast.success("L'équipe a été créée")
+          navigate("/teams/infos");
         }
       } else {
         console.log("Error while creating team: " + response.errorMessage)
@@ -62,9 +77,18 @@ const CreateTeam = () => {
 
       <FormControl variant="outlined" sx={{ marginTop: "5%", marginBottom: "3%", width: "40%" }}>
         <TextField
+          sx={{ marginBottom: "30px" }}
           value={nameTeam}
           onChange={(e) => setNameTeam(e.target.value)}
           label="Nom de l'équipe"
+          variant="outlined"
+          fullWidth
+        />
+
+        <TextField
+          value={github}
+          onChange={(e) => setGithub(e.target.value)}
+          label="Lien github"
           variant="outlined"
           fullWidth
         />
