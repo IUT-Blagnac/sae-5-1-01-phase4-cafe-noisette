@@ -37,29 +37,58 @@ endif::[]
 // /!\ A MODIFIER !!!
 :baseURL: https://github.com/IUT-Blagnac/S5.A.01-template.git
 
-// Tags
-image:{baseURL}/actions/workflows/build.yml/badge.svg[Build] 
-image:{baseURL}/actions/workflows/tests.yml/badge.svg[Tests] 
-image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg[License: MPL-2.0, link="https://opensource.org/licenses/MPL-2.0"]
 //---------------------------------------------------------------
 
-TIP: Pensez à mettre à jour les infos dans ce fichier pour que les badges pointent sur les résultats effectifs de vos intégrations continue ou sur la bonne licence logicielle.
+== Tests
 
-WARNING: Ce dépôt présente uen des parties du projet à développer dans le cadre de la SAÉ 5.A.01 du BUT1 Informatique de l'IUT de Blagnac.
+|===
+| **Noms** | **Lien du fork**
+| Grasser James | https://github.com/Darknxss/sae-5-1-01-phase4-cafe-noisette
+| JOLAS Alex, SANCHEZ-PORRO Aurélien | https://github.com/AurelienSP/sae-5-1-01-phase4-tests 
+| JACQUEMONT Nolan, FUERTES Bryce | https://github.com/NolanJacquemont/R5.A.08-Projet/
+| Sacilotto Nicolas | https://github.com/EternalNico/sae-5-1-01-phase4-cafe-noisette
 
-Ce fichier `README.adoc` (dont vous lisez sûrement le rendu HTML automatiquement effectué par GitHUb), fait partie du dépôt initial cloné à partir du lien GitHub classroom qui vous a été donné par ailleurs.
-Vous trouverez le dépôt "template" qui a servi de base ici : https://github.com/IUT-Blagnac/S5.A.01-template.git. 
+|===
 
 == Équipe
 
-Projet est réalisé par::
+Ce projet est réalisé par::
 
-- https://github.com/janeDoe[Jane Doe]
-- https://github.com/johnSmith[John Smith]
-...
+- https://github.com/NolanJacquemont[Jacquemont Nolan] - Chef de projet
+- https://github.com/BryceFuerty[Fuertes Bryce] - Développeur Backend
+- https://github.com/AurelienSP[Sanchez-Porro Aurélien] - Développeur Backend
+- https://github.com/Jolex35[Jolas Alex] - Développeur Frontend
+- https://github.com/EternalNico[Sacilotto Nicolas] - Développeur Frontend
+- https://github.com/Darknxss[Grasser James] - Développeur Frontend
 
+== Documentations techniques
+
+=== Documentation technique backend
+
+La documentation technique du backend est disponible xref:docs/technical-docs/homeTechnicalDoc.md[ici].
+
+La documentation d'installation du backend est disponible xref:sae-back/README.md[ici].
+
+=== Documentation technique frontend
+
+La documentation d'installation du frontend est disponible xref:sae-front/README.md[ici].
+
+=== Documentation utilisateur
+
+La documentation utilisateur est disponible xref:docs/user-docs/homeUserDoc.md[ici].
 
 == Contexte général
 
+Le but de cette SAE S5.A.01 est la création d'une applciation de gestion de la SAE, nous devrons y incorporer plusieurs fonctionnalitées :
 
-TIP: En cas de besoin, n'hésitez pas à me contacter (jean-michel.bruel@univ-tlse2.fr) ou à me poser des questions via le Discord de l'IUT.
+|===
+| **Must have this** | **Should have this** | **Could have this**
+| Remplissage de la fiche joueur | Saisie des informations sur les dépots des équipes | Constitution des équipes automatique
+| Constitution des équipes | Gestion des évaluations par les coatch et par les clients | affectations des équipes aux sujets automatique
+| Saisie des sujets | Gestion de la phase de renfort (des ALT aux INIT) | Page de présentation des équipes dans chaque groupes
+| Saisie des voeux des équipes en terme de sujet | Gestion des défis entre les rouges et les jaunes| Toutes fonctionnalitées que vous auriez aimer voir cette année
+| Affectation des équipes aux sujets ||
+
+
+
+|===
