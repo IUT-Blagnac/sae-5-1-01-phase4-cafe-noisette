@@ -42,8 +42,9 @@ endif::[]
 == Tests
 
 |===
-| **Nom** | **Lien du fork**
+| **Noms** | **Lien du fork**
 | Grasser James | https://github.com/Darknxss/sae-5-1-01-phase4-cafe-noisette
+| JOLAS Alex, SANCHEZ-PORRO Aurélien | https://github.com/AurelienSP/sae-5-1-01-phase4-tests 
 
 |===
 
